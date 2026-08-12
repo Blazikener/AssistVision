@@ -1,0 +1,21 @@
+# Raw captures are large and regenerable from the physical rig.
+# Keep manifests and ground-truth logs in data/ under version control instead.
+captures/
+*.png
+*.jpg
+*.jpeg
+!data/aruco_sheet.png
+
+# COLMAP working directories
+sparse/
+dense/
+*.db
+*.ply
+*.bin
+
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+.DS_Store
