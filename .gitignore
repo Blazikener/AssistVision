@@ -6,6 +6,11 @@ captures/
 *.jpeg
 !data/aruco_sheet.png
 
+# Never commit personal documents (CVs, scanned IDs) to a public repo.
+# Papers you cite belong in paper/refs/, which is exempted below.
+*.pdf
+!paper/refs/*.pdf
+
 # COLMAP working directories
 sparse/
 dense/
