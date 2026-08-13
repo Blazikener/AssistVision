@@ -1,0 +1,1078 @@
+<title>Tier 1 — Camera Geometry</title>
+
+<style>
+  :root {
+    --ground:      #F5F6F8;
+    --ground-2:    #EDEFF3;
+    --ink:         #141B24;
+    --muted:       #5D6A78;
+    --rule:        #D3D8DF;
+    --amber:       #B0761A;
+    --amber-soft:  #F3E7D0;
+    --cyan:        #1F6F82;
+    --cyan-soft:   #DDEDF1;
+    --code-bg:     #EAECF0;
+
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "Cascadia Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --serif: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+
+    --measure: 66ch;
+    --step: 1.5rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:     #0C1116;
+      --ground-2:   #131A22;
+      --ink:        #DCE3EA;
+      --muted:      #8A97A5;
+      --rule:       #26303B;
+      --amber:      #E3A94E;
+      --amber-soft: #33270F;
+      --cyan:       #56B6CB;
+      --cyan-soft:  #0E2830;
+      --code-bg:    #151D26;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:     #0C1116;
+    --ground-2:   #131A22;
+    --ink:        #DCE3EA;
+    --muted:      #8A97A5;
+    --rule:       #26303B;
+    --amber:      #E3A94E;
+    --amber-soft: #33270F;
+    --cyan:       #56B6CB;
+    --cyan-soft:  #0E2830;
+    --code-bg:    #151D26;
+  }
+
+  :root[data-theme="light"] {
+    --ground:     #F5F6F8;
+    --ground-2:   #EDEFF3;
+    --ink:        #141B24;
+    --muted:      #5D6A78;
+    --rule:       #D3D8DF;
+    --amber:      #B0761A;
+    --amber-soft: #F3E7D0;
+    --cyan:       #1F6F82;
+    --cyan-soft:  #DDEDF1;
+    --code-bg:    #EAECF0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 1.25rem 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: var(--measure); margin: 0 auto; }
+  .wide { max-width: 76ch; margin: 0 auto; }
+
+  /* ---------- masthead ---------- */
+
+  header.masthead {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 4.5rem 0 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 0 0 1.1rem;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(1.7rem, 5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+  .standfirst {
+    font-size: 1.08rem;
+    color: var(--muted);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  /* ---------- sections ---------- */
+
+  section { max-width: var(--measure); margin: 0 auto; padding-top: 3.25rem; }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 1.28rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    text-wrap: balance;
+    margin: 0 0 0.35rem;
+    display: flex;
+    gap: 0.85rem;
+    align-items: baseline;
+  }
+  h2 .num {
+    color: var(--amber);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    flex: none;
+    padding-top: 0.15rem;
+  }
+  h2 + .kicker {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 1.4rem 2.35rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  h3 {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 2.2rem 0 0.6rem;
+  }
+
+  p { margin: 0 0 1.05rem; text-wrap: pretty; }
+
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+
+  a { color: var(--cyan); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+
+  ul, ol { margin: 0 0 1.05rem; padding-left: 1.3rem; }
+  li { margin-bottom: 0.45rem; }
+  li::marker { color: var(--muted); }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.87em;
+    background: var(--code-bg);
+    padding: 0.12em 0.36em;
+    border-radius: 2px;
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.79rem;
+    line-height: 1.55;
+    background: var(--code-bg);
+    border-left: 2px solid var(--rule);
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    margin: 0 0 1.15rem;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  /* ---------- math display ---------- */
+
+  .math {
+    font-family: var(--mono);
+    background: var(--ground-2);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.15rem 1rem;
+    margin: 1.4rem 0;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 2;
+    overflow-x: auto;
+  }
+  .math .note {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.7rem;
+  }
+  .math b { color: var(--amber); font-weight: 600; }
+
+  /* ---------- callouts ---------- */
+
+  .incode {
+    background: var(--cyan-soft);
+    border-left: 3px solid var(--cyan);
+    padding: 0.95rem 1.1rem;
+    margin: 1.4rem 0;
+    font-size: 0.93rem;
+  }
+  .incode .label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.5rem;
+  }
+  .incode p:last-child { margin-bottom: 0; }
+
+  .keystone {
+    background: var(--amber-soft);
+    border-left: 3px solid var(--amber);
+    padding: 0.95rem 1.1rem;
+    margin: 1.4rem 0;
+    font-size: 0.93rem;
+  }
+  .keystone .label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.5rem;
+  }
+  .keystone p:last-child { margin-bottom: 0; }
+
+  /* ---------- figures ---------- */
+
+  figure {
+    margin: 2rem 0;
+    max-width: 76ch;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  figure svg {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    color: var(--ink);
+  }
+  figcaption {
+    font-family: var(--mono);
+    font-size: 0.73rem;
+    line-height: 1.6;
+    color: var(--muted);
+    margin-top: 0.85rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--rule);
+    text-wrap: pretty;
+  }
+
+  /* ---------- tables ---------- */
+
+  .tablewrap { overflow-x: auto; margin: 1.4rem 0; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.85rem;
+    font-family: var(--mono);
+  }
+  th, td {
+    text-align: left;
+    padding: 0.5rem 0.8rem 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--ink);
+    white-space: nowrap;
+  }
+  td.num, th.num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- self check ---------- */
+
+  .check {
+    border: 1px solid var(--rule);
+    padding: 1.2rem 1.3rem;
+    margin: 1.6rem 0;
+  }
+  .check .label {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .check ol { margin-bottom: 0; }
+  .check li { font-size: 0.94rem; }
+
+  hr.axis {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+    margin: 3.5rem auto 0;
+  }
+
+  footer {
+    max-width: var(--measure);
+    margin: 3rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+</style>
+
+<header class="masthead">
+  <p class="eyebrow">Vision Assist · Study Tier 1</p>
+  <h1>Camera Geometry</h1>
+  <p class="standfirst">Everything <code>calibrate.py</code> does, and why it has to. This is the layer
+  all the multi-view work sits on — get it solid and COLMAP becomes comprehensible instead of magical.</p>
+</header>
+
+<section>
+  <h2><span class="num">01</span> <span>What a camera actually destroys</span></h2>
+  <p class="kicker">The premise everything else follows from</p>
+
+  <p>A camera does not measure the world. It <em>projects</em> it — squashing three dimensions
+  onto two. That is not a hardware limitation you can engineer around with a better sensor.
+  It is what an image <em>is</em>.</p>
+
+  <p>One dimension is gone, and it is precisely the one you need: depth. Every difficulty in
+  this project, from the plate volume to the ambiguity of a single ESP32 frame, traces back
+  to this one fact. So the whole of Tier 1 is really one question — <strong>what exactly was
+  lost, and what has to be supplied from outside to get it back?</strong></p>
+</section>
+
+<section>
+  <h2><span class="num">02</span> <span>The pinhole model</span></h2>
+  <p class="kicker">Similar triangles, and the equation they give you</p>
+
+  <p>Imagine a sealed box with a pinhole in one face. Light from a point in the world travels
+  in a straight line through that hole and lands on the back wall. One point outside, one point
+  inside, one straight line connecting them.</p>
+
+  <p>That is the entire model. Real lenses gather far more light than a pinhole can, and we
+  will pay for that convenience in §07 — but geometrically, a well-made camera behaves like
+  this box.</p>
+
+  <p>Place the camera centre at the origin, pointing down the <code>Z</code> axis. A point in
+  the world sits at <code>(X, Y, Z)</code>. The image forms on a plane at distance <code>f</code>
+  from the centre — the <strong>focal length</strong>.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-label="A pinhole camera diagram showing an object of height X at distance Z projecting through the camera centre onto an image plane at distance f, forming an image of height x, with the two similar triangles highlighted.">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <polygon points="0,0 10,5 0,10" fill="currentColor"/>
+        </marker>
+        <marker id="ar-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <polygon points="0,0 10,5 0,10" fill="#B0761A"/>
+        </marker>
+      </defs>
+
+      <!-- optical axis -->
+      <line x1="140" y1="190" x2="690" y2="190" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" marker-end="url(#ar)"/>
+      <text x="684" y="208" font-family="monospace" font-size="12" fill="currentColor" text-anchor="end" opacity="0.7">Z</text>
+
+      <!-- image plane -->
+      <line x1="260" y1="80" x2="260" y2="285" stroke="currentColor" stroke-width="1.5"/>
+      <text x="260" y="70" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.75">image plane</text>
+
+      <!-- rays -->
+      <line x1="620" y1="90" x2="140" y2="190" stroke="#B0761A" stroke-width="1.5"/>
+      <line x1="620" y1="190" x2="140" y2="190" stroke="#B0761A" stroke-width="1.5" opacity="0.35"/>
+
+      <!-- object -->
+      <line x1="620" y1="190" x2="620" y2="90" stroke="currentColor" stroke-width="2.5" marker-end="url(#ar)"/>
+      <text x="634" y="132" font-family="monospace" font-size="13" fill="currentColor">X</text>
+
+      <!-- image of object -->
+      <line x1="260" y1="190" x2="260" y2="165" stroke="#B0761A" stroke-width="3"/>
+      <text x="228" y="176" font-family="monospace" font-size="13" fill="#B0761A" text-anchor="end">x</text>
+
+      <!-- camera centre -->
+      <circle cx="140" cy="190" r="4.5" fill="currentColor"/>
+      <text x="140" y="215" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle">O</text>
+      <text x="140" y="230" font-family="monospace" font-size="10" fill="currentColor" text-anchor="middle" opacity="0.65">camera centre</text>
+
+      <!-- f measure -->
+      <line x1="140" y1="262" x2="260" y2="262" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+      <line x1="140" y1="257" x2="140" y2="267" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+      <line x1="260" y1="257" x2="260" y2="267" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+      <text x="200" y="279" font-family="monospace" font-size="12" fill="currentColor" text-anchor="middle">f</text>
+
+      <!-- Z measure -->
+      <line x1="140" y1="112" x2="620" y2="112" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+      <line x1="140" y1="107" x2="140" y2="117" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+      <line x1="620" y1="107" x2="620" y2="117" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+      <text x="380" y="104" font-family="monospace" font-size="12" fill="currentColor" text-anchor="middle" opacity="0.7">Z</text>
+    </svg>
+    <figcaption>The two triangles sharing vertex O are similar: one has legs f and x, the other Z and X.
+    Equal ratios give x / f = X / Z. Everything in §03 through §06 is bookkeeping on top of this.</figcaption>
+  </figure>
+
+  <p>The shaded triangle from <code>O</code> to the image, and the large triangle from
+  <code>O</code> to the object, are <strong>similar</strong> — same angles, different size. So
+  their sides are in the same ratio:</p>
+
+  <div class="math">
+    x / f  =  X / Z<br>
+    <b>x = f · X / Z</b> &nbsp;&nbsp;&nbsp; <b>y = f · Y / Z</b>
+    <span class="note">the perspective projection equation</span>
+  </div>
+
+  <p>That <code>Z</code> in the denominator is perspective itself. Double the distance, halve
+  the image. It is why railway tracks converge and why the far end of your dinner plate looks
+  narrower than the near end.</p>
+</section>
+
+<section>
+  <h2><span class="num">03</span> <span>Scale ambiguity, derived</span></h2>
+  <p class="kicker">The most important consequence in this entire project</p>
+
+  <p>Look hard at <code>x = f · X / Z</code>. The world quantities <code>X</code> and
+  <code>Z</code> never appear alone — only as the ratio <code>X/Z</code>.</p>
+
+  <p>So take any object and replace it with one <em>twice as large, twice as far away</em>.
+  <code>X</code> doubles, <code>Z</code> doubles, the ratio is unchanged, and <code>x</code>
+  is <strong>identical</strong>. The two scenes produce pixel-for-pixel the same image.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-label="Two objects of different sizes at different distances — one 50 units tall at distance 240, one 100 units tall at distance 480 — both projecting through the camera centre to exactly the same point on the image plane.">
+      <line x1="140" y1="190" x2="690" y2="190" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" marker-end="url(#ar)"/>
+      <text x="684" y="208" font-family="monospace" font-size="12" fill="currentColor" text-anchor="end" opacity="0.7">Z</text>
+
+      <line x1="260" y1="80" x2="260" y2="285" stroke="currentColor" stroke-width="1.5"/>
+
+      <!-- rays: both pass exactly through (260,165) -->
+      <line x1="380" y1="140" x2="140" y2="190" stroke="#1F6F82" stroke-width="1.5"/>
+      <line x1="620" y1="90"  x2="140" y2="190" stroke="#B0761A" stroke-width="1.5"/>
+
+      <!-- small near object -->
+      <line x1="380" y1="190" x2="380" y2="140" stroke="#1F6F82" stroke-width="2.5"/>
+      <text x="392" y="160" font-family="monospace" font-size="11" fill="#1F6F82">X = 50</text>
+      <text x="392" y="175" font-family="monospace" font-size="11" fill="#1F6F82">Z = 240</text>
+
+      <!-- large far object -->
+      <line x1="620" y1="190" x2="620" y2="90" stroke="#B0761A" stroke-width="2.5"/>
+      <text x="632" y="124" font-family="monospace" font-size="11" fill="#B0761A">X = 100</text>
+      <text x="632" y="139" font-family="monospace" font-size="11" fill="#B0761A">Z = 480</text>
+
+      <!-- the single shared image point -->
+      <line x1="260" y1="190" x2="260" y2="165" stroke="currentColor" stroke-width="4"/>
+      <circle cx="260" cy="165" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <text x="248" y="152" font-family="monospace" font-size="11" fill="currentColor" text-anchor="end">one image</text>
+
+      <circle cx="140" cy="190" r="4.5" fill="currentColor"/>
+      <text x="140" y="215" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle">O</text>
+
+      <text x="415" y="262" font-family="monospace" font-size="12" fill="currentColor" opacity="0.8">50/240 = 100/480 = 0.2083</text>
+    </svg>
+    <figcaption>Two physically different scenes, one identical image. No algorithm can distinguish them,
+    because the difference was destroyed at the moment of projection — not obscured, destroyed.</figcaption>
+  </figure>
+
+  <div class="keystone">
+    <span class="label">Keystone</span>
+    <p>A single image cannot tell you the size of anything. Not with a better model, not with
+    more training data, not with a larger network. The information is not in the image.</p>
+    <p>Metric scale must be <strong>injected from outside</strong>: a marker of known size, a
+    known camera baseline, or a learned prior about how big things usually are. This is why your
+    ArUco sheet exists, and why <code>make_aruco.py</code> nags you to measure the printed marker.</p>
+  </div>
+
+  <p>Two consequences worth carrying forward. First, structure-from-motion has this problem too —
+  many views pin down <em>shape</em> beautifully but leave overall scale free, which is why
+  COLMAP alone will not give you millimetres. Second, because volume is a cubed quantity, a
+  5% error in your scale factor becomes roughly a 16% error in grams. Your scale reference is
+  the highest-leverage number in the project.</p>
+</section>
+
+<section>
+  <h2><span class="num">04</span> <span>From millimetres to pixels</span></h2>
+  <p class="kicker">The intrinsic matrix K, one element at a time</p>
+
+  <p>The equation in §02 gives <code>x</code> in physical units on a sensor. But you never see
+  millimetres — you see pixel indices. Two adjustments close that gap.</p>
+
+  <h3>Focal length in pixels</h3>
+  <p>Divide the physical focal length by the physical width of one pixel. If <code>f</code> is
+  4 mm and pixels are 1.4 µm wide, then <code>fx ≈ 2857</code> pixels. You get two numbers,
+  <code>fx</code> and <code>fy</code>, because pixels need not be perfectly square — though on
+  any modern sensor they essentially are, which gives you a free sanity check.</p>
+
+  <h3>Moving the origin</h3>
+  <p>The projection equation puts the origin on the optical axis, at the image centre. But
+  array indexing puts <code>(0, 0)</code> at the top-left corner. So you add an offset — the
+  <strong>principal point</strong> <code>(cx, cy)</code>, roughly at the image centre.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-label="An image rectangle with the array origin at the top-left corner and the principal point near the centre, showing that a pixel coordinate u equals fx times X over Z, plus cx.">
+      <rect x="150" y="45" width="420" height="210" fill="none" stroke="currentColor" stroke-width="1.5"/>
+
+      <!-- array origin -->
+      <circle cx="150" cy="45" r="4" fill="currentColor"/>
+      <text x="150" y="34" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle">(0, 0) array origin</text>
+
+      <!-- axes -->
+      <line x1="150" y1="45" x2="290" y2="45" stroke="currentColor" stroke-width="1" opacity="0.55" marker-end="url(#ar)"/>
+      <text x="296" y="49" font-family="monospace" font-size="11" fill="currentColor" opacity="0.75">u</text>
+      <line x1="150" y1="45" x2="150" y2="130" stroke="currentColor" stroke-width="1" opacity="0.55" marker-end="url(#ar)"/>
+      <text x="140" y="134" font-family="monospace" font-size="11" fill="currentColor" text-anchor="end" opacity="0.75">v</text>
+
+      <!-- principal point -->
+      <line x1="360" y1="130" x2="360" y2="170" stroke="#B0761A" stroke-width="1.2"/>
+      <line x1="340" y1="150" x2="380" y2="150" stroke="#B0761A" stroke-width="1.2"/>
+      <circle cx="360" cy="150" r="3" fill="#B0761A"/>
+      <text x="360" y="188" font-family="monospace" font-size="11.5" fill="#B0761A" text-anchor="middle">(cx, cy)</text>
+      <text x="360" y="203" font-family="monospace" font-size="10" fill="#B0761A" text-anchor="middle" opacity="0.85">principal point</text>
+
+      <!-- cx measure -->
+      <line x1="150" y1="272" x2="360" y2="272" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+      <line x1="150" y1="267" x2="150" y2="277" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+      <line x1="360" y1="267" x2="360" y2="277" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+      <text x="255" y="289" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.8">cx</text>
+
+      <!-- a projected point -->
+      <circle cx="470" cy="98" r="4.5" fill="#1F6F82"/>
+      <line x1="360" y1="98" x2="470" y2="98" stroke="#1F6F82" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="360" y1="150" x2="360" y2="98" stroke="#1F6F82" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+      <text x="482" y="94" font-family="monospace" font-size="11.5" fill="#1F6F82">(u, v)</text>
+      <text x="482" y="110" font-family="monospace" font-size="10" fill="#1F6F82" opacity="0.85">a projected corner</text>
+      <text x="415" y="90" font-family="monospace" font-size="10" fill="#1F6F82" text-anchor="middle" opacity="0.85">fx·X/Z</text>
+    </svg>
+    <figcaption>A pixel coordinate is the projected position measured from the optical axis, shifted so the
+    origin lands in the array's top-left corner. That shift is the entire job of cx and cy.</figcaption>
+  </figure>
+
+  <div class="math">
+    u = <b>fx</b> · X/Z + <b>cx</b> &nbsp;&nbsp;&nbsp;&nbsp; v = <b>fy</b> · Y/Z + <b>cy</b>
+    <span class="note">projection, in pixels</span>
+  </div>
+
+  <p>Package the four numbers into a matrix and you have the <strong>intrinsic matrix</strong>:</p>
+
+  <div class="math">
+    &nbsp;&nbsp;&nbsp; ⎡ fx&nbsp;&nbsp; 0&nbsp;&nbsp; cx ⎤<br>
+    K = ⎢ &nbsp;0&nbsp;&nbsp; fy&nbsp;&nbsp; cy ⎥<br>
+    &nbsp;&nbsp;&nbsp; ⎣ &nbsp;0&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp; 1 ⎦
+    <span class="note">four numbers that fully describe the camera's optics</span>
+  </div>
+
+  <p><code>K</code> depends only on the camera and its resolution — not on where the camera is
+  or what it is looking at. Calibrate once, reuse forever. That is why it goes in a file.</p>
+
+  <div class="incode">
+    <span class="label">In your code</span>
+    <p><code>calibrate.py</code> writes exactly these four numbers to <code>intrinsics.json</code>,
+    alongside the resolution they were measured at. The resolution matters: <code>fx</code> in
+    pixels scales with image width, so intrinsics measured at 1280×720 are <em>wrong</em> at
+    1920×1080. This is why the capture step pins the resolution and the solve step refuses to
+    mix image sizes.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span> <span>Homogeneous coordinates</span></h2>
+  <p class="kicker">Why there is a 1 in the corner of that matrix</p>
+
+  <p>Projection involves dividing by <code>Z</code>, and division is not a linear operation —
+  you cannot write it as a matrix multiply. That is inconvenient, because linear algebra is
+  where all the good tools live.</p>
+
+  <p>The fix is a bookkeeping trick. Represent a 2D point <code>(u, v)</code> by the 3-vector
+  <code>(u, v, 1)</code>, and declare that scaling the whole vector changes nothing:
+  <code>(u, v, 1)</code> and <code>(2u, 2v, 2)</code> are <em>the same point</em>. To recover
+  ordinary coordinates, divide by the last element.</p>
+
+  <div class="math">
+    s · [u, v, 1]ᵀ  =  K · [X, Y, Z]ᵀ
+    <span class="note">the division is deferred, not avoided</span>
+  </div>
+
+  <p>Now the matrix multiply is linear, and the awkward division happens once at the end when
+  you normalise by <code>s</code> — which turns out to equal <code>Z</code>. Nothing deep is
+  going on; it is a change of notation that lets you compose projections, rotations, and
+  translations as a single chain of matrices.</p>
+
+  <p>It also explains that scale ambiguity again, from a different angle: <code>s</code> is
+  free. A point and the same point scaled are indistinguishable, in the algebra exactly as in
+  the picture.</p>
+</section>
+
+<section>
+  <h2><span class="num">06</span> <span>Extrinsics</span></h2>
+  <p class="kicker">Where the camera is standing</p>
+
+  <p><code>K</code> describes the camera's optics. It says nothing about where the camera
+  <em>is</em>. For that you need a rotation <code>R</code> (3×3, which way it points) and a
+  translation <code>t</code> (3×1, where it sits) that carry world coordinates into camera
+  coordinates.</p>
+
+  <div class="math">
+    s · [u, v, 1]ᵀ  =  <b>K</b> · [ <b>R</b> | <b>t</b> ] · [X, Y, Z, 1]ᵀ
+    <span class="note">the full projection equation — memorise this one</span>
+  </div>
+
+  <p>Read it right to left: a world point, moved into the camera's frame by <code>[R|t]</code>,
+  then projected to pixels by <code>K</code>.</p>
+
+  <p>The split matters enormously. <strong><code>K</code> is one set of numbers for the whole
+  camera. <code>[R|t]</code> is a different set for every single photograph.</strong> Twenty
+  calibration images means one <code>K</code> and twenty <code>[R|t]</code> pairs.</p>
+
+  <p>Hold onto that, because it is the shape of structure-from-motion too. COLMAP solves for one
+  <code>K</code> per camera and one pose per image — the same decomposition, at larger scale.</p>
+
+  <div class="incode">
+    <span class="label">In your code</span>
+    <p><code>cv2.calibrateCamera</code> returns <code>rvecs</code> and <code>tvecs</code> —
+    lists with one entry per input image, each <code>(3,1)</code>. The rotation comes back as a
+    3-element <em>Rodrigues vector</em> (axis × angle) rather than a 3×3 matrix, because a
+    rotation genuinely has only 3 degrees of freedom and optimisers prefer the compact form.
+    <code>cv2.Rodrigues()</code> converts between them.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">07</span> <span>Lens distortion</span></h2>
+  <p class="kicker">Where real optics stop obeying the model</p>
+
+  <p>A pinhole is geometrically perfect and optically useless — it passes almost no light. Real
+  cameras use lenses, and lenses bend rays slightly wrong, especially far from the centre. The
+  symptom is that straight lines in the world come out curved in the image.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 280" role="img" aria-label="Two grids side by side: an ideal undistorted grid with straight lines, and a barrel-distorted grid whose lines bow outward away from the centre, with the distortion growing toward the edges.">
+      <!-- ideal grid -->
+      <text x="175" y="34" font-family="monospace" font-size="11.5" fill="currentColor" text-anchor="middle" opacity="0.8">ideal (pinhole)</text>
+      <g stroke="currentColor" stroke-width="1.2" fill="none">
+        <line x1="70" y1="60" x2="280" y2="60"/>
+        <line x1="70" y1="112" x2="280" y2="112"/>
+        <line x1="70" y1="164" x2="280" y2="164"/>
+        <line x1="70" y1="216" x2="280" y2="216"/>
+        <line x1="70" y1="60" x2="70" y2="216"/>
+        <line x1="122" y1="60" x2="122" y2="216"/>
+        <line x1="175" y1="60" x2="175" y2="216"/>
+        <line x1="228" y1="60" x2="228" y2="216"/>
+        <line x1="280" y1="60" x2="280" y2="216"/>
+      </g>
+      <circle cx="175" cy="138" r="3" fill="currentColor"/>
+
+      <!-- barrel grid -->
+      <text x="545" y="34" font-family="monospace" font-size="11.5" fill="#B0761A" text-anchor="middle">barrel (k1 &lt; 0)</text>
+      <g stroke="#B0761A" stroke-width="1.2" fill="none">
+        <path d="M440 60 Q545 40 650 60"/>
+        <path d="M440 112 Q545 103 650 112"/>
+        <path d="M440 164 Q545 173 650 164"/>
+        <path d="M440 216 Q545 236 650 216"/>
+        <path d="M440 60 Q420 138 440 216"/>
+        <path d="M492 60 Q483 138 492 216"/>
+        <path d="M545 60 Q545 138 545 216"/>
+        <path d="M598 60 Q607 138 598 216"/>
+        <path d="M650 60 Q670 138 650 216"/>
+      </g>
+      <circle cx="545" cy="138" r="3" fill="#B0761A"/>
+
+      <text x="360" y="142" font-family="monospace" font-size="15" fill="currentColor" text-anchor="middle" opacity="0.45">→</text>
+
+      <text x="175" y="258" font-family="monospace" font-size="10.5" fill="currentColor" text-anchor="middle" opacity="0.7">centre unaffected</text>
+      <text x="545" y="258" font-family="monospace" font-size="10.5" fill="#B0761A" text-anchor="middle" opacity="0.9">error grows with radius</text>
+    </svg>
+    <figcaption>Radial distortion displaces points along the line joining them to the image centre, by an
+    amount that grows with distance from it. Corners suffer most; the principal point does not move.</figcaption>
+  </figure>
+
+  <p>OpenCV models this with five coefficients. Three are <strong>radial</strong>
+  (<code>k1, k2, k3</code>), describing displacement outward or inward along the radius. Two
+  are <strong>tangential</strong> (<code>p1, p2</code>), covering the case where the lens is not
+  perfectly parallel to the sensor.</p>
+
+  <div class="math">
+    x' = x (1 + k₁r² + k₂r⁴ + k₃r⁶) + tangential terms
+    <span class="note">r = distance from the principal point</span>
+  </div>
+
+  <p>Notice that every term carries a power of <code>r</code>, so at the centre
+  (<code>r = 0</code>) distortion vanishes entirely. That matches the picture: the middle of
+  your image is trustworthy, the corners are not.</p>
+
+  <p>Sign tells you the type. Negative <code>k1</code> is <em>barrel</em> distortion — lines
+  bow outward, typical of wide-angle lenses and of essentially every webcam and phone camera
+  you will use. Positive is <em>pincushion</em>.</p>
+
+  <div class="keystone">
+    <span class="label">Why you cannot skip this</span>
+    <p>Uncorrected distortion silently bends your measurements. A plate rim near the frame edge
+    is reported at the wrong radius, and that error propagates straight into your scale factor
+    and then, cubed, into grams. It is also the reason to keep the marker and the plate away
+    from the extreme corners when you capture.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">08</span> <span>How calibration actually works</span></h2>
+  <p class="kicker">Counting equations against unknowns</p>
+
+  <p>You now have a model with unknowns in it. Calibration is the process of pinning them down,
+  and it works by a simple trick: <strong>photograph something whose 3D geometry you already
+  know.</strong></p>
+
+  <p>A chessboard is ideal. Its corners are perfectly regular, so if you measure one square you
+  know every corner's position. And it is flat, so you can declare the board's own plane to be
+  <code>Z = 0</code> and write every corner as <code>(i·s, j·s, 0)</code> for square size
+  <code>s</code>.</p>
+
+  <p>Now count. A 9×6 board has 54 corners. Each corner, in each view, gives you two equations —
+  one for <code>u</code>, one for <code>v</code>. With 20 views:</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Quantity</th><th class="num">Count</th><th>Where it comes from</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Equations</td><td class="num">2,160</td><td>54 corners × 20 views × 2</td></tr>
+        <tr><td>Intrinsic unknowns</td><td class="num">4</td><td>fx, fy, cx, cy</td></tr>
+        <tr><td>Distortion unknowns</td><td class="num">5</td><td>k1, k2, p1, p2, k3</td></tr>
+        <tr><td>Pose unknowns</td><td class="num">120</td><td>6 per view × 20 views</td></tr>
+        <tr><td><strong>Total unknowns</strong></td><td class="num"><strong>129</strong></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>2,160 equations for 129 unknowns. Massively overdetermined — which is exactly what you
+  want, because every measurement carries noise. No solution satisfies all 2,160 equations
+  exactly, so you look for the one that comes <em>closest</em>, in the least-squares sense.
+  The redundancy is what averages the noise away.</p>
+
+  <h3>Why pose variety matters more than image count</h3>
+
+  <p>Here is the trap. Twenty photographs of the board held flat-on, parallel to the sensor, at
+  various distances, are nearly <strong>useless</strong> — and it is §03 that explains why. A
+  flat board twice as far and twice as large projects identically. Held parallel, the board
+  gives you no way to separate focal length from distance; the two trade off against each other
+  and the solution is unstable.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 250" role="img" aria-label="Two capture strategies compared: on the left, boards all held parallel to the sensor at different distances, which is degenerate; on the right, boards held at varied tilts, which constrains the solution.">
+      <text x="175" y="30" font-family="monospace" font-size="11.5" fill="#1F6F82" text-anchor="middle">all flat-on — degenerate</text>
+      <g fill="none" stroke="#1F6F82" stroke-width="1.5">
+        <rect x="110" y="58" width="130" height="40"/>
+        <rect x="125" y="118" width="100" height="31"/>
+        <rect x="137" y="169" width="76" height="24"/>
+      </g>
+      <text x="175" y="222" font-family="monospace" font-size="10.5" fill="#1F6F82" text-anchor="middle" opacity="0.9">f and Z trade off freely</text>
+
+      <text x="545" y="30" font-family="monospace" font-size="11.5" fill="#B0761A" text-anchor="middle">varied tilt — constrained</text>
+      <g fill="none" stroke="#B0761A" stroke-width="1.5">
+        <polygon points="480,58 620,66 612,102 488,94"/>
+        <polygon points="470,124 600,114 615,148 486,155"/>
+        <polygon points="500,172 610,180 600,206 508,198"/>
+      </g>
+      <text x="545" y="228" font-family="monospace" font-size="10.5" fill="#B0761A" text-anchor="middle" opacity="0.9">foreshortening reveals depth</text>
+    </svg>
+    <figcaption>Tilting the board makes near edges project larger than far edges. That foreshortening is
+    depth information, and it is what breaks the focal-length/distance tie that flat views leave unresolved.</figcaption>
+  </figure>
+
+  <p>Tilt the board and the near edge projects larger than the far edge. That foreshortening
+  <em>is</em> depth information, and it forces the solver to commit to a particular focal
+  length. Ten well-varied views beat fifty lazy ones.</p>
+</section>
+
+<section>
+  <h2><span class="num">09</span> <span>Reprojection error</span></h2>
+  <p class="kicker">The number that governs everything downstream</p>
+
+  <p>Once you have candidate values for <code>K</code>, <code>dist</code>, and each
+  <code>[R|t]</code>, you can run the model <em>forwards</em>: take a corner whose 3D position
+  you know, push it through the full projection equation, and predict where it should land in
+  the image.</p>
+
+  <p>You also know where it <em>actually</em> landed, because the corner detector found it. The
+  distance between prediction and observation, in pixels, is the <strong>reprojection
+  error</strong>.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 250" role="img" aria-label="A known 3D corner is projected through K, R and t to a predicted image location, shown in amber, while the corner detector reports a slightly different measured location, shown in cyan. The gap between them is the residual.">
+      <!-- left: 3D point -->
+      <rect x="40" y="88" width="150" height="58" fill="none" stroke="currentColor" stroke-width="1.3"/>
+      <text x="115" y="112" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle">known 3D corner</text>
+      <text x="115" y="130" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle">(i·s, j·s, 0)</text>
+
+      <line x1="196" y1="117" x2="298" y2="117" stroke="currentColor" stroke-width="1.3" marker-end="url(#ar)"/>
+      <text x="247" y="106" font-family="monospace" font-size="10" fill="currentColor" text-anchor="middle" opacity="0.8">K [R|t]</text>
+
+      <!-- right: zoomed image patch -->
+      <rect x="308" y="42" width="230" height="165" fill="none" stroke="currentColor" stroke-width="1.3" opacity="0.6"/>
+      <text x="423" y="32" font-family="monospace" font-size="10.5" fill="currentColor" text-anchor="middle" opacity="0.7">image, magnified</text>
+
+      <!-- predicted -->
+      <circle cx="398" cy="112" r="6" fill="none" stroke="#B0761A" stroke-width="2"/>
+      <text x="356" y="94" font-family="monospace" font-size="10.5" fill="#B0761A" text-anchor="middle">predicted</text>
+
+      <!-- measured -->
+      <circle cx="452" cy="140" r="4.5" fill="#1F6F82"/>
+      <text x="497" y="163" font-family="monospace" font-size="10.5" fill="#1F6F82" text-anchor="middle">detected</text>
+
+      <!-- residual -->
+      <line x1="398" y1="112" x2="452" y2="140" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/>
+      <text x="430" y="118" font-family="monospace" font-size="10.5" fill="currentColor" opacity="0.9">residual</text>
+
+      <text x="620" y="112" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.85">minimise</text>
+      <text x="620" y="129" font-family="monospace" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.85">Σ ‖residual‖²</text>
+      <line x1="556" y1="120" x2="580" y2="120" stroke="currentColor" stroke-width="1.2" opacity="0.5" marker-end="url(#ar)"/>
+    </svg>
+    <figcaption>Calibration adjusts K, the distortion coefficients, and every pose until the summed squared
+    residual over all corners in all views is as small as it can be. That is the entire optimisation.</figcaption>
+  </figure>
+
+  <p>Calibration is nothing more than: <em>choose the parameters that make the total squared
+  residual as small as possible.</em> The problem is non-linear because of the division by
+  <code>Z</code> and the distortion polynomial, so OpenCV solves it iteratively with
+  Levenberg–Marquardt, starting from a closed-form initial guess.</p>
+
+  <div class="keystone">
+    <span class="label">The bridge to Tier 2</span>
+    <p>Reprojection error is <em>exactly</em> what bundle adjustment minimises inside COLMAP.
+    The difference is only scale: calibration optimises one camera over a known board, while
+    bundle adjustment optimises many cameras and millions of unknown 3D points at once. Same
+    objective function, same intuition. You are meeting the central idea of multi-view geometry
+    in its simplest possible form.</p>
+  </div>
+
+  <h3>Reading the number</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th class="num">RMS</th><th>Verdict</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td class="num">&lt; 0.5 px</td><td>Excellent</td><td>Proceed</td></tr>
+        <tr><td class="num">0.5 – 1.0 px</td><td>Fine here</td><td>Proceed</td></tr>
+        <tr><td class="num">&gt; 1.0 px</td><td>Something is wrong</td><td>Check focus, motion blur, and the square size you typed</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>A suspiciously <em>low</em> error deserves scrutiny too. Under about 0.1 px from a real
+  camera usually means too few views, or all views too similar — the model has enough freedom
+  to fit your handful of images without being genuinely constrained.</p>
+</section>
+
+<section>
+  <h2><span class="num">10</span> <span>The code, line by line</span></h2>
+  <p class="kicker">calibrate.py, with real shapes and dtypes</p>
+
+  <h3>Building the object points</h3>
+<pre><code>objp = np.zeros((cols * rows, 3), np.float32)
+objp[:, :2] = np.mgrid[0:cols, 0:rows].T.reshape(-1, 2)
+objp *= args.squares</code></pre>
+
+  <p>This constructs the board's corners in the board's own coordinate frame. Working through
+  it for a 9×6 board:</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Expression</th><th>Shape</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>np.mgrid[0:9, 0:6]</td><td>(2, 9, 6)</td><td>two index grids, x and y</td></tr>
+        <tr><td>.T</td><td>(6, 9, 2)</td><td>transposed so pairs sit last</td></tr>
+        <tr><td>.reshape(-1, 2)</td><td>(54, 2)</td><td>flat list of (x, y) index pairs</td></tr>
+        <tr><td>objp</td><td>(54, 3)</td><td>float32, third column all zeros</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The first few rows come out <code>[0,0,0], [25,0,0], [50,0,0]</code> — x advancing fastest,
+  which matches the order <code>findChessboardCorners</code> returns its corners in. That
+  correspondence is not decorative; if the two orderings disagreed, you would be pairing corner
+  1 with corner 47 and the solve would produce nonsense.</p>
+
+  <p>The third column stays zero because the board is planar. <code>float32</code> is required —
+  OpenCV will reject <code>float64</code> here.</p>
+
+  <h3>Finding the corners</h3>
+<pre><code>found, corners = cv2.findChessboardCorners(
+    gray, board,
+    cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_NORMALIZE_IMAGE,
+)</code></pre>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Item</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>input <code>gray</code></td><td>single-channel uint8 image</td></tr>
+        <tr><td>input <code>board</code></td><td>(cols, rows) of <em>inner</em> corners</td></tr>
+        <tr><td>returns <code>found</code></td><td>bool — all corners located, or none</td></tr>
+        <tr><td>returns <code>corners</code></td><td>(54, 1, 2) float32</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>That <code>(54, 1, 2)</code> shape with its vestigial middle axis is an OpenCV convention
+  you will meet constantly. It is not a mistake.</p>
+
+  <p><code>ADAPTIVE_THRESH</code> thresholds locally rather than globally, which is what lets
+  the detector cope with uneven lighting across the board. <code>NORMALIZE_IMAGE</code>
+  equalises contrast first.</p>
+
+  <p>The function is all-or-nothing: it returns every corner or none at all. And remember the
+  convention — <strong>inner corners, not squares</strong>. A board printed with 10×7 squares
+  is <code>9x6</code> here.</p>
+
+  <h3>Refining to sub-pixel</h3>
+<pre><code>corners = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)</code></pre>
+
+  <p>The detector returns corners on the integer pixel grid. That is not accurate enough — you
+  are trying to measure a camera to a fraction of a pixel. <code>cornerSubPix</code> examines
+  the intensity gradients in an 11×11 window around each corner and slides it to the point where
+  the gradients are most consistent with a true corner, typically improving precision several-fold.</p>
+
+  <p><code>(-1, -1)</code> means "no dead zone in the middle of the window". The criteria tuple
+  stops the iteration at 30 rounds or when the corner moves less than 0.001 px, whichever comes
+  first.</p>
+
+  <h3>The solve</h3>
+<pre><code>rms, K, dist, rvecs, tvecs = cv2.calibrateCamera(
+    obj_points, img_points, image_size, None, None
+)</code></pre>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Returned</th><th>Type / shape</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>rms</td><td>float</td><td>RMS reprojection error, pixels</td></tr>
+        <tr><td>K</td><td>(3, 3)</td><td>the intrinsic matrix</td></tr>
+        <tr><td>dist</td><td>(1, 5)</td><td>k1, k2, p1, p2, k3</td></tr>
+        <tr><td>rvecs</td><td>list of N × (3, 1)</td><td>rotation per view, Rodrigues form</td></tr>
+        <tr><td>tvecs</td><td>list of N × (3, 1)</td><td>translation per view</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Note <code>image_size</code> is <code>(width, height)</code>, while NumPy's
+  <code>.shape</code> gives <code>(height, width)</code>. Hence the <code>[::-1]</code> in the
+  code. Getting this backwards is a classic silent bug — it will not crash, it will just give
+  you a subtly wrong camera.</p>
+
+  <p>The two <code>None</code> arguments are optional initial guesses for <code>K</code> and
+  <code>dist</code>. Passing <code>None</code> asks OpenCV to estimate them from scratch.</p>
+
+  <h3>Per-view error</h3>
+<pre><code>proj, _ = cv2.projectPoints(obj_points[i], rvecs[i], tvecs[i], K, dist)
+err = cv2.norm(img_points[i], proj, cv2.NORM_L2) / len(proj)</code></pre>
+
+  <p>This is §09 made executable — the model run forwards, then compared against observation.
+  <code>projectPoints</code> returns <code>(54, 1, 2)</code>, matching the detector's shape so
+  the two can be differenced directly.</p>
+
+  <p>The aggregate <code>rms</code> hides bad individual views. This loop exposes them, and it
+  is genuinely useful: one blurred image can drag the whole solve. Delete the worst offenders
+  and re-run.</p>
+</section>
+
+<section>
+  <h2><span class="num">11</span> <span>Running it</span></h2>
+  <p class="kicker">Process, inputs, outputs, and what to check</p>
+
+  <h3>Before you touch the keyboard</h3>
+  <ol>
+    <li>Print the chessboard. <strong>Tape it flat to stiff card</strong> — a curled board is a
+    curved object, and the whole method assumes it is planar. This is the single most common
+    cause of a bad calibration.</li>
+    <li>Measure one square with a steel rule. Do not trust the size the PDF claims; printers
+    rescale silently.</li>
+    <li>Write the measured value into <code>NOTES.md</code>.</li>
+  </ol>
+
+  <h3>Capture</h3>
+<pre><code>python src/calibrate.py capture --out captures/laptop</code></pre>
+
+  <p>A live window opens. Corners are drawn in colour when the board is found; <kbd>SPACE</kbd>
+  saves a frame, <kbd>Q</kbd> quits. Collect 20–30 views and vary them deliberately: near and
+  far, tilted left, right, up, down, and with the board in each corner of the frame as well as
+  the centre. Edge coverage is what constrains the distortion coefficients, since distortion is
+  invisible at the centre.</p>
+
+  <p>Hold still for each grab. Motion blur moves corners.</p>
+
+  <h3>Solve</h3>
+<pre><code>python src/calibrate.py solve --images captures/laptop --squares 25.0 --preview</code></pre>
+
+  <p>Substitute your measured square size in millimetres. Everything downstream inherits its
+  units from this one number.</p>
+
+  <h3>Reading the output</h3>
+  <p>Four checks, in order:</p>
+  <ol>
+    <li><strong>RMS under 1.0 px.</strong> If not, look at the worst-view list the script prints
+    and delete the offenders.</li>
+    <li><strong><code>cx, cy</code> near the image centre.</strong> For 1280×720 expect roughly
+    (640, 360). Far off means bad input, not an exotic camera.</li>
+    <li><strong><code>fx/fy</code> ≈ 1.000.</strong> Pixels are square on any sensor you will
+    use. A ratio of 1.05 means something is wrong.</li>
+    <li><strong>The undistortion preview.</strong> Lines that bowed outward should be straight.
+    This is your eyes confirming what the numbers claim.</li>
+  </ol>
+
+  <p>The result lands in <code>intrinsics.json</code>. Then do it again for your phone, at a
+  locked resolution — that is the camera you will orbit plates with.</p>
+
+  <div class="incode">
+    <span class="label">Log it</span>
+    <p>Record the RMS, the four intrinsics, and the view count in <code>NOTES.md</code> for both
+    cameras. In week 9 you will need these numbers for the paper's setup section, and
+    reconstructing them later from memory is not an option.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">12</span> <span>Check yourself</span></h2>
+  <p class="kicker">Answer aloud, without notes</p>
+
+  <div class="check">
+    <span class="label">Tier 1 exit criteria</span>
+    <ol>
+      <li>Why can a single image never tell you how large an object is? Give the algebra, not
+      the intuition.</li>
+      <li>What do <code>fx</code> and <code>cx</code> physically represent, and why does
+      <code>fx</code> change if you switch resolution?</li>
+      <li>Why must the chessboard be flat, and why must it be photographed at varied angles?</li>
+      <li>Define reprojection error. Why is it the right thing to minimise rather than, say,
+      3D distance?</li>
+      <li>Your calibration reports RMS 3.2 px. Name three plausible causes.</li>
+      <li>Where does lens distortion vanish, and why does that make edge coverage important
+      during capture?</li>
+      <li>A 5% error in your scale factor produces roughly what error in estimated grams?</li>
+    </ol>
+  </div>
+
+  <p>If any of these are shaky, re-read the relevant section before starting Tier 2. Multi-view
+  geometry assumes all of it, and debugging COLMAP without it is guesswork.</p>
+
+  <p>Question 4 has a subtlety worth chasing: we minimise error in the <em>image</em>, where the
+  measurement noise actually lives, rather than in 3D where it would be warped by the projection.
+  That reasoning carries directly into bundle adjustment.</p>
+</section>
+
+<hr class="axis">
+
+<footer>
+  Tier 1 of the study path in STUDY.md · Vision Assist<br>
+  Next: Tier 2 — epipolar geometry, triangulation, bundle adjustment, and the COLMAP pipeline.
+</footer>

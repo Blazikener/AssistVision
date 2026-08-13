@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Vision Assist — metric food volume estimation from multi-view images
 
 Estimating the mass of served food from images, with metric scale recovered from
@@ -73,3 +74,6 @@ want a GPU, so those steps run on Colab. See `NOTES.md` for the current split.
 Public benchmark evaluation uses [Nutrition5k](https://github.com/google-research-datasets/Nutrition5k)
 (CC-BY-4.0). Captured data in this repository contains food on tables only — no
 human subjects and no identifiable bystanders.
+=======
+# AssistVision
+>>>>>>> c739b0b4f506c2d158429c0d6ae05f49a6c03c94
