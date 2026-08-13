@@ -1,3 +1,8 @@
+# Verified working on: OpenCV 5.0.0, NumPy 2.2.6, SciPy 1.18.0, Open3D 0.19.0
+# (Python 3.12.10, Windows). Run `python src/test_geometry.py` after any
+# upgrade -- the paper needs a reproducible environment, so record versions
+# here rather than discovering a silent behaviour change in week 9.
+
 # Week 1-2: calibration, marker generation, geometry
 opencv-contrib-python>=4.10
 numpy>=1.26

@@ -49,6 +49,13 @@ def build_sheet(marker_mm, dpi, ids):
     dictionary = cv2.aruco.getPredefinedDictionary(DICT)
     side = mm(marker_mm, dpi)
 
+    # A marker must be a whole number of pixels, so the rendered size is the
+    # requested size rounded to the pixel grid. At 300 dpi a nominal 50 mm
+    # marker actually renders at 49.96 mm. That is a 0.1% length error, which
+    # the cube law turns into 0.3% in volume -- small, but free to eliminate.
+    # Report and print the TRUE size so nothing downstream uses the nominal one.
+    rendered_mm = side * 25.4 / dpi
+
     # Two columns, two rows, centred on the page with a wide quiet zone.
     # ArUco needs white space around the black border to detect reliably;
     # crowding markers together is a common reason detection fails.
@@ -71,7 +78,7 @@ def build_sheet(marker_mm, dpi, ids):
 
     # Header: the facts you will need months from now when you have forgotten
     # which sheet this was. Printed metadata beats a filename every time.
-    cv2.putText(sheet, f"ArUco DICT_4X4_50   marker = {marker_mm:.1f} mm",
+    cv2.putText(sheet, f"ArUco DICT_4X4_50   marker = {rendered_mm:.2f} mm",
                 (x0, mm(25, dpi)), cv2.FONT_HERSHEY_SIMPLEX,
                 dpi / 180, 0, max(2, dpi // 150))
     cv2.putText(sheet, "PRINT AT 100% / ACTUAL SIZE -- do not fit to page",
@@ -93,7 +100,7 @@ def build_sheet(marker_mm, dpi, ids):
                 (ruler_x, ruler_y + mm(10, dpi)), cv2.FONT_HERSHEY_SIMPLEX,
                 dpi / 260, 0, max(1, dpi // 220))
 
-    return sheet, placed
+    return sheet, placed, rendered_mm
 
 
 def main():
@@ -106,12 +113,14 @@ def main():
     ap.add_argument("--out", default="data/aruco_sheet.png")
     args = ap.parse_args()
 
-    sheet, placed = build_sheet(args.marker_mm, args.dpi, args.ids)
+    sheet, placed, rendered_mm = build_sheet(args.marker_mm, args.dpi, args.ids)
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     cv2.imwrite(args.out, sheet)
     print(f"Wrote {args.out}  ({sheet.shape[1]}x{sheet.shape[0]} px @ {args.dpi} dpi)")
-    print(f"Markers: ids {[p[0] for p in placed]}, {args.marker_mm} mm each")
+    print(f"Markers: ids {[p[0] for p in placed]}")
+    print(f"Requested {args.marker_mm:.2f} mm; RENDERED {rendered_mm:.3f} mm "
+          f"(pixel-grid rounding)")
     print("\nAfter printing:")
     print("  1. Measure the 100 mm ruler line. It must be exactly 100 mm.")
     print("  2. Measure one marker's black square edge to edge.")
