@@ -24,3 +24,5 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 .DS_Store
+NOTES.md
+STUDY.md
