@@ -153,7 +153,7 @@ def figures(gt, models, rows, figs):
     ax.set_xticks(range(len(names)))
     ax.set_xticklabels([n.replace("-Metric-Indoor", "-MI") for n in names], rotation=30, ha="right")
     ax.set_ylabel("median |volume error| (%)")
-    ax.set_yscale("log")
+    ax.set_ylim(0, 105)
     ax.axhline(20, color="k", lw=0.5, ls=":")
     ax.legend(frameon=False, ncol=3, loc="upper left")
     fig.savefig(os.path.join(figs, "n5k_volume_error.pdf")); plt.close(fig)
@@ -169,7 +169,7 @@ def figures(gt, models, rows, figs):
             if proto == "oracle":
                 ax.annotate(r["model"].replace("-Metric-Indoor", "-MI"), (r["latency_s"], r["vol_ape_median"]),
                             fontsize=4.5, xytext=(3, 2), textcoords="offset points")
-    ax.set_xscale("log"); ax.set_yscale("log")
+    ax.set_ylim(0, 105); ax.set_xlim(left=0)
     ax.set_xlabel("CPU latency per image (s, dev VM)"); ax.set_ylabel("median |volume error| (%)")
     ax.scatter([], [], c=colors["oracle"], marker="o", label="oracle (upper bound)")
     ax.scatter([], [], c=colors["anchor"], marker="s", label="anchor (deployable)")
