@@ -1,1 +1,16 @@
-\pending{e4 results}
+All ablations use the dense MVS pipeline and change one factor at a time:
+number of views (6, 8, 12, 16, 24, evenly spaced), image resolution and JPEG
+quality (the OV2640 range), a deliberate error in the printed marker size
+($\pm1$, $\pm2\%$), plate material, and three repeated runs of the identical
+input to measure the run-to-run spread of SfM/MVS, which are not bit-deterministic.
+A run fails if SfM returns no model, no marker side is triangulated, or
+densification errors; failures are counted, not dropped, and the number of
+registered views is reported for every run.
+\begin{figure*}[t]
+\centering
+\IfFileExists{figs/synth_ablations.pdf}{\includegraphics[width=\textwidth]{figs/synth_ablations.pdf}}{\pending{figure}}
+\caption{E4 ablations (synthetic). Left: views per scan. Middle: resolution
+$\times$ JPEG quality. Right: marker-size error against the cube law.}
+\label{fig:ablate}
+\end{figure*}
+\input{sections/e4_text.tex}

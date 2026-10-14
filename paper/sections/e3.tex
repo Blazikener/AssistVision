@@ -1,1 +1,28 @@
-\pending{e3 results}
+\textbf{Scenes.} Twenty-two Blender (Cycles) scenes with watertight food meshes
+whose volume is computed exactly from the mesh: eight food configurations
+(single rice mound, rice + dal, two idli, curry heap, lumpy rice, a three-item
+thali, a 40\,mL small portion and a tall mound) on ceramic and polished steel
+plates, four textureless variants and two on banana leaf. Each scene is rendered
+at $1600\times1200$, $60^\circ$ horizontal FoV, $45^\circ$ elevation and
+\SI{0.40}{m} distance, with the plate rotating on a turntable inside a printed
+50\,mm ArUco mat, i.e.\ the rig geometry. View 0 also stores a metric depth map,
+which gives the ``perfect single-view depth'' row: the error a monocular method
+would have even if its depth were exact, because it cannot see behind the food.
+
+\textbf{Methods.} (i) Dense MVS: COLMAP SfM, marker-triangulated scale,
+OpenMVS densification, plate-noise-calibrated footprint threshold, shared
+integral. (ii) Sparse SfM points only, same integral. (iii) Monocular depth on
+view 0 under the anchor and oracle protocols, with the plane taken from the
+marker-mat pose.
+
+\begin{table}[t]
+\centering
+\caption{E3 (synthetic, exact mesh volume). Absolute volume error, median and
+95\% bootstrap CI over scenes; bias is the mean signed error. Time is VM CPU
+seconds per scene.}
+\label{tab:synth}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\IfFileExists{tables/synth_main.tex}{\input{tables/synth_main.tex}}{\pending{table}}
+\end{table}
+\input{sections/e3_text.tex}
