@@ -121,12 +121,16 @@ physical number we have not measured.
 \section{Method}
 \subsection{Shared volume integral}
 All methods produce a 3-D point set $P$ in metres and a support plane
-$(\mathbf n, d)$. Points are projected into an orthonormal plane basis, binned
-into square cells, and each cell keeps the median (dense MVS) or the
-back-projected height $h=\mathbf n^\top\mathbf p+d$. Empty cells inside the
-footprint are filled by nearest neighbour, negative heights are clipped, and
-$V=\sum_{\text{cells}} h\,c^2$. Because every method shares this integral,
-differences in volume reflect differences in geometry.
+$(\mathbf n, d)$ oriented towards the camera. Each point gets a height
+$h=\mathbf n^\top\mathbf p+d$ and plane coordinates in an orthonormal basis;
+points are binned into square cells of side $c$ and each cell keeps the median
+height. Empty cells inside the footprint are filled by nearest neighbour,
+negative heights are clipped, and
+\begin{equation}\label{eq:vol}
+V=c^2\sum_{\text{cells}}\max(h,0).
+\end{equation}
+Because monocular, multi-view and sensor depth all share this integral,
+differences in volume reflect differences in geometry, not in post-processing.
 
 \subsection{Metric scale from the marker mat}\label{sec:scale}
 Marker corners are detected in every view and triangulated with the SfM
@@ -149,7 +153,7 @@ constant inverse depth, so scale and shift are not separately identifiable.
 \subsection{E1: Monocular depth on Nutrition5k}
 \input{sections/e1.tex}
 
-\subsection{E2: Volume versus weighed mass}
+\subsection{E2: Sensor-referenced volume and weighed mass}
 \input{sections/e2.tex}
 
 \subsection{E3: Multi-view versus monocular on exact synthetic volumes}\label{sec:synth}
