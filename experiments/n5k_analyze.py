@@ -160,7 +160,7 @@ def figures(gt, models, rows, figs):
 
     # 2. latency vs accuracy (oracle and anchor), marker size ~ params
     PARETO_LABELS = {("anchor", "ZoeDepth-NYU"), ("anchor", "DepthPro"), ("anchor", "MiDaS-DPT-Hybrid"),
-                     ("oracle", "DA-V2-L"), ("oracle", "DA-V2-S"), ("oracle", "DepthPro")}
+                     ("oracle", "DA-V2-L"), ("oracle", "DA-V2-S")}
     fig, ax = plt.subplots(figsize=(COL1, 2.2))
     for proto, mk in [("oracle", "o"), ("anchor", "s")]:
         for r in rows:
