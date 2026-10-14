@@ -53,7 +53,14 @@ def main():
     # E3 main table: multi-view (dense, sparse) vs mono by protocol, per plate material.
     rows = []
     sparse = load("sparse")
-    for name, df in [("MVS dense (24 views)", main_df), ("SfM sparse (24 views)", sparse)]:
+    hyst = main_df.copy()
+    if not hyst.empty and "volume_hyst_err_pct" in hyst:
+        hyst["volume_err_pct"] = hyst["volume_hyst_err_pct"]
+        hyst["ape"] = hyst["volume_err_pct"].abs()
+    else:
+        hyst = pd.DataFrame()
+    for name, df in [("MVS dense (24 views)", main_df), ("MVS dense, hysteresis (post-hoc)", hyst),
+                     ("SfM sparse (24 views)", sparse)]:
         if df.empty:
             continue
         for plate in ["all"] + sorted(df["plate"].unique()):
