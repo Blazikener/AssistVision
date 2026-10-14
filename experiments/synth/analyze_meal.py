@@ -68,7 +68,7 @@ def main():
     a = S["All"]
     ci = f"[{a['lo']:.1f}, {a['hi']:.1f}]"
     lines = [r"\begin{table}[t]\centering\small",
-             r"\caption{E5: eaten volume from before/after 24-view dense MVS on partly eaten synthetic plates (exact mesh volumes).}",
+             r"\caption{E5: eaten volume from before/after 24-view dense MVS on partly eaten synthetic plates (exact mesh volumes). Share: error in the eaten fraction of the serving, percentage points.}",
              r"\label{tab:e5}", r"\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{lrrrr}", r"\toprule",
              r"Plate & $n$ & Median $|$err$|$ \% [95\,\% CI] & $\le$10\,\% & Share (pp) \\", r"\midrule"]
     for g, s in S.items():
