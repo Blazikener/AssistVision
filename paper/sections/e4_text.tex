@@ -1,5 +1,16 @@
-\textbf{Status.} The ablation runs had not finished at the time of writing, so
-no ablation numbers are reported here. Two observations are already available
+\textbf{Marker-scale error (60 runs, sparse SfM).} We scaled the believed marker
+side by $0.98$--$1.02$ on 12 scenes. The recovered metric scale tracks the
+injected factor, but the integrated volume does not change monotonically
+(mean 71.7, 90.3, 77.9, 66.9 and 47.7\,mL for factors 0.98 to 1.02). Two sparse
+runs of the same input differ by a median of 1.9 and up to 62.9 percentage
+points of true volume, so run-to-run SfM variation is far larger than the
+$\pm6\,\%$ that the cube law predicts for a $\pm2\,\%$ scale error. The cube law
+is therefore an analytic bound (Sec.~\ref{sec:scale}), and this ablation is
+uninformative on sparse reconstructions. It will be repeated on dense
+reconstructions.
+
+\textbf{Status.} The view-count, resolution/JPEG and repeat ablations had not
+finished at the time of writing. Two observations are already available
 from E3. Ceramic and steel differ in plate noise by about $2$--$5\times$
 (plate-material ablation). Two independent reconstructions of the same eight
 scenes differed by up to 2.7 percentage points (e.g.\ \texttt{idli\_pair\_\_ceramic}
