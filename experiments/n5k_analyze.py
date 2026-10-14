@@ -72,6 +72,9 @@ def summarise(gt, models):
             absrel = np.array([num(rs[d], f"{proto}_absrel") for d in dishes])[ok]
             hmae = np.array([num(rs[d], f"{proto}_height_mae_mm") for d in dishes])[ok]
             d105 = np.array([num(rs[d], f"{proto}_delta_1.05") for d in dishes])[ok]
+            vg = np.array([num(rs[d], f"{proto}_volume_gtplane_ml") for d in dishes])[ok]
+            eg = ape(vg, vgt[ok])
+            trms = np.array([num(rs[d], f"{proto}_table_rms_mm") for d in dishes])[ok]
             within = int((e <= 20).sum())
             med, lo, hi = stats.bootstrap_ci(e, np.median)
             ar, arlo, arhi = stats.bootstrap_ci(absrel, np.mean)
@@ -85,6 +88,8 @@ def summarise(gt, models):
                          "vol_ape_median": med, "vol_ape_lo": lo, "vol_ape_hi": hi,
                          "vol_signed_median": float(np.median((v[ok] - vgt[ok]) / vgt[ok] * 100)),
                          "within20": within / len(e), "within20_lo": w[1], "within20_hi": w[2],
+                         "vol_gtplane_ape_median": float(np.nanmedian(eg)) if np.isfinite(eg).any() else np.nan,
+                         "table_rms_mm": float(np.nanmedian(trms)) if np.isfinite(trms).any() else np.nan,
                          "latency_s": float(np.median(lat)),
                          "_err": e, "_dishes": [d for d, k in zip(dishes, ok) if k]})
     return rows
@@ -222,12 +227,13 @@ def figures(gt, models, rows, figs):
 
 
 def latex_table(rows, path):
-    lines = [r"\begin{tabular}{llrrrrr}", r"\toprule",
-             r"Model & Prot. & AbsRel & $h$ MAE (mm) & Vol. APE med. (\%) & $\le$20\% (\%) & s/img \\", r"\midrule"]
+    lines = [r"\begin{tabular}{llrrrrrrr}", r"\toprule",
+             r"Model & Prot. & AbsRel & $h$ MAE (mm) & Vol. APE med. (\%) & $\le$20\% (\%) & APE, sensor plane (\%) & table RMS (mm) & s/img \\", r"\midrule"]
     for r in sorted(rows, key=lambda r: (PROTOCOLS.index(r["protocol"]), r["vol_ape_median"])):
         lines.append(f"{r['model']} & {r['protocol']} & {r['absrel']:.3f} & {r['height_mae_mm']:.1f} & "
                      f"{r['vol_ape_median']:.1f} [{r['vol_ape_lo']:.1f}, {r['vol_ape_hi']:.1f}] & "
-                     f"{r['within20']*100:.0f} & {r['latency_s']:.2f} \\\\")
+                     f"{r['within20']*100:.0f} & {r['vol_gtplane_ape_median']:.1f} & {r['table_rms_mm']:.1f} & "
+                     f"{r['latency_s']:.2f} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}"]
     open(path, "w").write("\n".join(lines) + "\n")
 

@@ -1,2 +1,3 @@
 main: 2 runs to do, 2 done
 [1/2] rice_dal__ceramic v=24 r=1.0 q=0 s=1.0 openmvs: -4.4% ok
+[2/2] rice_dal__steel v=24 r=1.0 q=0 s=1.0 openmvs: -3.9% ok
