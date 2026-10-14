@@ -1,1 +1,40 @@
-\pending{E1 findings}
+\textbf{Anchoring on the table fails from overhead.} All three relative models
+have a median volume error of 94.8--99.4\,\% under the deployable anchor
+protocol (Table~\ref{tab:n5k}), even though their predicted table is flat to
+0.6--0.7\,mm RMS: the affine fit reproduces the table and collapses the food
+relief. The anchor fit is badly conditioned on most dishes
+(Fig.~\ref{fig:cond}), as expected when the only reference is a plane almost
+perpendicular to the optical axis. This is the quantitative reason the rig
+views the plate at $45^\circ$ and uses the marker mat and multiple views.
+
+\textbf{Depth metrics do not predict volume.} AbsRel is 0.016--0.045 for every
+model and protocol, yet volume errors span 14--99\,\%. Food relief
+(1--3\,cm) is a small fraction of the 36\,cm camera distance, so a model can
+score well on depth and still lose most of the volume. We therefore rank
+models on volume, not on AbsRel.
+
+\textbf{Oracle upper bound.} With an oracle fit DA-V2-S is best: 37.4\,\%
+[33.0, 41.9] median volume error with its own support plane and 14.1\,\% with
+the sensor's plane. The paired Wilcoxon test with Holm correction separates it
+from DA-V1-S ($p=5.2\times10^{-11}$) and MiDaS-DPT-Hybrid
+($p=5.5\times10^{-53}$). Under the anchor protocol DA-V1-S and DA-V2-S are not
+distinguishable ($p=0.31$). The gap between the two plane choices shows that
+fitting the support plane in predicted depth causes more than half of the
+error; in the rig the marker mat provides this plane independently of the
+network.
+
+\textbf{Coverage and failures.} 498 of the 503 usable dishes were evaluated
+for every model. The remaining five failed in the plane fit (degenerate table
+region) and are counted as failures, not dropped. Latency is 1.4--1.9\,s per
+image on the VM CPU, measured while other jobs shared the machine (VM evidence,
+an upper bound). The metric models (ZoeDepth, metric DA-V2, Depth Pro) are
+implemented in the same benchmark but had not finished at the time of
+writing, so the raw protocol is not yet reported.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figs/n5k_anchor_conditioning.pdf}
+\caption{Anchor-fit conditioning on Nutrition5k (relative models): condition
+number of the affine fit (left) and coefficient of variation of table inverse
+depth (right). A low CV means the table alone cannot separate scale from shift.}
+\label{fig:cond}
+\end{figure}

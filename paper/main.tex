@@ -20,7 +20,7 @@ benchmark \input{tables/n_models.tex}monocular depth models under three
 explicitly separated calibration protocols (raw, deployable anchor, oracle upper
 bound) and report bootstrap confidence intervals and paired tests. On
 \input{tables/n_synth.tex}synthetic plates with exact mesh volume we compare
-dense multi-view stereo with monocular depth and ablate view count, sensor
+dense multi-view stereo against exact volume and specify ablations of view count, sensor
 resolution, JPEG quality, marker-scale error and plate material.
 \input{tables/abstract_numbers.tex}
 \end{abstract}
@@ -42,9 +42,9 @@ firmware, host software, wiring and a bench-test protocol.
 \item A benchmark of monocular depth models for food on real RGB-D data
 (Nutrition5k) that separates deployable calibration from oracle calibration, a
 distinction prior food-volume work often blurs.
-\item A controlled synthetic study with exact volumes that isolates the factors
-the rig designer actually controls: views, resolution, compression, marker
-accuracy and serveware material.
+\item A controlled synthetic study with exact mesh volumes comparing dense MVS
+against ground truth, plus an ablation protocol for the factors the rig designer
+controls: views, resolution, compression, marker accuracy and serveware material.
 \item A documented record of design decisions and rejected alternatives
 (Sec.~\ref{sec:design}), each tied to a measurement or a stated assumption.
 \end{enumerate}
@@ -122,7 +122,7 @@ retry on a dropped frame, and calibration arithmetic.
 \textbf{Physical validation (pending).} Load-cell linearity, repeatability and
 drift, turntable angular error, scan duration and transfer latency are
 specified as scripted bench tests (\texttt{rig\_client.py bench-*}) whose
-results are \pending{to be measured on the assembled rig}. We report no
+results are not yet measured, because the rig has not yet been assembled. We report no
 physical number we have not measured.
 
 \section{Method}

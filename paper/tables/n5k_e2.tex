@@ -1,1 +1,31 @@
-\pending{E2 table}
+\begin{table}[t]
+\centering
+\caption{E2 (Nutrition5k). Mass predicted as $\rho V$ with a single density
+$\rho$ fitted on four folds and scored on the held-out fold (5-fold CV).
+Brackets: 95\,\% bootstrap CI.}
+\label{tab:mass}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrr}
+\toprule
+Volume source & $n$ & MAE (g) & median APE (\%) \\
+\midrule
+RealSense depth (sensor ceiling) & 503 & 139.3 [129.3, 150.0] & 68.2 [63.1, 72.9] \\
+DA-V2-S, oracle & 483 & 178.1 [161.6, 196.6] & 85.7 [84.2, 87.5] \\
+DA-V1-S, oracle & 491 & 180.4 [167.2, 194.1] & 88.2 [85.7, 89.6] \\
+MiDaS-DPT-Hybrid, oracle & 490 & 193.2 [178.7, 208.5] & 96.9 [95.9, 97.6] \\
+DA-V2-S, anchor & 490 & 189.0 [175.8, 202.7] & 98.7 [97.9, 99.3] \\
+DA-V1-S, anchor & 487 & 201.6 [186.4, 218.5] & 99.5 [99.4, 99.7] \\
+MiDaS-DPT-Hybrid, anchor & 441 & 194.0 [180.1, 208.4] & 99.9 [99.8, 100.0] \\
+Predict the mean mass (no image) & 503 & 117.9 [109.8, 126.5] & 52.0 [46.1, 57.2] \\
+\bottomrule
+\end{tabular}
+\end{table}
+Even sensor-depth volume with a cross-validated density predicts mass worse
+than ignoring the image and predicting the mean (Table~\ref{tab:mass}).
+Sensor volume and weighed mass are only weakly correlated (Pearson $r=0.19$,
+Spearman $\rho=0.17$, $n=503$). Mixed dishes differ in density, and the
+dish region includes the plate rim. A single image-derived volume therefore
+cannot stand in for grams on real dishes, and this is the quantitative case for
+weighing the plate in the rig. Mass counts $n$ vary because dishes with a
+non-positive predicted volume are excluded from the density fit.

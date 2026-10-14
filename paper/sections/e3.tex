@@ -1,19 +1,27 @@
-\textbf{Scenes.} Twenty-two Blender (Cycles) scenes with watertight food meshes
+\textbf{Scenes.} We specify twenty-two Blender (Cycles) scenes with watertight food meshes
 whose volume is computed exactly from the mesh: eight food configurations
 (single rice mound, rice + dal, two idli, curry heap, lumpy rice, a three-item
 thali, a 40\,mL small portion and a tall mound) on ceramic and polished steel
-plates, four textureless variants and two on banana leaf. Each scene is rendered
+plates, four textureless variants and two on banana leaf. At the time of writing, 11 had been rendered and
+reconstructed: rice mound, rice + dal, two idli, curry heap and lumpy rice on
+both plates, and the three-item thali on ceramic. Only these are reported. Each scene is rendered
 at $1600\times1200$, $60^\circ$ horizontal FoV, $45^\circ$ elevation and
 \SI{0.40}{m} distance, with the plate rotating on a turntable inside a printed
-50\,mm ArUco mat, i.e.\ the rig geometry. View 0 also stores a metric depth map,
-which gives the ``perfect single-view depth'' row: the error a monocular method
-would have even if its depth were exact, because it cannot see behind the food.
+50\,mm ArUco mat, i.e.\ the rig geometry. View 0 also stores a metric depth map for a ``perfect single-view depth''
+baseline.
 
 \textbf{Methods.} (i) Dense MVS: COLMAP SfM, marker-triangulated scale,
 OpenMVS densification, plate-noise-calibrated footprint threshold, shared
-integral. (ii) Sparse SfM points only, same integral. (iii) Monocular depth on
-view 0 under the anchor and oracle protocols, with the plane taken from the
-marker-mat pose.
+integral. The sparse-SfM, monocular and perfect-single-view
+baselines use the same integral and are implemented, but their runs had not
+finished at the time of writing and are not reported.
+
+\textbf{Footprint rule.} Dense MVS leaves millimetre-level noise on the plate
+surface. A cell counts as food if its height exceeds $\mu+2\sigma$ of the plate
+annulus heights. This rule was fixed on \texttt{rice\_mound\_\_ceramic} before
+the other scenes were run, and those scenes are held out. A hysteresis variant
+(seed at $2\sigma$, grow connected cells down to $0.5\sigma$) was added
+\emph{after} the curry failure below, and is reported as post hoc.
 
 \begin{table}[t]
 \centering

@@ -1,4 +1,7 @@
 method,plate,n,ape,bias,w10,secs
-MVS dense (24 views),all,2/2,"0.8 [0.2, 1.4]",-0.8,2,132
-MVS dense (24 views),ceramic,1/1,1.4,-1.4,1,131
-MVS dense (24 views),steel,1/1,0.2,-0.2,1,132
+MVS dense (24 views),all,11/11,"3.9 [1.0, 5.7]",-4.0,10,117
+MVS dense (24 views),ceramic,6/6,"5.3 [1.9, 16.0]",-5.7,5,114
+MVS dense (24 views),steel,5/5,"2.0 [0.2, 4.2]",-1.9,5,119
+"MVS dense, hysteresis (post-hoc)",all,11/11,"2.0 [0.3, 6.0]",+4.4,9,117
+"MVS dense, hysteresis (post-hoc)",ceramic,6/6,"5.5 [1.7, 21.1]",+8.3,4,114
+"MVS dense, hysteresis (post-hoc)",steel,5/5,"0.3 [0.1, 2.0]",-0.2,5,119

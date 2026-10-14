@@ -3,29 +3,56 @@
   {
    "method": "MVS dense (24 views)",
    "plate": "all",
-   "n": "2/2",
-   "ape": "0.8 [0.2, 1.4]",
-   "bias": "-0.8",
-   "w10": 2,
-   "secs": "132"
+   "n": "11/11",
+   "ape": "3.9 [1.0, 5.7]",
+   "bias": "-4.0",
+   "w10": 10,
+   "secs": "117"
   },
   {
    "method": "MVS dense (24 views)",
    "plate": "ceramic",
-   "n": "1/1",
-   "ape": "1.4",
-   "bias": "-1.4",
-   "w10": 1,
-   "secs": "131"
+   "n": "6/6",
+   "ape": "5.3 [1.9, 16.0]",
+   "bias": "-5.7",
+   "w10": 5,
+   "secs": "114"
   },
   {
    "method": "MVS dense (24 views)",
    "plate": "steel",
-   "n": "1/1",
-   "ape": "0.2",
+   "n": "5/5",
+   "ape": "2.0 [0.2, 4.2]",
+   "bias": "-1.9",
+   "w10": 5,
+   "secs": "119"
+  },
+  {
+   "method": "MVS dense, hysteresis (post-hoc)",
+   "plate": "all",
+   "n": "11/11",
+   "ape": "2.0 [0.3, 6.0]",
+   "bias": "+4.4",
+   "w10": 9,
+   "secs": "117"
+  },
+  {
+   "method": "MVS dense, hysteresis (post-hoc)",
+   "plate": "ceramic",
+   "n": "6/6",
+   "ape": "5.5 [1.7, 21.1]",
+   "bias": "+8.3",
+   "w10": 4,
+   "secs": "114"
+  },
+  {
+   "method": "MVS dense, hysteresis (post-hoc)",
+   "plate": "steel",
+   "n": "5/5",
+   "ape": "0.3 [0.1, 2.0]",
    "bias": "-0.2",
-   "w10": 1,
-   "secs": "132"
+   "w10": 5,
+   "secs": "119"
   }
  ]
 }

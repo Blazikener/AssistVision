@@ -1,1 +1,17 @@
-\pending{E3 findings}
+Table~\ref{tab:synth} gives the results. With the pre-registered footprint
+rule, dense MVS has a median absolute error of 3.9\,\% [1.0, 5.7] over 11
+scenes, and 10 of 11 are within 10\,\%. Steel plates (2.0\,\%) do better than
+ceramic (5.3\,\%). The textureless white ceramic gives plate-surface noise of
+1.9--6.2\,mm, against 0.9--1.2\,mm on the textured steel.
+
+\textbf{Failure case.} \texttt{curry\_heap\_\_ceramic} is $-26.0$\,\%: its
+6.2\,mm plate noise raises the threshold above the low outer skirt of the
+heap, which is then cut from the footprint. The post-hoc hysteresis rule
+recovers it ($-1.0$\,\%) and lowers the median error to 2.0\,\%, but its bias is
+$+4.4$\,\% and it overestimates lumpy rice on ceramic by 24.2\,\% and the
+thali by 17.9\,\%, where plate noise connects to the food. No single height
+threshold works on every scene. We keep the pre-registered rule as primary
+and conclude that \emph{separating food from plate}, not depth accuracy, is
+now the dominant error of the multi-view pipeline. Image-space food
+segmentation projected onto the height field is the natural next step.
+Reconstruction takes about 117\,s per scene on the VM CPU (VM evidence).
