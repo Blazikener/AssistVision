@@ -44,3 +44,5 @@ paper/*.fdb_latexmk
 paper/*.fls
 paper/*.log
 paper/*.out
+results/synth/*.log
+data/synth/watch_main.sh
