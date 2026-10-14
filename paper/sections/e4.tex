@@ -1,6 +1,10 @@
-The ablations use the dense MVS pipeline and change one factor at a time:
-number of views (6, 8, 12, 16, 24, evenly spaced), image resolution and JPEG
-quality over the OV2640 range, a deliberate error in the printed marker size
+The ablations change one factor at a time and use the dense MVS pipeline,
+except the marker-scale ablation, which used sparse SfM:
+number of views (6, 8, 12, 16, 24, evenly spaced), image resolution
+(1600$\times$1200, 800$\times$600, 640$\times$480, the OV2640 UXGA, SVGA and
+VGA modes), JPEG re-encoding with OpenCV at quality 30 and 10 on its 0--100
+scale (this is not the OV2640 0--63 quality register, and we did not measure
+how the two map), a deliberate error in the printed marker size
 ($\pm1$, $\pm2\,\%$), plate material, and three repeated runs on identical
 input to measure the run-to-run spread of SfM/MVS, which are not
 bit-deterministic. A run fails if SfM returns no model, if no marker side is
