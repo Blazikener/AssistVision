@@ -44,7 +44,7 @@ def grid(exp, all_scenes):
         return [dict(scene=s, views=24, scale=f, dense="sparse")
                 for s, f in itertools.product(abl, (0.98, 0.99, 1.0, 1.01, 1.02))]
     if exp == "repeat":  # run-to-run spread of the whole SfM+MVS pipeline
-        return [dict(scene=s, views=24, rep=r) for s in all_scenes if "rice_mound" in s or "thali3" in s
+        return [dict(scene=s, views=24, rep=r) for s in all_scenes if any(k in s for k in ("rice_mound", "thali3", "curry_heap"))
                 for r in range(1, 4)]
     if exp == "sparse":
         return [dict(scene=s, views=24, dense="sparse") for s in all_scenes]
