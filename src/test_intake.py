@@ -4,7 +4,7 @@ import sys
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(__file__))
-from intake import Meal, daily_totals, low_intake_alert, meal_intake, trend_g_per_day  # noqa: E402
+from intake import Meal, daily_totals, low_intake_alert, meal_intake, trend_g_per_day
 
 
 def test_basic():

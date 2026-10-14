@@ -22,7 +22,15 @@ from datetime import date, datetime, timedelta
 from flask import Flask, abort, g, jsonify, redirect, render_template, request, url_for
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
-from intake import LOW_MEAL_PCT, LOW_STREAK, Meal, daily_totals, low_intake_alert, meal_intake, trend_g_per_day  # noqa: E402
+from intake import (
+    LOW_MEAL_PCT,
+    LOW_STREAK,
+    Meal,
+    daily_totals,
+    low_intake_alert,
+    meal_intake,
+    trend_g_per_day,
+)
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS residents (id INTEGER PRIMARY KEY, name TEXT NOT NULL, age INTEGER, notes TEXT,

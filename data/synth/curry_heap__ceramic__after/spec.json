@@ -1,0 +1,24 @@
+{
+ "plate": "ceramic",
+ "views": 24,
+ "samples": 24,
+ "width": 1600,
+ "height": 1200,
+ "hfov_deg": 60.0,
+ "elev_deg": 45.0,
+ "cam_dist": 0.4,
+ "threads": 4,
+ "depth_views": [
+  0
+ ],
+ "foods": [
+  {
+   "shape": "gauss",
+   "r": 0.052500000000000005,
+   "h": 0.014000000000000002,
+   "texture": "curry"
+  }
+ ],
+ "seed": 895125968,
+ "before": "curry_heap__ceramic"
+}

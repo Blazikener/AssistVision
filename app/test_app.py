@@ -5,7 +5,7 @@ import tempfile
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from app import create_app, seed  # noqa: E402
+from app import create_app, seed
 
 TODAY = date(2026, 10, 14)
 
@@ -18,14 +18,14 @@ def make():
 
 
 def test_pages_render():
-    app, c = make()
+    _app, c = make()
     for url in ["/", "/r/1", "/r/2", "/r/1/report", "/api/residents/1/summary"]:
         assert c.get(url).status_code == 200, url
     assert c.get("/r/99").status_code == 404
 
 
 def test_seed_alerts_only_declining_resident():
-    app, c = make()
+    _app, c = make()
     by_name = {s["resident"]["name"]: s for s in (c.get(f"/api/residents/{i}/summary").get_json() for i in (1, 2))}
     assert by_name["Abdul Kareem"]["alert"] is not None
     assert by_name["Lakshmi Narayanan"]["alert"] is None
@@ -33,7 +33,7 @@ def test_seed_alerts_only_declining_resident():
 
 def test_api_posts_and_alerts_once():
     app, c = make()
-    rid = [i for i in (1, 2) if c.get(f"/api/residents/{i}/summary").get_json()["alert"] is None][0]
+    rid = next(i for i in (1, 2) if c.get(f"/api/residents/{i}/summary").get_json()["alert"] is None)
     for k in range(3):
         r = c.post("/api/meals", json={"resident_id": rid, "when": f"2026-10-14T2{k}:00", "served_g": 300, "left_g": 240})
         assert r.status_code == 201
