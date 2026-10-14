@@ -90,9 +90,13 @@ def gt_geometry(gt):
     return plane, h, roi, table, plate_plane, plate_px, food
 
 
-def evaluate_depth(depth, gt, roi, table, h_gt):
+def evaluate_depth(depth, gt, roi, table, h_gt, gt_plane):
     """Volume + errors for a metric depth map. Plane re-fitted on its own
-    table pixels so a global scale/tilt error is not hidden by the GT plane."""
+    table pixels so a global scale/tilt error is not hidden by the GT plane.
+
+    volume_ml uses that self-fitted plane (deployable). volume_gtplane_ml uses
+    the sensor's plane instead, isolating relief error from support-plane
+    error; table_rms_mm is the predicted table's deviation from flat."""
     # Table pixels are already selected from the sensor, so a plain
     # least-squares fit is used: RANSAC with a sensor-grade 3 mm threshold
     # latches onto arbitrary slivers of a noisy monocular table.
@@ -100,12 +104,16 @@ def evaluate_depth(depth, gt, roi, table, h_gt):
     plane = vol.orient_towards(vol.fit_plane(pts_t), np.zeros(3))
     n, d = plane
     V = vol.volume_from_depth(depth, K, plane, roi & (gt > 0))
+    Vg = vol.volume_from_depth(depth, K, gt_plane, roi & (gt > 0))
+    table_rms = float(np.sqrt(np.mean((pts_t @ n + d) ** 2)) * 1000)
     m = roi & (gt > 0) & np.isfinite(depth) & (depth > 0)
     pts = vol.backproject(depth, K, m)
     h_pred = pts @ n + d
     e = dm.depth_errors(depth, gt, roi & (gt > 0))
     e["height_mae_mm"] = float(np.mean(np.abs(h_pred - h_gt[m])) * 1000)
     e["volume_ml"] = V * 1e6
+    e["volume_gtplane_ml"] = Vg * 1e6
+    e["table_rms_mm"] = table_rms
     return e
 
 
@@ -116,6 +124,7 @@ def main():
     ap.add_argument("--out", default="results/n5k")
     ap.add_argument("--threads", type=int, default=6)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--force", action="store_true", help="re-run models whose CSV already exists")
     args = ap.parse_args()
 
     from mono_depth import MODELS, MonoDepth
@@ -158,8 +167,11 @@ def main():
     pro_subset = set(rng.choice(sorted(cache), min(DEPTHPRO_SUBSET, len(cache)), replace=False))
 
     for name in names:
-        model = MonoDepth(name, threads=args.threads)
         out_path = os.path.join(args.out, f"{name}.csv")
+        if os.path.exists(out_path) and not args.force:
+            print(f"{name}: {out_path} exists, skipping", flush=True)
+            continue
+        model = MonoDepth(name, threads=args.threads)
         todo = [d for d in sorted(cache) if name != "DepthPro" or d in pro_subset]
         out_rows = []
         t_start = time.time()
@@ -171,18 +183,18 @@ def main():
             evalm = roi | table
             try:
                 if model.kind == "metric":
-                    r = evaluate_depth(pred, gt, roi, table, h_gt)
+                    r = evaluate_depth(pred, gt, roi, table, h_gt, plane)
                     row.update({f"raw_{k}": v for k, v in r.items()})
                     row["raw_median_depth_m"] = float(np.median(pred[roi]))
                     # anchor: one scale from the table plane only (no food GT)
                     tp = dm.plane_depth(K, plane, gt.shape)
                     s = float(np.median(tp[table] / pred[table]))
-                    r = evaluate_depth(pred * s, gt, roi, table, h_gt)
+                    r = evaluate_depth(pred * s, gt, roi, table, h_gt, plane)
                     row.update({f"anchor_{k}": v for k, v in r.items()})
                     row["anchor_scale"] = s
                     # oracle: least-squares scale on food+plate+table vs GT
                     ps, _ = dm.align_scale_lsq(pred, np.where(gt > 0, gt, np.nan), evalm & (gt > 0))
-                    r = evaluate_depth(ps, gt, roi, table, h_gt)
+                    r = evaluate_depth(ps, gt, roi, table, h_gt, plane)
                     row.update({f"oracle_{k}": v for k, v in r.items()})
                 else:
                     # anchor: scale+shift of inverse depth from the table plane
@@ -194,12 +206,12 @@ def main():
                     depth_a, _, cond = dm.align_disparity_affine(pred, tp, table)
                     row["anchor_condition_number"] = cond
                     try:
-                        r = evaluate_depth(depth_a, gt, roi, table, h_gt)
+                        r = evaluate_depth(depth_a, gt, roi, table, h_gt, plane)
                         row.update({f"anchor_{k}": v for k, v in r.items()})
                     except Exception:
                         row["anchor_volume_ml"] = np.nan
                     depth, (s_, t_), _ = dm.align_disparity_affine(pred, gt, evalm & (gt > 0))
-                    r = evaluate_depth(depth, gt, roi, table, h_gt)
+                    r = evaluate_depth(depth, gt, roi, table, h_gt, plane)
                     row.update({f"oracle_{k}": v for k, v in r.items()})
                 row["status"] = "ok"
             except Exception as exc:  # degenerate fits are data, not crashes

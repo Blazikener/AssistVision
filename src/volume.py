@@ -43,7 +43,7 @@ def orient_towards(plane, viewpoint):
     return n, d
 
 
-def fit_plane_ransac(points, threshold=0.003, iters=500, seed=0):
+def fit_plane_ransac(points, threshold=0.003, iters=500, seed=0, max_score_pts=50000):
     """RANSAC plane, refit on inliers. threshold in metres.
 
     Returns ((n, d), inlier_mask). Food is the minority structure in every
@@ -52,6 +52,9 @@ def fit_plane_ransac(points, threshold=0.003, iters=500, seed=0):
     n_pts = len(points)
     if n_pts < 3:
         raise ValueError("need at least 3 points to fit a plane")
+    # Hypotheses are scored on a fixed random subset (inlier fractions are
+    # estimated to <0.5% at 50k points); the final refit uses every inlier.
+    score = points[rng.choice(n_pts, max_score_pts, replace=False)] if n_pts > max_score_pts else points
     best = None
     best_count = -1
     for _ in range(iters):
@@ -62,7 +65,7 @@ def fit_plane_ransac(points, threshold=0.003, iters=500, seed=0):
             continue
         n /= norm
         d = -n @ p[0]
-        count = int(np.count_nonzero(np.abs(points @ n + d) < threshold))
+        count = int(np.count_nonzero(np.abs(score @ n + d) < threshold))
         if count > best_count:
             best_count, best = count, (n, d)
     n, d = best
