@@ -99,7 +99,14 @@ scan loop, so dropped frames are retried rather than corrupting a scan.}
 \caption{Wiring of the ESP32-S3, HX711 load-cell amplifier and ULN2003 stepper driver.}
 \label{fig:wiring}
 \end{figure}
-The rig (Fig.~\ref{fig:arch}, \ref{fig:wiring}) uses an ESP32-S3 camera board
+\begin{figure}[t]\centering
+\includegraphics[width=0.78\columnwidth]{figs/scan_flow.pdf}
+\caption{Scan protocol implemented by \texttt{rig\_client.py scan}. Weight is
+read before and after the turntable moves; their difference is a per-scan
+drift/vibration check.}
+\label{fig:flow}
+\end{figure}
+The rig (Figs.~\ref{fig:arch}--\ref{fig:flow}) uses an ESP32-S3 camera board
 (OV2640, up to $1600\times1200$), a 28BYJ-48 stepper through a ULN2003 driver
 (4076 half-steps per revolution, \SI{0.088}{\degree} per step), and a
 \SI{5}{kg} bar load cell read by an HX711 at 10\,Hz. The firmware exposes
