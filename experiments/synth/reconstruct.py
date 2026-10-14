@@ -187,7 +187,8 @@ def plate_plane(points, mat_plane):
     return plane, z
 
 
-def food_volume(points, plane, plate_radius, cell=0.002, k_sigma=2.0, min_height=0.003, open_iter=1):
+def food_volume(points, plane, plate_radius, cell=0.002, k_sigma=2.0, min_height=0.003, open_iter=1,
+                hysteresis=False, k_low=0.5):
     """Food volume above the plate from a (noisy) MVS point cloud.
 
     The plate plane (density mode, plate_plane) is accurate, but MVS on a
@@ -196,7 +197,10 @@ def food_volume(points, plane, plate_radius, cell=0.002, k_sigma=2.0, min_height
     plate's own noise: median + k_sigma * robust sigma of cell heights in the
     outer annulus (0.75-0.95 R), where food rarely sits. Heights stay relative
     to the plate plane. Rule fixed on rice_mound__ceramic; all other scenes
-    are held out."""
+    are held out.
+
+    hysteresis=True is a post-hoc variant added after curry_heap__ceramic
+    lost its low skirt (-26%) under the primary rule; both are reported."""
     from scipy import ndimage
     H, origin = vol.heightmap(points, plane, cell, reduce="median")
     ii, jj = np.indices(H.shape)
@@ -212,9 +216,16 @@ def food_volume(points, plane, plate_radius, cell=0.002, k_sigma=2.0, min_height
         level = float(np.median(H[ann]))
         sigma = float(1.4826 * np.median(np.abs(H[ann] - level)))
     thr = max(min_height, level + k_sigma * sigma)
-    fp = np.nan_to_num(H, nan=0.0) > thr
+    Hz = np.nan_to_num(H, nan=0.0)
+    fp = Hz > thr
     if open_iter:
         fp = ndimage.binary_opening(fp, iterations=open_iter)
+    if hysteresis:
+        # grow the confident seeds into connected cells above a low threshold so
+        # the thin skirt of a heap is kept; isolated plate noise has no seed
+        low = Hz > max(min_height, level + k_low * sigma)
+        lab_l, _ = ndimage.label(low | fp)
+        fp = np.isin(lab_l, np.unique(lab_l[fp & (lab_l > 0)]))
     fp = ndimage.binary_fill_holes(ndimage.binary_closing(fp, iterations=2))
     lab, nl = ndimage.label(fp)
     if nl > 1:
@@ -309,9 +320,14 @@ def main():
         cell, oi = (0.002, 1) if a.dense == "openmvs" else (0.006, 0)
         V, info = food_volume(sel, (n, d + n @ centre), gt["plate"]["radius"], cell=cell, open_iter=oi)
         res.update(info)
-        if a.keep:
-            np.savez_compressed(os.path.join(work, "plate_points.npz"), points=points[on_plate & (hgt > -0.01)],
-                                n=n, d=d, centre=centre)
+        Vh, info_h = food_volume(sel, (n, d + n @ centre), gt["plate"]["radius"], cell=cell, open_iter=oi,
+                                 hysteresis=True)
+        res["volume_hyst_ml"] = Vh * 1e6
+        res["volume_hyst_err_pct"] = (Vh * 1e6 / res["gt_volume_ml"] - 1) * 100
+        res["footprint_hyst_cm2"] = info_h["footprint_cm2"]
+        # always kept (~10 MB) so footprint rules can be re-evaluated offline
+        np.savez_compressed(os.path.join(work, "plate_points.npz"), points=points[on_plate & (hgt > -0.01)],
+                            n=n, d=d, centre=centre)
         res["volume_ml"] = V * 1e6
         res["volume_err_pct"] = (res["volume_ml"] / res["gt_volume_ml"] - 1) * 100
         res["status"] = "ok"
