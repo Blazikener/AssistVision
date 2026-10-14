@@ -3,7 +3,7 @@
 \caption{E1 (Nutrition5k, $n$ dishes per model as shown). Depth error over
 the dish region and volume error relative to sensor-depth volume, per model and
 calibration protocol. Brackets: 95\% bootstrap CI (10\,000 resamples). Latency is
-CPU time per image on the development VM.}
+CPU time per image on 8-vCPU cloud VMs (VM evidence; see text).}
 \label{tab:n5k}
 \footnotesize
 \input{tables/n5k_models.tex}
@@ -18,6 +18,6 @@ CPU time per image on the development VM.}
 \begin{figure}[t]
 \centering
 \IfFileExists{figs/n5k_latency_pareto.pdf}{\includegraphics[width=\columnwidth]{figs/n5k_latency_pareto.pdf}}{\pending{figure}}
-\caption{Accuracy--latency trade-off (anchor protocol; CPU latency on the development VM).}
+\caption{Accuracy--latency trade-off (anchor protocol; CPU latency on 8-vCPU cloud VMs).}
 \label{fig:n5k_pareto}
 \end{figure}

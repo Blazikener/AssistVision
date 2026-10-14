@@ -6,28 +6,68 @@
  },
  "tests": [
   {
+   "protocol": "raw",
+   "best": "DA-V2-Metric-Indoor-L",
+   "model": "DA-V2-Metric-Indoor-S",
+   "n_paired": 498,
+   "p": 0.05649791644050965,
+   "p_holm": 0.05649791644050965
+  },
+  {
+   "protocol": "raw",
+   "best": "DA-V2-Metric-Indoor-L",
+   "model": "DA-V2-Metric-Indoor-B",
+   "n_paired": 498,
+   "p": 1.7516283843286327e-17,
+   "p_holm": 3.5032567686572654e-17
+  },
+  {
    "protocol": "anchor",
-   "best": "DA-V2-B",
+   "best": "DA-V2-Metric-Indoor-S",
    "model": "MiDaS-DPT-Hybrid",
    "n_paired": 498,
-   "p": 1.5484859534454206e-39,
-   "p_holm": 4.6454578603362616e-39
+   "p": 9.699702335614508e-22,
+   "p_holm": 5.819821401368705e-21
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-B",
+   "best": "DA-V2-Metric-Indoor-S",
    "model": "DA-V1-S",
    "n_paired": 498,
-   "p": 0.004277810760279952,
-   "p_holm": 0.004277810760279952
+   "p": 2.6290421597363936e-09,
+   "p_holm": 1.0516168638945574e-08
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-B",
+   "best": "DA-V2-Metric-Indoor-S",
    "model": "DA-V2-S",
    "n_paired": 498,
-   "p": 6.706907207637437e-05,
-   "p_holm": 0.00013413814415274875
+   "p": 4.826683896015617e-07,
+   "p_holm": 1.4480051688046852e-06
+  },
+  {
+   "protocol": "anchor",
+   "best": "DA-V2-Metric-Indoor-S",
+   "model": "DA-V2-B",
+   "n_paired": 498,
+   "p": 1.0308653237237643e-05,
+   "p_holm": 2.0617306474475287e-05
+  },
+  {
+   "protocol": "anchor",
+   "best": "DA-V2-Metric-Indoor-S",
+   "model": "DA-V2-Metric-Indoor-B",
+   "n_paired": 498,
+   "p": 9.689999830193226e-19,
+   "p_holm": 4.8449999150966126e-18
+  },
+  {
+   "protocol": "anchor",
+   "best": "DA-V2-Metric-Indoor-S",
+   "model": "DA-V2-Metric-Indoor-L",
+   "n_paired": 498,
+   "p": 0.13798870626427656,
+   "p_holm": 0.13798870626427656
   },
   {
    "protocol": "oracle",
@@ -35,7 +75,7 @@
    "model": "MiDaS-DPT-Hybrid",
    "n_paired": 498,
    "p": 7.454952943429233e-56,
-   "p_holm": 2.2364858830287698e-55
+   "p_holm": 3.7274764717146165e-55
   },
   {
    "protocol": "oracle",
@@ -52,6 +92,30 @@
    "n_paired": 498,
    "p": 8.639338788826319e-10,
    "p_holm": 8.639338788826319e-10
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-B",
+   "model": "DA-V2-Metric-Indoor-S",
+   "n_paired": 498,
+   "p": 6.861202265360318e-36,
+   "p_holm": 2.0583606796080955e-35
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-B",
+   "model": "DA-V2-Metric-Indoor-B",
+   "n_paired": 498,
+   "p": 6.778186489201727e-64,
+   "p_holm": 4.066911893521036e-63
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-B",
+   "model": "DA-V2-Metric-Indoor-L",
+   "n_paired": 498,
+   "p": 3.588925972682122e-49,
+   "p_holm": 1.4355703890728487e-48
   }
  ],
  "mass": [
@@ -179,6 +243,90 @@
     83.79476249940484,
     81.95062768192523,
     86.12434860905577
+   ]
+  },
+  {
+   "source": "DA-V2-Metric-Indoor-S (anchor)",
+   "n": 475,
+   "mae_g": [
+    182.2618274238096,
+    168.39806305118844,
+    196.97619161061303
+   ],
+   "median_ape": [
+    92.17961312775074,
+    89.6953606491998,
+    94.04789805754903
+   ]
+  },
+  {
+   "source": "DA-V2-Metric-Indoor-S (oracle)",
+   "n": 475,
+   "mae_g": [
+    195.22825392239696,
+    180.45971377416248,
+    211.52017458842735
+   ],
+   "median_ape": [
+    96.92934581980303,
+    95.79764996948032,
+    97.56089103120861
+   ]
+  },
+  {
+   "source": "DA-V2-Metric-Indoor-B (anchor)",
+   "n": 421,
+   "mae_g": [
+    192.84348621265232,
+    177.59570194451246,
+    208.37244282883387
+   ],
+   "median_ape": [
+    98.76860051035862,
+    97.78999976037517,
+    99.31254328997457
+   ]
+  },
+  {
+   "source": "DA-V2-Metric-Indoor-B (oracle)",
+   "n": 419,
+   "mae_g": [
+    186.16221607476362,
+    170.99836617604475,
+    201.64886854027185
+   ],
+   "median_ape": [
+    97.00509007848083,
+    95.20171106780046,
+    98.27346067512116
+   ]
+  },
+  {
+   "source": "DA-V2-Metric-Indoor-L (anchor)",
+   "n": 473,
+   "mae_g": [
+    198.39885852789877,
+    184.6802000830463,
+    212.76726587870158
+   ],
+   "median_ape": [
+    97.79491338896939,
+    96.91643299756605,
+    98.37016883539857
+   ]
+  },
+  {
+   "source": "DA-V2-Metric-Indoor-L (oracle)",
+   "n": 473,
+   "mae_g": [
+    198.75018717321575,
+    185.1234532079854,
+    213.1903635358197
+   ],
+   "median_ape": [
+    98.13350459580599,
+    97.27109933505373,
+    98.65448299346963
    ]
   },
   {

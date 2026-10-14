@@ -170,7 +170,7 @@ def figures(gt, models, rows, figs):
                 ax.annotate(r["model"].replace("-Metric-Indoor", "-MI"), (r["latency_s"], r["vol_ape_median"]),
                             fontsize=4.5, xytext=(3, 2), textcoords="offset points")
     ax.set_ylim(0, 105); ax.set_xlim(left=0)
-    ax.set_xlabel("CPU latency per image (s, dev VM)"); ax.set_ylabel("median |volume error| (%)")
+    ax.set_xlabel("CPU latency per image (s, 8-vCPU VM)"); ax.set_ylabel("median |volume error| (%)")
     ax.scatter([], [], c=colors["oracle"], marker="o", label="oracle (upper bound)")
     ax.scatter([], [], c=colors["anchor"], marker="s", label="anchor (deployable)")
     ax.legend(frameon=False, loc="best")
