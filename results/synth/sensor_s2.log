@@ -1,0 +1,25 @@
+sensor: 24 runs to do, 0 done
+[1/24] curry_heap__ceramic v=24 r=1.0 q=0 s=1.0 openmvs: -24.1% ok
+[2/24] curry_heap__ceramic v=24 r=1.0 q=30 s=1.0 openmvs: -8.7% ok
+[3/24] curry_heap__ceramic v=24 r=1.0 q=10 s=1.0 openmvs: -72.9% ok
+[4/24] curry_heap__ceramic v=24 r=0.5 q=0 s=1.0 openmvs: -5.8% ok
+[5/24] curry_heap__ceramic v=24 r=0.5 q=10 s=1.0 openmvs: -97.3% ok
+[6/24] curry_heap__ceramic v=24 r=0.4 q=10 s=1.0 openmvs: -95.0% ok
+[7/24] curry_heap__steel v=24 r=1.0 q=0 s=1.0 openmvs: -4.3% ok
+[8/24] curry_heap__steel v=24 r=1.0 q=30 s=1.0 openmvs: -6.0% ok
+[9/24] curry_heap__steel v=24 r=1.0 q=10 s=1.0 openmvs: -78.4% ok
+[10/24] curry_heap__steel v=24 r=0.5 q=0 s=1.0 openmvs: -5.5% ok
+[11/24] curry_heap__steel v=24 r=0.5 q=10 s=1.0 openmvs: -95.4% ok
+[12/24] curry_heap__steel v=24 r=0.4 q=10 s=1.0 openmvs: -96.2% ok
+[13/24] idli_pair__ceramic v=24 r=1.0 q=0 s=1.0 openmvs: -4.0% ok
+[14/24] idli_pair__ceramic v=24 r=1.0 q=30 s=1.0 openmvs: -8.6% ok
+[15/24] idli_pair__ceramic v=24 r=1.0 q=10 s=1.0 openmvs: -72.8% ok
+[16/24] idli_pair__ceramic v=24 r=0.5 q=0 s=1.0 openmvs: +2.6% ok
+[17/24] idli_pair__ceramic v=24 r=0.5 q=10 s=1.0 openmvs: -94.1% ok
+[18/24] idli_pair__ceramic v=24 r=0.4 q=10 s=1.0 openmvs: -92.3% ok
+[19/24] idli_pair__steel v=24 r=1.0 q=0 s=1.0 openmvs: -3.9% ok
+[20/24] idli_pair__steel v=24 r=1.0 q=30 s=1.0 openmvs: -3.2% ok
+[21/24] idli_pair__steel v=24 r=1.0 q=10 s=1.0 openmvs: +7.8% ok
+[22/24] idli_pair__steel v=24 r=0.5 q=0 s=1.0 openmvs: -2.8% ok
+[23/24] idli_pair__steel v=24 r=0.5 q=10 s=1.0 openmvs: -45.7% ok
+[24/24] idli_pair__steel v=24 r=0.4 q=10 s=1.0 openmvs: -24.6% ok
