@@ -124,11 +124,12 @@ def main():
         out["views"] = v.groupby(["plate", "views"]).agg(n=("ok", "size"), ok=("ok", "sum"), median_ape=("ape", "median")).reset_index().to_dict("records")
     s = load("sensor")
     if not s.empty:
-        s["cond"] = s.apply(lambda r: f"{int(1600 * r['resize'])}px\n" + ("PNG" if r["jpeg"] == 0 else f"q{int(r['jpeg'])}"), axis=1)
+        s["cond"] = s.apply(lambda r: f"{int(1600 * r['resize'])}\n" + ("PNG" if r["jpeg"] == 0 else f"q{int(r['jpeg'])}"), axis=1)
         g = s.groupby("cond", sort=False)["ape"].median()
         axs[1].bar(range(len(g)), g.values, color="0.4")
         axs[1].set_xticks(range(len(g)), g.index, fontsize=6)
         axs[1].set_ylabel("median |volume error| %")
+        axs[1].set_xlabel("image width px / encoding")
         out["sensor"] = s.groupby(["resize", "jpeg"]).agg(n=("ok", "size"), ok=("ok", "sum"), median_ape=("ape", "median")).reset_index().to_dict("records")
     sc = load("scale")
     if not sc.empty:
