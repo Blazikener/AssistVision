@@ -21,6 +21,24 @@ Oct 2026, not quotes). Replace with your invoice totals before publishing.
 | 6 | Printed ArUco mat (src/make_aruco.py, 50 mm markers, 100% scale) | 1 | Metric scale + support plane; verify with a ruler | 20 |
 | 7 | MDF/acrylic base, camera arm (45°, 40 cm), M3 hardware | 1 set | Fixed camera, rotating object: lighting moves relative to food exactly as in the synthetic benchmark | 300–600 |
 | 8 | Reference masses (or sealed water bottles weighed on a calibrated scale) | 50/100/200/500/1000 g | Scale calibration and linearity test | 0–400 |
+| 9 | Jumper wires (F-F, M-F) + mini breadboard | 1 set | HX711 and ULN2003 hook-up without soldering | 100–200 |
+| 10 | USB-C data cable | 1 | Flashing and power | 100–150 |
+| 11 | 5 V USB LED strip, ~0.5 m, with paper diffuser | 1 | Even, constant light so the views match each other | 100–200 |
+| | **Total** | | | **≈ 2,320–4,220** |
+
+### Budget: hard cap ₹5,000
+
+Even at the top of every price range the rig costs about ₹4,220, which leaves
+about ₹780 for shipping and breakages. To spend less:
+
+- Reuse a phone charger (≥ 2 A) and a USB-C cable you already own: saves up to ₹550.
+- Build the base and arm from 6 mm plywood or thick cardboard: saves up to ₹300.
+- Use sealed water bottles weighed once on a shop scale as reference masses: saves up to ₹400.
+- Do **not** cut the 8 MB PSRAM ESP32-S3 board or the HX711 + load cell. Without
+  them there are no UXGA frames and no ground-truth grams, and the experiments
+  depend on both. A cheaper AI-Thinker ESP32-CAM (~₹500) would also work, but
+  it has a different pin map and no native USB, so `config.h` would need
+  changes. The firmware has only been compiled for the S3.
 
 ## Pin map (`firmware/assistvision_rig/config.h`)
 
