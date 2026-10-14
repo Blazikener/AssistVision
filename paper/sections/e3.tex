@@ -10,11 +10,12 @@ at $1600\times1200$, $60^\circ$ horizontal FoV, $45^\circ$ elevation and
 50\,mm ArUco mat, i.e.\ the rig geometry. View 0 also stores a metric depth map for a ``perfect single-view depth''
 baseline.
 
-\textbf{Methods.} (i) Dense MVS: COLMAP SfM, marker-triangulated scale,
-OpenMVS densification, plate-noise-calibrated footprint threshold, shared
-integral. (ii) Sparse SfM points only, with the same scale and
-integral. The monocular and perfect-single-view baselines are implemented,
-but their runs had not finished at the time of writing and are not reported.
+\textbf{Methods.} We compare two pipelines. Dense MVS runs COLMAP SfM, takes
+scale from the triangulated marker corners, densifies with OpenMVS, cuts the
+food footprint at a threshold set from plate noise, and integrates. Sparse
+SfM skips densification and integrates the SfM points with the same scale.
+Single-view runs on these scenes are in the code but were not run, so the
+monocular comparison rests on E1.
 
 \textbf{Footprint rule.} Dense MVS leaves millimetre-level noise on the plate
 surface. A cell counts as food if its height exceeds $\mu+2\sigma$ of the plate
@@ -25,9 +26,9 @@ the other scenes were run, and those scenes are held out. A hysteresis variant
 
 \begin{table*}[t]
 \centering
-\caption{E3 (synthetic, exact mesh volume). Absolute volume error, median and
-95\% bootstrap CI over scenes; bias is the mean signed error. Time is VM CPU
-seconds per scene.}
+\caption{E3 on synthetic plates with exact mesh volume. Error columns give the
+median absolute error with a 95\% bootstrap CI across scenes; bias is the mean
+signed error. Time: CPU seconds per scene on our VM.}
 \label{tab:synth}
 \footnotesize
 \IfFileExists{tables/synth_main.tex}{\input{tables/synth_main.tex}}{\pending{table}}
