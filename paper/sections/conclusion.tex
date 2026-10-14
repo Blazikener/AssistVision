@@ -1,9 +1,9 @@
 We built a capture rig within an INR~5{,}000 budget and a
 benchmark that scores monocular and multi-view volume estimation with the same
-integral, explicit calibration protocols and confidence intervals. On the
-partial results, three findings stand. First, a single overhead image
+integral, explicit calibration protocols and confidence intervals. Before
+physical validation, three findings stand. First, a single overhead image
 anchored only on the table does not recover food volume: the best deployable
-model (ZoeDepth-NYU) still has a median error of 44\,\%, and relative models
+models (ZoeDepth-NYU, and Depth Pro at 15$\times$ the latency) still have median errors of 44--48\,\%, and relative models
 lose almost all of it. Second, low depth error (AbsRel) does not imply low volume error.
 Third, 24-view dense MVS with marker scale reaches a median error of a few
 percent on exact synthetic volumes, its remaining error on textured food comes from

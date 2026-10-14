@@ -2,7 +2,7 @@
 \centering
 \caption{E2 (Nutrition5k). Mass predicted as $\rho V$ with a single density
 $\rho$ fitted on four folds and scored on the held-out fold (5-fold CV).
-Brackets: 95\,\% bootstrap CI.}
+Brackets: 95\,\% bootstrap CI. $^\dagger$200-dish seeded subset.}
 \label{tab:mass}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -11,7 +11,9 @@ Brackets: 95\,\% bootstrap CI.}
 Volume source & $n$ & MAE (g) & median APE (\%) \\
 \midrule
 RealSense depth (sensor ceiling) & 503 & 139.3 [129.3, 150.0] & 68.2 [63.1, 72.9] \\
+DepthPro$^\dagger$, anchor & 191 & 184.3 [159.0, 212.8] & 79.1 [73.3, 83.7] \\
 DA-V2-B, oracle & 485 & 177.2 [164.4, 191.1] & 83.8 [82.0, 86.1] \\
+DepthPro$^\dagger$, oracle & 191 & 199.1 [172.5, 228.6] & 84.4 [79.0, 87.1] \\
 DA-V2-S, oracle & 483 & 178.1 [161.6, 196.6] & 85.7 [84.2, 87.5] \\
 DA-V1-S, oracle & 491 & 180.4 [167.2, 194.1] & 88.2 [85.7, 89.6] \\
 DA-V2-L, oracle & 486 & 185.3 [172.1, 199.0] & 89.0 [87.5, 90.1] \\

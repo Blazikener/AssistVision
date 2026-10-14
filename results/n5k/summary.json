@@ -7,35 +7,43 @@
  "tests": [
   {
    "protocol": "raw",
-   "best": "DA-V2-Metric-Indoor-L",
+   "best": "DepthPro",
    "model": "ZoeDepth-NYU",
-   "n_paired": 498,
-   "p": 1.4650388554128394e-72,
-   "p_holm": 5.860155421651358e-72
+   "n_paired": 198,
+   "p": 1.404825554481343e-33,
+   "p_holm": 7.024127772406715e-33
   },
   {
    "protocol": "raw",
-   "best": "DA-V2-Metric-Indoor-L",
+   "best": "DepthPro",
    "model": "ZoeDepth-NYU-KITTI",
-   "n_paired": 498,
-   "p": 8.63574898840833e-71,
-   "p_holm": 2.590724696522499e-70
+   "n_paired": 198,
+   "p": 2.0816197262135796e-33,
+   "p_holm": 8.326478904854319e-33
   },
   {
    "protocol": "raw",
-   "best": "DA-V2-Metric-Indoor-L",
+   "best": "DepthPro",
    "model": "DA-V2-Metric-Indoor-S",
-   "n_paired": 498,
-   "p": 0.05649791644050965,
-   "p_holm": 0.05649791644050965
+   "n_paired": 198,
+   "p": 2.858862975814633e-28,
+   "p_holm": 5.717725951629266e-28
   },
   {
    "protocol": "raw",
-   "best": "DA-V2-Metric-Indoor-L",
+   "best": "DepthPro",
    "model": "DA-V2-Metric-Indoor-B",
-   "n_paired": 498,
-   "p": 1.7516283843286327e-17,
-   "p_holm": 3.5032567686572654e-17
+   "n_paired": 198,
+   "p": 1.8009066009987914e-25,
+   "p_holm": 1.8009066009987914e-25
+  },
+  {
+   "protocol": "raw",
+   "best": "DepthPro",
+   "model": "DA-V2-Metric-Indoor-L",
+   "n_paired": 198,
+   "p": 1.1575989262300335e-29,
+   "p_holm": 3.4727967786901006e-29
   },
   {
    "protocol": "anchor",
@@ -43,7 +51,7 @@
    "model": "MiDaS-DPT-Hybrid",
    "n_paired": 498,
    "p": 1.5984141952936038e-33,
-   "p_holm": 1.278731356234883e-32
+   "p_holm": 1.4385727757642434e-32
   },
   {
    "protocol": "anchor",
@@ -51,7 +59,7 @@
    "model": "DA-V1-S",
    "n_paired": 498,
    "p": 1.6366307033958816e-20,
-   "p_holm": 1.1456414923771172e-19
+   "p_holm": 1.3093045627167053e-19
   },
   {
    "protocol": "anchor",
@@ -59,7 +67,7 @@
    "model": "DA-V2-S",
    "n_paired": 498,
    "p": 1.3964057777841928e-18,
-   "p_holm": 8.378434666705157e-18
+   "p_holm": 9.77484044448935e-18
   },
   {
    "protocol": "anchor",
@@ -67,7 +75,7 @@
    "model": "DA-V2-B",
    "n_paired": 498,
    "p": 4.320237172443612e-17,
-   "p_holm": 2.160118586221806e-16
+   "p_holm": 2.592142303466167e-16
   },
   {
    "protocol": "anchor",
@@ -75,7 +83,7 @@
    "model": "DA-V2-L",
    "n_paired": 498,
    "p": 1.6583092934326783e-12,
-   "p_holm": 4.974927880298035e-12
+   "p_holm": 6.633237173730713e-12
   },
   {
    "protocol": "anchor",
@@ -83,7 +91,7 @@
    "model": "ZoeDepth-NYU-KITTI",
    "n_paired": 498,
    "p": 0.08586664590152972,
-   "p_holm": 0.08586664590152972
+   "p_holm": 0.17173329180305943
   },
   {
    "protocol": "anchor",
@@ -91,7 +99,7 @@
    "model": "DA-V2-Metric-Indoor-S",
    "n_paired": 498,
    "p": 1.79943534433721e-09,
-   "p_holm": 3.59887068867442e-09
+   "p_holm": 5.39830603301163e-09
   },
   {
    "protocol": "anchor",
@@ -99,7 +107,7 @@
    "model": "DA-V2-Metric-Indoor-B",
    "n_paired": 498,
    "p": 3.0714692617316505e-34,
-   "p_holm": 2.7643223355584854e-33
+   "p_holm": 3.0714692617316506e-33
   },
   {
    "protocol": "anchor",
@@ -107,7 +115,15 @@
    "model": "DA-V2-Metric-Indoor-L",
    "n_paired": 498,
    "p": 3.184662670740922e-13,
-   "p_holm": 1.2738650682963689e-12
+   "p_holm": 1.592331335370461e-12
+  },
+  {
+   "protocol": "anchor",
+   "best": "ZoeDepth-NYU",
+   "model": "DepthPro",
+   "n_paired": 198,
+   "p": 0.7959396759883115,
+   "p_holm": 0.7959396759883115
   },
   {
    "protocol": "oracle",
@@ -115,7 +131,7 @@
    "model": "MiDaS-DPT-Hybrid",
    "n_paired": 498,
    "p": 3.811709413551168e-57,
-   "p_holm": 3.0493675308409345e-56
+   "p_holm": 3.430538472196051e-56
   },
   {
    "protocol": "oracle",
@@ -123,7 +139,7 @@
    "model": "DA-V1-S",
    "n_paired": 498,
    "p": 1.5960262459665596e-32,
-   "p_holm": 7.980131229832798e-32
+   "p_holm": 9.576157475799358e-32
   },
   {
    "protocol": "oracle",
@@ -131,7 +147,7 @@
    "model": "DA-V2-S",
    "n_paired": 498,
    "p": 2.7060457402809643e-28,
-   "p_holm": 8.917139014501008e-28
+   "p_holm": 1.1146423768126259e-27
   },
   {
    "protocol": "oracle",
@@ -139,7 +155,7 @@
    "model": "DA-V2-B",
    "n_paired": 498,
    "p": 1.5406765784265526e-19,
-   "p_holm": 3.0813531568531053e-19
+   "p_holm": 4.622029735279658e-19
   },
   {
    "protocol": "oracle",
@@ -147,7 +163,7 @@
    "model": "ZoeDepth-NYU",
    "n_paired": 498,
    "p": 3.999471138389025e-15,
-   "p_holm": 3.999471138389025e-15
+   "p_holm": 7.99894227677805e-15
   },
   {
    "protocol": "oracle",
@@ -155,7 +171,7 @@
    "model": "ZoeDepth-NYU-KITTI",
    "n_paired": 498,
    "p": 2.229284753625252e-28,
-   "p_holm": 8.917139014501008e-28
+   "p_holm": 1.1146423768126259e-27
   },
   {
    "protocol": "oracle",
@@ -163,7 +179,7 @@
    "model": "DA-V2-Metric-Indoor-S",
    "n_paired": 498,
    "p": 7.371020465824512e-39,
-   "p_holm": 4.4226122794947074e-38
+   "p_holm": 5.159714326077159e-38
   },
   {
    "protocol": "oracle",
@@ -171,7 +187,7 @@
    "model": "DA-V2-Metric-Indoor-B",
    "n_paired": 498,
    "p": 2.9632607474129254e-62,
-   "p_holm": 2.6669346726716328e-61
+   "p_holm": 2.9632607474129255e-61
   },
   {
    "protocol": "oracle",
@@ -179,7 +195,15 @@
    "model": "DA-V2-Metric-Indoor-L",
    "n_paired": 498,
    "p": 6.54496287669484e-51,
-   "p_holm": 4.581474013686388e-50
+   "p_holm": 5.235970301355872e-50
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "DepthPro",
+   "n_paired": 198,
+   "p": 9.21859152481804e-11,
+   "p_holm": 9.21859152481804e-11
   }
  ],
  "mass": [
@@ -475,6 +499,34 @@
     98.13350459580599,
     97.27109933505373,
     98.65448299346963
+   ]
+  },
+  {
+   "source": "DepthPro (anchor)",
+   "n": 191,
+   "mae_g": [
+    184.26742026298876,
+    158.97753150734587,
+    212.7513243894683
+   ],
+   "median_ape": [
+    79.14200769956811,
+    73.30939909795563,
+    83.69900514265214
+   ]
+  },
+  {
+   "source": "DepthPro (oracle)",
+   "n": 191,
+   "mae_g": [
+    199.1030627567825,
+    172.477178024618,
+    228.63906650474863
+   ],
+   "median_ape": [
+    84.41021263856075,
+    78.96077029767247,
+    87.1411825465655
    ]
   },
   {
