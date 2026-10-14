@@ -12,9 +12,9 @@ baseline.
 
 \textbf{Methods.} (i) Dense MVS: COLMAP SfM, marker-triangulated scale,
 OpenMVS densification, plate-noise-calibrated footprint threshold, shared
-integral. The sparse-SfM, monocular and perfect-single-view
-baselines use the same integral and are implemented, but their runs had not
-finished at the time of writing and are not reported.
+integral. (ii) Sparse SfM points only, with the same scale and
+integral. The monocular and perfect-single-view baselines are implemented,
+but their runs had not finished at the time of writing and are not reported.
 
 \textbf{Footprint rule.} Dense MVS leaves millimetre-level noise on the plate
 surface. A cell counts as food if its height exceeds $\mu+2\sigma$ of the plate
@@ -23,14 +23,13 @@ the other scenes were run, and those scenes are held out. A hysteresis variant
 (seed at $2\sigma$, grow connected cells down to $0.5\sigma$) was added
 \emph{after} the curry failure below, and is reported as post hoc.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{E3 (synthetic, exact mesh volume). Absolute volume error, median and
 95\% bootstrap CI over scenes; bias is the mean signed error. Time is VM CPU
 seconds per scene.}
 \label{tab:synth}
-\scriptsize
-\setlength{\tabcolsep}{3pt}
+\footnotesize
 \IfFileExists{tables/synth_main.tex}{\input{tables/synth_main.tex}}{\pending{table}}
-\end{table}
+\end{table*}
 \input{sections/e3_text.tex}

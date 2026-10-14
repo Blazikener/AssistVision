@@ -84,7 +84,7 @@ def main():
     t.to_csv(os.path.join(RES, "e3_summary.csv"), index=False)
     if len(t):
         with open(os.path.join(TAB, "synth_main.tex"), "w") as f:
-            f.write("\\begin{tabular}{llrlrrr}\\toprule\nMethod & Plate & $n$ ok & |err| \\% median [95\\% CI] & bias \\% & $<$10\\% & s \\\\\n\\midrule\n")
+            f.write("\\begin{tabular}{llrlrrr}\\toprule\nMethod & Plate & $n$ ok & $|e|$ \\% median [95\\% CI] & bias \\% & $<$10\\% & s \\\\\n\\midrule\n")
             for r in t.itertuples():
                 f.write(f"{r.method} & {r.plate.replace('_', ' ')} & {r.n} & {r.ape} & {r.bias} & {r.w10} & {r.secs} \\\\\n")
             f.write("\\bottomrule\n\\end{tabular}\n")

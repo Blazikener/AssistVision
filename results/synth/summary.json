@@ -53,6 +53,33 @@
    "bias": "-0.2",
    "w10": 5,
    "secs": "119"
+  },
+  {
+   "method": "SfM sparse (24 views)",
+   "plate": "all",
+   "n": "11/11",
+   "ape": "92.4 [77.6, 99.6]",
+   "bias": "-89.5",
+   "w10": 0,
+   "secs": "20"
+  },
+  {
+   "method": "SfM sparse (24 views)",
+   "plate": "ceramic",
+   "n": "6/6",
+   "ape": "93.6 [82.6, 99.8]",
+   "bias": "-92.0",
+   "w10": 0,
+   "secs": "20"
+  },
+  {
+   "method": "SfM sparse (24 views)",
+   "plate": "steel",
+   "n": "5/5",
+   "ape": "81.4 [75.4, 100.0]",
+   "bias": "-86.5",
+   "w10": 0,
+   "secs": "21"
   }
  ]
 }

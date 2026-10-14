@@ -14,4 +14,8 @@ threshold works on every scene. We keep the pre-registered rule as primary
 and conclude that \emph{separating food from plate}, not depth accuracy, is
 now the dominant error of the multi-view pipeline. Image-space food
 segmentation projected onto the height field is the natural next step.
-Reconstruction takes about 117\,s per scene on the VM CPU (VM evidence).
+\textbf{Sparse is not enough.} Sparse SfM points alone underestimate every scene,
+with a median error of 92.4\,\% [77.6, 99.6]: feature points concentrate on the
+textured mat and food edges, leaving most of the food surface empty.
+Densification is therefore required, and it is the main cost of a scan.
+Dense reconstruction takes about 117\,s per scene, against 20\,s for sparse on the VM CPU (VM evidence).
