@@ -3,6 +3,7 @@
   python experiments/synth/analyze.py
 """
 
+import glob
 import json
 import os
 import sys
@@ -24,10 +25,11 @@ plt.rcParams.update({"font.size": 8, "font.family": "serif", "axes.spines.top": 
 
 
 def load(exp):
-    p = os.path.join(RES, f"{exp}.jsonl")
-    if not os.path.exists(p):
+    # {exp}.jsonl from this machine plus {exp}_<shard>.jsonl from parallel sessions
+    paths = sorted(glob.glob(os.path.join(RES, f"{exp}.jsonl")) + glob.glob(os.path.join(RES, f"{exp}_*.jsonl")))
+    if not paths:
         return pd.DataFrame()
-    df = pd.DataFrame([json.loads(x) for x in open(p)])
+    df = pd.DataFrame([json.loads(x) for p in paths for x in open(p)])
     df["ok"] = df["status"].eq("ok")
     df["ape"] = df["volume_err_pct"].abs()
     df["food"] = df["scene"].str.split("__").str[0]
@@ -137,6 +139,7 @@ def main():
         axs[2].plot((x - 1) * 100, g.median().values - base, "o", label="measured (median)")
         xx = np.linspace(x.min(), x.max(), 50)
         axs[2].plot((xx - 1) * 100, ((1 / xx) ** 3 - 1) * 100, "-", lw=0.8, label=r"$(1/(1+\epsilon))^3-1$")
+        axs[2].set_title("sparse SfM: run-to-run noise dominates", fontsize=6)
         axs[2].set_xlabel("marker-size error %")
         axs[2].set_ylabel("volume change %")
         axs[2].legend(frameon=False, fontsize=6)
