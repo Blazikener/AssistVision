@@ -1,0 +1,25 @@
+sensor: 24 runs to do, 0 done
+[1/24] rice_dal__ceramic v=24 r=1.0 q=0 s=1.0 openmvs: -6.4% ok
+[2/24] rice_dal__ceramic v=24 r=1.0 q=30 s=1.0 openmvs: -8.5% ok
+[3/24] rice_dal__ceramic v=24 r=1.0 q=10 s=1.0 openmvs: -78.2% ok
+[4/24] rice_dal__ceramic v=24 r=0.5 q=0 s=1.0 openmvs: -3.3% ok
+[5/24] rice_dal__ceramic v=24 r=0.5 q=10 s=1.0 openmvs: -90.7% ok
+[6/24] rice_dal__ceramic v=24 r=0.4 q=10 s=1.0 openmvs: -79.2% ok
+[7/24] rice_dal__steel v=24 r=1.0 q=0 s=1.0 openmvs: -3.4% ok
+[8/24] rice_dal__steel v=24 r=1.0 q=30 s=1.0 openmvs: -8.6% ok
+[9/24] rice_dal__steel v=24 r=1.0 q=10 s=1.0 openmvs: -71.1% ok
+[10/24] rice_dal__steel v=24 r=0.5 q=0 s=1.0 openmvs: -3.0% ok
+[11/24] rice_dal__steel v=24 r=0.5 q=10 s=1.0 openmvs: -86.5% ok
+[12/24] rice_dal__steel v=24 r=0.4 q=10 s=1.0 openmvs: -82.8% ok
+[13/24] rice_mound__ceramic v=24 r=1.0 q=0 s=1.0 openmvs: +0.7% ok
+[14/24] rice_mound__ceramic v=24 r=1.0 q=30 s=1.0 openmvs: -1.5% ok
+[15/24] rice_mound__ceramic v=24 r=1.0 q=10 s=1.0 openmvs: -84.3% ok
+[16/24] rice_mound__ceramic v=24 r=0.5 q=0 s=1.0 openmvs: -0.4% ok
+[17/24] rice_mound__ceramic v=24 r=0.5 q=10 s=1.0 openmvs: -95.3% ok
+[18/24] rice_mound__ceramic v=24 r=0.4 q=10 s=1.0 openmvs: -94.3% ok
+[19/24] rice_mound__steel v=24 r=1.0 q=0 s=1.0 openmvs: -0.2% ok
+[20/24] rice_mound__steel v=24 r=1.0 q=30 s=1.0 openmvs: -9.3% ok
+[21/24] rice_mound__steel v=24 r=1.0 q=10 s=1.0 openmvs: -89.8% ok
+[22/24] rice_mound__steel v=24 r=0.5 q=0 s=1.0 openmvs: +0.9% ok
+[23/24] rice_mound__steel v=24 r=0.5 q=10 s=1.0 openmvs: -100.0% ok
+[24/24] rice_mound__steel v=24 r=0.4 q=10 s=1.0 openmvs: -86.5% ok
