@@ -83,6 +83,21 @@ python src/calibrate.py capture --out captures/laptop
 python src/calibrate.py solve --images captures/laptop --squares 25.0 --preview
 ```
 
+## Meal-intake monitoring for older adults
+
+The rig weighs and scans the plate when a meal is served and again when it is cleared;
+eaten = served - left (`src/intake.py`). The companion app (`app/`) shows family members
+and the doctor a meal log, a two-week trend, a low-intake alert (k low meals in a row,
+threshold set per person) and a printable weekly report.
+
+    python app/app.py --seed      # fictional demo residents on http://localhost:5000
+    python src/rig_client.py meal --phase served  --id lunch_01
+    python src/rig_client.py meal --phase cleared --id lunch_01 --app http://localhost:5000
+
+Prototype only: alerts are recorded, not sent; no clinical or user study has been run.
+E5 (`experiments/synth/run_suite.py --exp meal`, `analyze_meal.py`) measures eaten volume
+on 12 synthetic partly eaten plates.
+
 ## Hardware capture rig
 
 `hardware/` holds an ESP32-S3 + OV2640 rig: stepper turntable, HX711 load cell

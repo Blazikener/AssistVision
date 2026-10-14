@@ -5,30 +5,24 @@
 \newcommand{\pending}[1]{\textcolor{red}{[#1]}}
 
 \begin{document}
-\title{AssistVision: Before-and-After Plate Weighing and Multi-View Scanning\\for Meal-Intake Monitoring in Older Adults}
+\title{AssistVision: Before-and-After Plate Weighing and Scanning for Meal-Intake Monitoring in Older Adults}
 \author{\IEEEauthorblockN{Usama Abdur Rahman}\IEEEauthorblockA{\pending{Affiliation}}
 \and\IEEEauthorblockN{Yasir}\IEEEauthorblockA{\pending{Affiliation}}
 \and\IEEEauthorblockN{K. M. Mohammed Mohsin}\IEEEauthorblockA{\pending{Affiliation}}}
 \maketitle
 
 \begin{abstract}
-Many older adults eat less than they are served, and in hospital surveys low
-meal intake is an independent risk factor for death; yet intake is usually
-judged by eye when the tray is cleared. AssistVision is a low-cost rig
-($\le$\,INR~4,220 at indicative prices; ESP32-S3 camera, stepper turntable,
-HX711 load cell, printed ArUco mat) that weighs and scans the plate when a meal
-is served and again when it is cleared. The mass difference gives grams eaten
-per meal. A companion web app keeps the meal log, raises an alert to family
-members after a run of low-intake meals, and prints a weekly report for the
-treating doctor. The cameras add food volume, which cross-checks the scale and
-is the quantity a later per-item intake estimate needs. To choose the vision
-pipeline we benchmark \input{tables/n_models.tex}monocular depth models on the
-507-dish Nutrition5k depth test split under three separately reported
-calibration protocols (raw, deployable anchor, oracle upper bound), and compare
-dense multi-view stereo against exact mesh volume on
-\input{tables/n_synth.tex}synthetic plates and 12 synthetic before/after meal
-pairs, with ablations of view count, sensor resolution, JPEG quality,
-marker-scale error and plate material.
+Many older adults eat less than they are served, and low meal intake is an
+independent risk factor for death in hospital, yet intake is usually judged by
+eye. AssistVision is a rig costing at most INR~4,220 (ESP32-S3 camera, stepper
+turntable, HX711 load cell, printed ArUco mat) that weighs and scans the plate
+when a meal is served and again when it is cleared; the mass difference gives
+grams eaten. A companion app keeps the meal log, alerts family after a run of
+low-intake meals and prints a weekly report for the doctor. To choose the
+vision pipeline we test \input{tables/n_models.tex}monocular depth models on
+507 Nutrition5k dishes and dense multi-view stereo on
+\input{tables/n_synth.tex}synthetic plates with exact volume, plus 12
+before/after meal pairs.
 \input{tables/abstract_numbers.tex}
 \input{tables/e5_abstract.tex}
 The app and alert rule are an engineering prototype; no clinical or user study
