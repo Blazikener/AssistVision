@@ -159,6 +159,8 @@ def figures(gt, models, rows, figs):
     fig.savefig(os.path.join(figs, "n5k_volume_error.pdf")); plt.close(fig)
 
     # 2. latency vs accuracy (oracle and anchor), marker size ~ params
+    PARETO_LABELS = {("anchor", "ZoeDepth-NYU"), ("anchor", "DepthPro"), ("anchor", "MiDaS-DPT-Hybrid"),
+                     ("oracle", "DA-V2-L"), ("oracle", "DA-V2-S"), ("oracle", "DepthPro")}
     fig, ax = plt.subplots(figsize=(COL1, 2.2))
     for proto, mk in [("oracle", "o"), ("anchor", "s")]:
         for r in rows:
@@ -166,14 +168,15 @@ def figures(gt, models, rows, figs):
                 continue
             ax.scatter(r["latency_s"], r["vol_ape_median"], s=8 + r["params_m"] / 12, marker=mk,
                        c=colors[proto], alpha=0.85, lw=0)
-            if proto == "oracle":
-                ax.annotate(r["model"].replace("-Metric-Indoor", "-MI"), (r["latency_s"], r["vol_ape_median"]),
-                            fontsize=4.5, xytext=(3, 2), textcoords="offset points")
-    ax.set_ylim(0, 105); ax.set_xlim(left=0)
+            if (proto, r["model"]) in PARETO_LABELS:
+                ax.annotate(r["model"], (r["latency_s"], r["vol_ape_median"]),
+                            fontsize=5, xytext=(4, -8 if r["model"] == "MiDaS-DPT-Hybrid" else -2),
+                            textcoords="offset points")
+    ax.set_xscale("log"); ax.set_ylim(0, 105); ax.set_xlim(1, 80)
     ax.set_xlabel("CPU latency per image (s, 8-vCPU VM)"); ax.set_ylabel("median |volume error| (%)")
     ax.scatter([], [], c=colors["oracle"], marker="o", label="oracle (upper bound)")
     ax.scatter([], [], c=colors["anchor"], marker="s", label="anchor (deployable)")
-    ax.legend(frameon=False, loc="best")
+    ax.legend(frameon=False, loc="lower left", fontsize=5)
     fig.savefig(os.path.join(figs, "n5k_latency_pareto.pdf")); plt.close(fig)
 
     # 3. sensor volume vs weighed mass
