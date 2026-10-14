@@ -11,7 +11,7 @@ accuracy is reported only on synthetic scenes with exact mesh volume.
 \textbf{Synthetic-to-real gap.} Blender scenes have perfect camera intrinsics,
 controlled lighting and procedural textures. Real OV2640 frames add rolling
 shutter, auto-exposure drift, lens distortion and JPEG blocking on low-texture
-food. The resolution and JPEG ablations bound part of this gap but not all of it.
+food. The resolution and JPEG ablations bound part of this gap but not all of it. Textureless food already fails in simulation (Sec.~\ref{sec:synth}); an active texture projector or image-space segmentation would be needed for it.
 
 \textbf{No physical measurements yet.} Load-cell linearity, repeatability and
 drift, turntable angular error, scan duration and Wi-Fi transfer latency have

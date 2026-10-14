@@ -33,6 +33,9 @@ def load(exp):
     df["ok"] = df["status"].eq("ok")
     df["ape"] = df["volume_err_pct"].abs()
     df["food"] = df["scene"].str.split("__").str[0]
+    flat = df["scene"].str.endswith("__flat")
+    df["subset"] = np.where(flat, "ceramic, textureless food", df["plate"].astype(str))
+    df["textured"] = ~flat & df["plate"].isin(["ceramic", "steel"])
     return df
 
 
@@ -65,8 +68,11 @@ def main():
                      ("SfM sparse (24 views)", sparse)]:
         if df.empty:
             continue
-        for plate in ["all"] + sorted(df["plate"].unique()):
-            d = df if plate == "all" else df[df["plate"] == plate]
+        subsets = ["all", "textured food"] + [x for x in ("ceramic", "steel", "banana_leaf", "ceramic, textureless food")
+                                              if x in set(df["subset"])]
+        for plate in subsets:
+            d = (df if plate == "all" else df[df["textured"]] if plate == "textured food"
+                 else df[df["subset"] == plate])
             ok = d[d["ok"]]
             rows.append(dict(method=name, plate=plate, n=f"{len(ok)}/{len(d)}", ape=ci_str(ok["ape"]),
                              bias=f"{ok['volume_err_pct'].mean():+.1f}" if len(ok) else "--",
@@ -86,7 +92,7 @@ def main():
     t.to_csv(os.path.join(RES, "e3_summary.csv"), index=False)
     if len(t):
         with open(os.path.join(TAB, "synth_main.tex"), "w") as f:
-            f.write("\\begin{tabular}{llrlrrr}\\toprule\nMethod & Plate & $n$ ok & $|e|$ \\% median [95\\% CI] & bias \\% & $<$10\\% & s \\\\\n\\midrule\n")
+            f.write("\\begin{tabular}{llrlrrr}\\toprule\nMethod & Subset & $n$ ok & $|e|$ \\% median [95\\% CI] & bias \\% & $<$10\\% & s \\\\\n\\midrule\n")
             for r in t.itertuples():
                 f.write(f"{r.method} & {r.plate.replace('_', ' ')} & {r.n} & {r.ape} & {r.bias} & {r.w10} & {r.secs} \\\\\n")
             f.write("\\bottomrule\n\\end{tabular}\n")
