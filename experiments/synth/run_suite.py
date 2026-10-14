@@ -73,7 +73,7 @@ def main():
     todo = [c for c in grid(a.exp, scenes(a.scenes, [o for o in a.only.split(",") if o])) if key(c) not in done]
     print(f"{a.exp}: {len(todo)} runs to do, {len(done)} done", flush=True)
     for i, c in enumerate(todo):
-        work = os.path.join(a.out, "runs", f"{a.exp}_{i}")
+        work = os.path.join(a.out, "runs", a.exp + "__" + "_".join(str(x) for x in key(c)))
         cmd = [sys.executable, os.path.join(HERE, "reconstruct.py"), "--scene", c["scene"], "--out", work,
                "--views", str(c.get("views", 24)), "--resize", str(c.get("resize", 1.0)),
                "--jpeg", str(c.get("jpeg", 0)), "--scale", str(c.get("scale", 1.0)),
