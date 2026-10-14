@@ -49,6 +49,7 @@ def main():
                          "est_served_ml": b["volume_ml"], "est_left_ml": a["volume_ml"], "gt_eaten_ml": gt_eaten,
                          "est_eaten_ml": est_eaten, "eaten_err_pct": 100 * (est_eaten - gt_eaten) / gt_eaten,
                          "left_err_ml": a["volume_ml"] - a["gt_volume_ml"],
+                         "left_err_pct": 100 * (a["volume_ml"] - a["gt_volume_ml"]) / a["gt_volume_ml"],
                          "gt_eaten_frac": 100 * gt_eaten / b["gt_volume_ml"],
                          "est_eaten_frac": 100 * est_eaten / b["volume_ml"]})
     with open(os.path.join(RES, "e5_meal.csv"), "w", newline="") as f:
@@ -68,13 +69,15 @@ def main():
     ci = f"[{a['lo']:.1f}, {a['hi']:.1f}]"
     lines = [r"\begin{table}[t]\centering\small",
              r"\caption{E5: eaten volume from before/after 24-view dense MVS on partly eaten synthetic plates (exact mesh volumes).}",
-             r"\label{tab:e5}", r"\begin{tabular}{lrrrr}", r"\toprule",
-             r"Plate & $n$ & Median $|$err$|$ (\%) & Within 10\,\% & Eaten share (pp) \\", r"\midrule"]
+             r"\label{tab:e5}", r"\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{lrrrr}", r"\toprule",
+             r"Plate & $n$ & Median $|$err$|$ \% [95\,\% CI] & $\le$10\,\% & Share (pp) \\", r"\midrule"]
     for g, s in S.items():
         cis = "" if np.isnan(s["lo"]) else f" [{s['lo']:.1f}, {s['hi']:.1f}]"
         lines.append(f"{g} & {s['n']} & {s['med']:.1f}{cis} & {s['within']}/{s['n']} & {s['frac_pp']:.1f} \\\\")
     lines += [r"\bottomrule", r"\end{tabular}", r"\end{table}", ""]
     worst = max(rows, key=lambda r: abs(r["eaten_err_pct"]))
+    left_pct = float(np.median(np.abs([r["left_err_pct"] for r in rows])))
+    left_ml = float(np.median(np.abs([r["left_err_ml"] for r in rows])))
     lines.append(
         "Each of the six plates from E3 was paired with a leftover version on ceramic and steel: one or more items "
         "removed, the rest reduced in height and radius (e.g.\\ the rice eaten and 60\\,\\% of the dal height left), "
@@ -83,7 +86,10 @@ def main():
         f"Across {a['n']} pairs the median absolute error of the eaten volume is {a['med']:.1f}\\,\\% {ci}, "
         f"{a['within']}/{a['n']} within 10\\,\\%, and the eaten share of the serving is off by a median of "
         f"{a['frac_pp']:.1f} percentage points (Table~\\ref{{tab:e5}}). The largest error is "
-        f"{worst['scene'].replace('_', chr(92) + '_')} ({worst['eaten_err_pct']:+.1f}\\,\\%). "
+        f"{worst['scene'].split('__')[0].replace('_', ' ')} on {worst['plate']} ({worst['eaten_err_pct']:+.1f}\\,\\%). "
+        f"The leftover scans alone are much worse in relative terms (median {left_pct:.0f}\\,\\% of the leftover "
+        f"volume), because thin remains on a plate are hard to reconstruct; in absolute terms that is a median "
+        f"{left_ml:.1f}\\,ml, small next to the served portion. "
         "The load cell remains the source of the grams; these numbers say how far the image-based cross-check "
         "can be trusted, and they are synthetic, not physical, measurements.")
     with open(os.path.join(PAPER, "sections", "e5.tex"), "w") as f:
