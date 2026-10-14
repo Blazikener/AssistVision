@@ -1,0 +1,31 @@
+{
+ "e3": [
+  {
+   "method": "MVS dense (24 views)",
+   "plate": "all",
+   "n": "2/2",
+   "ape": "0.8 [0.2, 1.4]",
+   "bias": "-0.8",
+   "w10": 2,
+   "secs": "132"
+  },
+  {
+   "method": "MVS dense (24 views)",
+   "plate": "ceramic",
+   "n": "1/1",
+   "ape": "1.4",
+   "bias": "-1.4",
+   "w10": 1,
+   "secs": "131"
+  },
+  {
+   "method": "MVS dense (24 views)",
+   "plate": "steel",
+   "n": "1/1",
+   "ape": "0.2",
+   "bias": "-0.2",
+   "w10": 1,
+   "secs": "132"
+  }
+ ]
+}

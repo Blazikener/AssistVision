@@ -1,0 +1,41 @@
+{
+ "plate": "steel",
+ "views": 24,
+ "samples": 24,
+ "width": 1600,
+ "height": 1200,
+ "hfov_deg": 60.0,
+ "elev_deg": 45.0,
+ "cam_dist": 0.4,
+ "threads": 4,
+ "depth_views": [
+  0
+ ],
+ "foods": [
+  {
+   "shape": "cap",
+   "r": 0.05,
+   "h": 0.03,
+   "texture": "rice",
+   "x": -0.04,
+   "y": -0.02
+  },
+  {
+   "shape": "gauss",
+   "r": 0.035,
+   "h": 0.02,
+   "texture": "dal",
+   "x": 0.05,
+   "y": -0.03
+  },
+  {
+   "shape": "lumpy",
+   "r": 0.035,
+   "h": 0.025,
+   "texture": "curry",
+   "x": 0.01,
+   "y": 0.06
+  }
+ ],
+ "seed": 937970869
+}

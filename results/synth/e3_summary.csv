@@ -1,0 +1,4 @@
+method,plate,n,ape,bias,w10,secs
+MVS dense (24 views),all,2/2,"0.8 [0.2, 1.4]",-0.8,2,132
+MVS dense (24 views),ceramic,1/1,1.4,-1.4,1,131
+MVS dense (24 views),steel,1/1,0.2,-0.2,1,132
