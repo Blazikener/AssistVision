@@ -27,8 +27,27 @@ machines differed by a median of 0.9 percentage points, 10 of 12 scenes within
 1.2 points, but by 4.9 points on \texttt{thali3\_\_ceramic} and 26.1 points on
 \texttt{curry\_heap\_\_ceramic} ($-26.0\,\%$ vs.\ $+0.1\,\%$).
 
-\textbf{Status.} The resolution/JPEG and repeat ablations had not
-finished at the time of writing. Two observations are already available
+\textbf{Resolution and compression (72 dense runs, 12 scenes).} Resolution
+matters less than compression. Median absolute volume error is 3.9\,\% [0.8,
+5.1] at 1600$\times$1200 lossless and 3.2\,\% [2.1, 4.0] at 800$\times$600
+lossless (12 of 12 within 10\,\%; paired $p=0.27$). OpenCV quality 30 at full
+resolution is 7.4\,\% [2.4, 8.6] (12 of 12 within 10\,\%, $p=0.18$). Quality 10
+fails at every resolution: 72.7\,\% at 1600$\times$1200, 90.4\,\% at
+800$\times$600 and 82.7\,\% at 640$\times$480 (at most 1 of 12 within 10\,\%;
+$p=4.9\times10^{-4}$ for each against the lossless baseline, significant after
+Holm correction over five comparisons). Heavy compression removes the fine
+texture that dense matching needs. For the rig this means a low compression
+setting on the camera matters more than its maximum resolution; we did not
+measure how the OV2640 quality register maps onto these OpenCV levels, so the
+rig default has to be checked on hardware.
+
+\textbf{Repeat runs (18 dense runs, 6 scenes, one machine).} Three runs on
+identical input stay within 0.2--0.9 percentage points of each other on steel
+plates and within 1.8--2.9 points on ceramic. The spread is again larger on the
+textureless plate.
+
+\textbf{Status.} Plate material beyond ceramic and steel (banana leaf) and
+textureless food had not finished at the time of writing. Two observations are already available
 from E3. Ceramic and steel differ in plate noise by about $2$--$5\times$
 (plate-material ablation). Two independent reconstructions of the same eight
 scenes differed by up to 2.7 percentage points (e.g.\ \texttt{idli\_pair\_\_ceramic}
