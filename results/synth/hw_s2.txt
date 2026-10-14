@@ -1,0 +1,57 @@
+## lscpu | head -20
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           46 bits physical, 57 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  8
+On-line CPU(s) list:                     0-7
+Vendor ID:                               GenuineIntel
+Model name:                              INTEL(R) XEON(R) PLATINUM 8559C
+CPU family:                              6
+Model:                                   207
+Thread(s) per core:                      1
+Core(s) per socket:                      8
+Socket(s):                               1
+Stepping:                                2
+BogoMIPS:                                4800.00
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq dtes64 vmx ssse3 fma cx16 pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves user_shstk avx_vnni avx512_bf16 wbnoinvd arat vnmi avx512vbmi umip pku ospke waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid bus_lock_detect cldemote movdiri movdir64b fsrm md_clear serialize tsxldtrk ibt avx512_fp16 flush_l1d arch_capabilities
+Virtualization:                          VT-x
+Hypervisor vendor:                       KVM
+Virtualization type:                     full
+L1d cache:                               192 KiB (4 instances)
+
+## nproc
+8
+
+## free -g
+               total        used        free      shared  buff/cache   available
+Mem:              31           1          20           0           8          28
+Swap:              0           0           0
+
+## colmap
+COLMAP 3.7 -- Structure-from-Motion and Multi-View Stereo
+              (Commit Unknown on Unknown without CUDA)
+
+## python
+Python 3.12.2
+
+## pip (pinned packages)
+matplotlib==3.11.2
+numpy==2.5.2
+open3d==0.20.0
+opencv-contrib-python==5.0.0.93
+pandas==3.0.6
+pillow==12.3.0
+pycolmap==4.2.1
+scipy==1.18.1
+
+## docker / OpenMVS
+docker 29.7.2
+openmvs/openmvs-ubuntu@sha256:fcb172bd84903d679684e618b45dc6f7a7621de0da87e6dc40f8fb084016e35a (created 2019-12-10T21:01:01.6534785Z)
+
+## OS
+Ubuntu 22.04.5 LTS
+6.8.0-1061-aws
+
+## smoke test (not part of views_s2.jsonl)
+reconstruct.py --scene idli_pair__steel --views 24: volume_err_pct -4.96% (hyst -2.40%), total_s 111
