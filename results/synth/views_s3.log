@@ -1,0 +1,21 @@
+views: 20 runs to do, 0 done
+[1/20] lumpy_rice__ceramic v=6 r=1.0 q=0 s=1.0 openmvs: -92.1% ok
+[2/20] lumpy_rice__ceramic v=8 r=1.0 q=0 s=1.0 openmvs: -76.3% ok
+[3/20] lumpy_rice__ceramic v=12 r=1.0 q=0 s=1.0 openmvs: +1.2% ok
+[4/20] lumpy_rice__ceramic v=16 r=1.0 q=0 s=1.0 openmvs: +3.1% ok
+[5/20] lumpy_rice__ceramic v=24 r=1.0 q=0 s=1.0 openmvs: +5.1% ok
+[6/20] lumpy_rice__steel v=6 r=1.0 q=0 s=1.0 openmvs: -96.1% ok
+[7/20] lumpy_rice__steel v=8 r=1.0 q=0 s=1.0 openmvs: -74.5% ok
+[8/20] lumpy_rice__steel v=12 r=1.0 q=0 s=1.0 openmvs: +0.4% ok
+[9/20] lumpy_rice__steel v=16 r=1.0 q=0 s=1.0 openmvs: +0.2% ok
+[10/20] lumpy_rice__steel v=24 r=1.0 q=0 s=1.0 openmvs: +0.5% ok
+[11/20] thali3__ceramic v=6 r=1.0 q=0 s=1.0 openmvs: -85.0% ok
+[12/20] thali3__ceramic v=8 r=1.0 q=0 s=1.0 openmvs: -34.0% ok
+[13/20] thali3__ceramic v=12 r=1.0 q=0 s=1.0 openmvs: -6.7% ok
+[14/20] thali3__ceramic v=16 r=1.0 q=0 s=1.0 openmvs: -6.6% ok
+[15/20] thali3__ceramic v=24 r=1.0 q=0 s=1.0 openmvs: +2.2% ok
+[16/20] thali3__steel v=6 r=1.0 q=0 s=1.0 openmvs: -91.1% ok
+[17/20] thali3__steel v=8 r=1.0 q=0 s=1.0 openmvs: -70.5% ok
+[18/20] thali3__steel v=12 r=1.0 q=0 s=1.0 openmvs: -3.8% ok
+[19/20] thali3__steel v=16 r=1.0 q=0 s=1.0 openmvs: -4.2% ok
+[20/20] thali3__steel v=24 r=1.0 q=0 s=1.0 openmvs: -4.9% ok
