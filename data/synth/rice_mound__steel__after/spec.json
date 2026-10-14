@@ -1,0 +1,24 @@
+{
+ "plate": "steel",
+ "views": 24,
+ "samples": 24,
+ "width": 1600,
+ "height": 1200,
+ "hfov_deg": 60.0,
+ "elev_deg": 45.0,
+ "cam_dist": 0.4,
+ "threads": 4,
+ "depth_views": [
+  0
+ ],
+ "foods": [
+  {
+   "shape": "cap",
+   "r": 0.052000000000000005,
+   "h": 0.02,
+   "texture": "rice"
+  }
+ ],
+ "seed": 671191146,
+ "before": "rice_mound__steel"
+}

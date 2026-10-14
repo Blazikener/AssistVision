@@ -1,0 +1,16 @@
+AssistVision turns a plate scale and a turntable camera into a meal-intake
+monitor for older adults: the plate is weighed and scanned when the meal is
+served and again when it is cleared, the app logs grams eaten, family members
+are alerted after a run of low-intake meals, and the doctor gets a weekly
+report. The rig costs less than INR~5{,}000. The vision experiments explain the
+design. A single overhead image anchored only on the table does not recover
+food volume: the best deployable models (ZoeDepth-NYU, and Depth Pro at
+15$\times$ the latency) still have median errors of 44--48\,\%, and low depth
+error (AbsRel) does not imply low volume error. Dense 24-view MVS with marker
+scale reaches a median error of a few percent on textured synthetic food and
+measures eaten volume on partly eaten plates to a median 2.8\,\%, but it fails
+on textureless food, and volume from depth does not predict grams on real mixed
+dishes, which is why grams come from the load cell. Next we will run the
+physical bench tests and real-plate captures, add image-space food
+segmentation, and pilot the app with residents, families and staff in a care
+home, using weighed plate waste as the reference.

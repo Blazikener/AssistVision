@@ -1,0 +1,31 @@
+\textbf{Nutrition5k has no volume ground truth.} The dataset provides
+overhead RealSense depth and weighed mass, not food volume. We therefore score
+monocular models against the volume integrated from sensor depth over the same
+dish region (food plus plate rim above the support plane). This measures how
+well a model reproduces a depth sensor, not how well it measures food. Our
+attempt to separate food from plate with a second plate-floor plane fit gave a
+food volume that barely tracks weighed mass (Spearman $\rho=0.25$,
+Pearson $r=-0.02$, $n=503$), so we do not use it as a target. Absolute food-volume
+accuracy is reported only on synthetic scenes with exact mesh volume.
+
+\textbf{Synthetic-to-real gap.} Blender scenes have perfect camera intrinsics,
+controlled lighting and procedural textures. Real OV2640 frames add rolling
+shutter, auto-exposure drift, lens distortion and JPEG blocking on low-texture
+food. The resolution and JPEG ablations bound part of this gap but not all of it. Textureless food already fails in simulation (Sec.~\ref{sec:synth}); an active texture projector or image-space segmentation would be needed for it.
+
+\textbf{No physical measurements yet.} Load-cell linearity, repeatability and
+drift, turntable angular error, scan duration and Wi-Fi transfer latency have
+scripts and empty tables (Sec.~\ref{sec:hw}); none of the numbers in this paper
+come from the physical rig. Timings are CPU timings on 8-vCPU cloud VMs, not
+on the ESP32-S3.
+
+\textbf{Volume is not mass.} E2 shows that even sensor-measured volume tracks
+weighed mass poorly on real dishes, and we estimate no food density, so every
+gram figure in AssistVision comes from the load cell.
+
+\textbf{No clinical or user study.} The app, the alert rule and the weekly
+report have not been used by older adults, families or clinicians. Usability
+for people with poor eyesight or tremor, acceptance, alert fatigue and any
+effect on intake or outcomes are untested, and the residents in the app's demo
+data are fictional. A pilot in a ward or care home, with weighed plate waste as
+reference and staff and family feedback, is the next step.

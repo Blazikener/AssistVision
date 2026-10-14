@@ -1,0 +1,10 @@
+From an overhead view, deployable table-only anchoring of relative models fails
+(median volume error $\geq$88.4\,\%), because a fronto-parallel plane cannot
+fix both scale and shift. Metric models used as-is are off by 8--54$\times$ in volume;
+fitting their single scale to the table makes ZoeDepth-NYU the best
+deployable monocular option, at 44.1\,\% median error. On the 16 textured-food scenes, dense 24-view MVS with marker scale reaches 4.6\,\% [2.0, 6.1] median absolute
+error against exact mesh volume, while sparse SfM alone misses 91.3\,\% and textureless food on a white plate
+fails (45.1\,\%). Accuracy collapses below 12 views and under
+heavy JPEG compression, but not at half resolution. Even sensor-depth volume predicts weighed mass
+worse than the dataset mean (68.2 vs 52.0\,\% median error), which is why the
+rig weighs the plate. No result in this paper comes from the physical rig.

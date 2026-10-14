@@ -3,8 +3,28 @@
 Estimating the mass of served food from images, with metric scale recovered from
 multi-view reconstruction and validated against gravimetric ground truth.
 
-> **Status: in progress (week 1 of 12).** Target: arXiv preprint and a workshop
-> submission by early November 2026.
+> **Status: in progress.** Hardware rig designed and firmware compiled; physical
+> measurements pending. Target: arXiv preprint and a workshop submission.
+> Paper: `paper/main.pdf` (built from `paper/main.tex`).
+
+**Results so far (no physical-rig numbers yet).** Synthetic = Blender scenes with exact
+mesh volume; Nutrition5k = volume relative to RealSense sensor depth (not true food volume).
+
+| Finding | Number | Source |
+|---|---|---|
+| Dense 24-view MVS, 16 textured-food scenes | 4.6 % median abs. error [2.0, 6.1], 13/16 within 10 % | Synthetic |
+| Sparse SfM only, 22 scenes | 91.3 % median error | Synthetic |
+| Textureless food on white ceramic, 4 scenes | 45.1 % median error | Synthetic |
+| Views per scan: 6 / 8 / 12 / 16 / 24 | 91.6 / 71.4 / 3.3 / 1.6 / 4.2 % | Synthetic, 60 runs |
+| OpenCV JPEG quality 10 (any resolution) | 73–90 % error; 800×600 lossless is 3.2 % | Synthetic, 72 runs |
+| Best deployable monocular model (ZoeDepth-NYU, table-scale anchor) | 44.1 % median volume error | Nutrition5k, 498 dishes |
+| Relative models, table anchor (5 models) | 88.4–99.4 % | Nutrition5k |
+| Oracle upper bound (DA-V2-L) | 25.9 % | Nutrition5k |
+| Sensor-depth volume → grams vs predicting the mean mass | 68.2 % vs 52.0 % median error | Nutrition5k |
+
+Reproduce: `experiments/n5k_mono_benchmark.py` + `experiments/n5k_analyze.py` (Nutrition5k),
+`experiments/synth/run_suite.py --exp {main,sparse,views,sensor,scale,repeat}` +
+`experiments/synth/analyze.py` (synthetic). Timings are CPU timings on 8-vCPU cloud VMs.
 
 ## The problem
 
@@ -63,10 +83,57 @@ python src/calibrate.py capture --out captures/laptop
 python src/calibrate.py solve --images captures/laptop --squares 25.0 --preview
 ```
 
+## Meal-intake monitoring for older adults
+
+The rig weighs and scans the plate when a meal is served and again when it is cleared;
+eaten = served - left (`src/intake.py`). The companion app (`app/`) shows family members
+and the doctor a meal log, a two-week trend, a low-intake alert (k low meals in a row,
+threshold set per person) and a printable weekly report.
+
+    python app/app.py --seed      # fictional demo residents on http://localhost:5000
+    python src/rig_client.py meal --phase served  --id lunch_01
+    python src/rig_client.py meal --phase cleared --id lunch_01 --app http://localhost:5000
+
+Prototype only: alerts are recorded, not sent; no clinical or user study has been run.
+E5 (`experiments/synth/run_suite.py --exp meal`, `analyze_meal.py`) measures eaten volume
+on 12 synthetic partly eaten plates.
+
+## Hardware capture rig
+
+`hardware/` holds an ESP32-S3 + OV2640 rig: stepper turntable, HX711 load cell
+under the plate, printed ArUco mat. One scan returns N views plus the plate's
+weighed mass. Firmware, wiring, BOM, power budget and the bench-test protocol
+are in [`hardware/README.md`](hardware/README.md); the host client is
+`src/rig_client.py` (tested against a fake firmware: `python src/test_rig_client.py`).
+
+```bash
+python src/rig_client.py scan --views 24 --out captures/rig/plate_001 --label "rice, steel thali"
+```
+
+## Experiments
+
+Every number in the paper comes from one of four evidence sources, labelled as such:
+**Nutrition5k** (public real RGB-D), **synthetic** (Blender renders with exact
+mesh volume), **VM** (CPU timings on the dev VM, not the ESP32) and
+**physical** (rig bench tests -- empty until the rig is built and measured).
+
+| ID | What | Command |
+|---|---|---|
+| E1/E2 | 11 monocular depth models vs RealSense depth and weighed mass, Nutrition5k depth test split (507 dishes); raw / anchor / oracle protocols | `python experiments/n5k_mono_benchmark.py --models all` then `python experiments/n5k_analyze.py` |
+| E3 | Dense MVS (COLMAP + OpenMVS) vs sparse SfM vs monocular depth on exact-volume scenes | `bash data/synth/render_all.sh`, `python experiments/synth/run_suite.py --exp main`, `python experiments/synth/mono_synth.py` |
+| E4 | Ablations: views, resolution x JPEG, marker-scale error, plate material, run-to-run repeat | `python experiments/synth/run_suite.py --exp views\|sensor\|scale\|sparse\|repeat`, then `python experiments/synth/analyze.py` |
+| HW | Load-cell linearity/repeatability/drift, turntable error, scan time | `python src/rig_client.py bench-scale ...`, `python experiments/hw_analysis.py` |
+
+Unit tests: `python src/test_volume.py`, `python src/test_geometry.py`, `python src/test_rig_client.py`.
+
+The manuscript is `paper/main.tex` (`cd paper && latexmk -pdf main.tex`).
+
 ## Compute
 
-Sparse SfM runs on CPU. Dense MVS requires CUDA, and monocular depth and SAM 2
-want a GPU, so those steps run on Colab. See `NOTES.md` for the current split.
+Everything runs on CPU. Dense MVS uses the OpenMVS Docker image
+(`openmvs/openmvs-ubuntu`), monocular models load through Hugging Face
+`transformers`; Depth Pro (~30 s/image on CPU) is run on a fixed random subset
+of 200 dishes.
 
 ## Data and licences
 
