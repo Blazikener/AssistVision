@@ -5,6 +5,26 @@ multi-view reconstruction and validated against gravimetric ground truth.
 
 > **Status: in progress.** Hardware rig designed and firmware compiled; physical
 > measurements pending. Target: arXiv preprint and a workshop submission.
+> Paper: `paper/main.pdf` (built from `paper/main.tex`).
+
+**Results so far (no physical-rig numbers yet).** Synthetic = Blender scenes with exact
+mesh volume; Nutrition5k = volume relative to RealSense sensor depth (not true food volume).
+
+| Finding | Number | Source |
+|---|---|---|
+| Dense 24-view MVS, 16 textured-food scenes | 4.6 % median abs. error [2.0, 6.1], 13/16 within 10 % | Synthetic |
+| Sparse SfM only, 22 scenes | 91.3 % median error | Synthetic |
+| Textureless food on white ceramic, 4 scenes | 45.1 % median error | Synthetic |
+| Views per scan: 6 / 8 / 12 / 16 / 24 | 91.6 / 71.4 / 3.3 / 1.6 / 4.2 % | Synthetic, 60 runs |
+| OpenCV JPEG quality 10 (any resolution) | 73–90 % error; 800×600 lossless is 3.2 % | Synthetic, 72 runs |
+| Best deployable monocular model (ZoeDepth-NYU, table-scale anchor) | 44.1 % median volume error | Nutrition5k, 498 dishes |
+| Relative models, table anchor (5 models) | 88.4–99.4 % | Nutrition5k |
+| Oracle upper bound (DA-V2-L) | 25.9 % | Nutrition5k |
+| Sensor-depth volume → grams vs predicting the mean mass | 68.2 % vs 52.0 % median error | Nutrition5k |
+
+Reproduce: `experiments/n5k_mono_benchmark.py` + `experiments/n5k_analyze.py` (Nutrition5k),
+`experiments/synth/run_suite.py --exp {main,sparse,views,sensor,scale,repeat}` +
+`experiments/synth/analyze.py` (synthetic). Timings are CPU timings on 8-vCPU cloud VMs.
 
 ## The problem
 
