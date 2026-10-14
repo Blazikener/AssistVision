@@ -4,7 +4,8 @@
     bash data/synth/render_all.sh        # ~6-10 min/scene on 4 CPU threads
 
 Factors: food configuration (8) x plate material (ceramic, steel), plus
-textureless-food and banana-leaf variants. Food dimensions are drawn from
+textureless-food and banana-leaf variants, and after-meal (leftover) versions
+of six configurations for the intake experiment (E5). Food dimensions are drawn from
 ranges typical of a South-Indian thali (cups of 40-350 mL).
 """
 import argparse
@@ -28,6 +29,21 @@ CONFIGS = [
     ("tall_mound", [dict(shape="cap", r=0.05, h=0.055, texture="rice")]),
 ]
 
+# What is left on the plate after a meal, per configuration: (food index, kept
+# fraction of height, kept fraction of radius); missing indices were eaten.
+AFTER_MEAL = {
+    "rice_mound": [(0, 0.5, 0.8)],
+    "rice_dal": [(1, 0.6, 0.8)],
+    "idli_pair": [(1, 1.0, 1.0)],
+    "curry_heap": [(0, 0.4, 0.75)],
+    "lumpy_rice": [(0, 0.6, 0.85)],
+    "thali3": [(0, 0.5, 0.8), (2, 1.0, 1.0)],
+}
+
+
+def leftovers(name, foods):
+    return [{**foods[i], "h": foods[i]["h"] * kh, "r": foods[i]["r"] * kr} for i, kh, kr in AFTER_MEAL[name]]
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -46,6 +62,11 @@ def main():
         scenes.append((f"{name}__ceramic__flat", "ceramic", [{**f, "texture": "flat"} for f in foods]))
     for name, foods in CONFIGS[1:3]:
         scenes.append((f"{name}__banana_leaf", "banana_leaf", foods))
+    meal = []
+    for name, foods in CONFIGS:
+        if name in AFTER_MEAL:
+            for plate in ("ceramic", "steel"):
+                meal.append((f"{name}__{plate}__after", plate, leftovers(name, foods), f"{name}__{plate}"))
     lines = ["#!/usr/bin/env bash", "set -e", 'B=${BLENDER:-blender}', 'cd "$(dirname "$0")/../.."']
     for sid, plate, foods in scenes:
         spec = {"plate": plate, "views": a.views, "samples": a.samples, "width": 1600, "height": 1200,
@@ -56,8 +77,17 @@ def main():
         json.dump(spec, open(p, "w"), indent=1)
         lines.append(f'[ -f {a.out}/{sid}/gt.json ] || "$B" -b -P experiments/synth/render_scene.py -- '
                      f'--spec {a.out}/{sid}/spec.json --out {a.out}/{sid} > {a.out}/{sid}/render.log 2>&1 && echo "rendered {sid}"')
+    seeds = {sid: json.load(open(os.path.join(a.out, sid, "spec.json")))["seed"] for sid, *_ in scenes}
+    for sid, plate, foods, before in meal:
+        spec = {**json.load(open(os.path.join(a.out, before, "spec.json"))), "foods": foods,
+                "seed": seeds[before], "before": before}
+        p = os.path.join(a.out, sid, "spec.json")
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        json.dump(spec, open(p, "w"), indent=1)
+        lines.append(f'[ -f {a.out}/{sid}/gt.json ] || "$B" -b -P experiments/synth/render_scene.py -- '
+                     f'--spec {a.out}/{sid}/spec.json --out {a.out}/{sid} > {a.out}/{sid}/render.log 2>&1 && echo "rendered {sid}"')
     open(os.path.join(a.out, "render_all.sh"), "w").write("\n".join(lines) + "\n")
-    print(f"{len(scenes)} scenes -> {a.out}/render_all.sh")
+    print(f"{len(scenes)} scenes + {len(meal)} after-meal scenes -> {a.out}/render_all.sh")
 
 
 if __name__ == "__main__":

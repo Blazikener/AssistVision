@@ -1,0 +1,48 @@
+:root{--ink:#16202a;--muted:#6b7682;--line:#eef0f3;--bg:#fafaf8;--card:#fff;--accent:#2f6f5e;--accent2:#d9ebe5;--warn:#b5482f;--warnbg:#fbeee9}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+main{max-width:1040px;margin:0 auto;padding:8px 24px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;max-width:1040px;margin:0 auto;padding:18px 24px}
+.brand{font-weight:600;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+h1{font-size:28px;margin:8px 0 4px;letter-spacing:-.01em} h2{font-size:18px;margin:0} h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:28px 0 10px}
+.lead{color:var(--muted);margin:0 0 24px;max-width:560px}
+.muted{color:var(--muted)} .small{font-size:13px;margin-top:20px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.head{align-items:flex-start}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{display:block;background:var(--card);border-radius:14px;padding:20px 22px;text-decoration:none;color:inherit;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.03);transition:transform .15s}
+.card:hover{transform:translateY(-2px)}
+.card.alerting{box-shadow:inset 0 0 0 1.5px var(--warn)}
+.big{font-size:34px;font-weight:600;letter-spacing:-.02em;margin-top:10px}
+.badge{display:inline-block;margin-top:14px;padding:4px 10px;border-radius:999px;background:var(--warnbg);color:var(--warn);font-size:13px}
+.badge.ok{background:var(--accent2);color:var(--accent)}
+.back{color:var(--muted);text-decoration:none;font-size:14px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
+.alert{background:var(--warnbg);color:#6d2a1a;border-radius:12px;padding:14px 18px;margin:16px 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0 0}
+.stats>div{background:var(--card);border-radius:14px;padding:6px 20px 16px}
+section{min-width:0}
+.chart{width:100%;height:auto;display:block;background:var(--card);border-radius:14px;padding:16px 12px 4px}
+.chart .served{fill:#e8ecef} .chart .eaten{fill:var(--accent)} .chart .eaten.low{fill:var(--warn)} .axis{font-size:11px;fill:var(--muted)}
+.legend{font-size:13px;color:var(--muted);margin-top:8px;display:flex;gap:14px;align-items:center}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:-8px}.sw.served{background:#e8ecef}.sw.eaten{background:var(--accent)}.sw.low{background:var(--warn)}
+.grid2{display:grid;grid-template-columns:3fr 2fr;gap:32px}
+table.list{width:100%;border-collapse:collapse;table-layout:auto}
+.list th{font-weight:500;color:var(--muted);text-align:left;font-size:13px;padding:6px 8px}
+.list td{padding:9px 8px;border-top:1px solid var(--line);vertical-align:top}
+.num{text-align:right;font-variant-numeric:tabular-nums} .lowtxt{color:var(--warn);font-weight:600}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:8px}.form input:first-child{grid-column:1/-1}
+.form input{font:inherit;padding:9px 12px;border:1px solid #dde1e5;border-radius:10px;background:#fff}
+.form .btn{grid-column:1/-1}
+footer{max-width:1040px;margin:0 auto;padding:0 24px 32px;font-size:13px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr 1fr;gap:8px}.big{font-size:24px}.head{flex-direction:column}}
+@media print{.noprint,footer,.top{display:none}body{background:#fff}.stats>div{border:1px solid #ddd}}
+.list th.num{text-align:right} .list td.nowrap{white-space:nowrap}
+.form input{width:100%;min-width:0}
+.chart{border-radius:14px 14px 0 0;padding-bottom:0}
+.xaxis{display:flex;background:var(--card);border-radius:0 0 14px 14px;padding:4px 12px 12px;font-size:12px;color:var(--muted)}
+.xaxis span{flex:1;text-align:center;white-space:nowrap}
+.stats + table.list{margin-top:24px}
+@media (max-width:760px){.xaxis{font-size:10px}}
+@media (max-width:760px){.top .muted{display:none}}

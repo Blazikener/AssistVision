@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}AssistVision Care{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='care.css') }}">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="{{ url_for('home') }}"><span class="dot"></span>AssistVision Care</a>
+  <span class="muted">{{ today.strftime('%A, %-d %B %Y') }}</span>
+</header>
+<main>{% block body %}{% endblock %}</main>
+<footer class="muted">Prototype. Demo residents are fictional. Alerts are recorded here, not sent.</footer>
+</body>
+</html>

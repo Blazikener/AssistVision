@@ -118,7 +118,24 @@ def test_firmware_api_matches_client():
     print(f"PASS  firmware registers all {len(client)} client endpoints and JSON keys")
 
 
+def test_meal_served_cleared():
+    srv = serve()
+    FakeRig.state.update(tare=1000, cpg=420.0, load_g=0.0)
+    rig = rig_client.Rig(f"http://127.0.0.1:{srv.server_port}", timeout=2)
+    rig.tare()
+    with tempfile.TemporaryDirectory() as d:
+        FakeRig.state["load_g"] = 420.0
+        rig_client.meal(rig, "served", "lunch", d, views=0, label="rice + dal")
+        FakeRig.state["load_g"] = 105.0
+        rec = rig_client.meal(rig, "cleared", "lunch", d, views=0)
+        assert abs(rec["intake"]["eaten_g"] - 315.0) < 0.01 and abs(rec["intake"]["eaten_pct"] - 75.0) < 0.01
+        assert json.load(open(os.path.join(d, "lunch", "meal.json")))["label"] == "rice + dal"
+    srv.shutdown()
+    print("PASS  meal: served 420 g, cleared 105 g -> 315 g eaten (75 %)")
+
+
 if __name__ == "__main__":
     test_scan_roundtrip()
     test_tare_calibrate()
+    test_meal_served_cleared()
     test_firmware_api_matches_client()

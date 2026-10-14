@@ -6,6 +6,8 @@
     python src/rig_client.py scan --views 24 --out captures/plate_001 --label "rice+dal"
     python src/rig_client.py bench-scale --masses 0,50,100,200,500,1000 --repeats 10 --out results/hw/scale.csv
     python src/rig_client.py bench-turntable --revs 5 --out results/hw/turntable.csv
+    python src/rig_client.py meal --phase served --id 2026-10-14_lunch --out captures/meals
+    python src/rig_client.py meal --phase cleared --id 2026-10-14_lunch --out captures/meals --app http://localhost:5000
 
 A scan writes view_XX.jpg, weight before and after (drift check), the exact
 turntable angle of every view, firmware status and camera settings into
@@ -118,6 +120,37 @@ def scan(rig: Rig, views: int, out: str, label: str = "", framesize="UXGA", qual
     return meta
 
 
+def meal(rig: Rig, phase, meal_id, out, views=24, app=None, resident=1, label=""):
+    """Weigh (and optionally scan) the plate when a meal is served and when it is cleared.
+
+    The plate is tared empty before serving, so the reading is food mass.
+    `cleared` computes intake with src/intake.py and can post it to the companion app.
+    """
+    from intake import meal_intake
+    d = os.path.join(out, meal_id)
+    os.makedirs(d, exist_ok=True)
+    if views:
+        m = scan(rig, views, os.path.join(d, phase), label)
+        grams = m["weight_after"]["grams"]
+    else:
+        grams = rig.weight(n=30)["grams"]
+    rec_path = os.path.join(d, "meal.json")
+    rec = json.load(open(rec_path)) if os.path.exists(rec_path) else {"id": meal_id, "label": label}
+    rec[phase] = {"grams": grams, "time": time.strftime("%Y-%m-%dT%H:%M:%S"), "views": views}
+    if phase == "cleared" and "served" in rec:
+        rec["intake"] = meal_intake(rec["served"]["grams"], grams)
+        if app:
+            body = json.dumps({"resident_id": resident, "when": rec["served"]["time"], "label": rec.get("label", ""),
+                               "served_g": rec["served"]["grams"], "left_g": grams, "source": "rig"}).encode()
+            req = urllib.request.Request(app.rstrip("/") + "/api/meals", data=body, method="POST",
+                                         headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=10) as r:
+                rec["posted"] = json.loads(r.read())
+    with open(rec_path, "w") as f:
+        json.dump(rec, f, indent=2)
+    return rec
+
+
 def bench_scale(rig: Rig, masses, repeats, out):
     """Linearity / repeatability: place each reference mass when prompted."""
     rows = []
@@ -177,6 +210,12 @@ def main():
     b.add_argument("--out", default="results/hw/scale.csv")
     t = sub.add_parser("bench-turntable")
     t.add_argument("--revs", type=int, default=5); t.add_argument("--out", default="results/hw/turntable.csv")
+    ml = sub.add_parser("meal")
+    ml.add_argument("--phase", choices=["served", "cleared"], required=True); ml.add_argument("--id", required=True)
+    ml.add_argument("--out", default="captures/meals"); ml.add_argument("--views", type=int, default=24,
+                    help="0 = weigh only, no scan"); ml.add_argument("--label", default="")
+    ml.add_argument("--app", default=None, help="companion app URL to post the result to")
+    ml.add_argument("--resident", type=int, default=1)
     a = ap.parse_args()
     rig = Rig(a.host)
     if a.cmd == "status":
@@ -189,6 +228,9 @@ def main():
         m = scan(rig, a.views, a.out, a.label, a.framesize, a.quality)
         print(f"{len(m['views'])} views in {m['scan_seconds']:.1f}s, "
               f"{m['weight_before']['grams']} g -> {m['weight_after']['grams']} g")
+    elif a.cmd == "meal":
+        r = meal(rig, a.phase, a.id, a.out, a.views, a.app, a.resident, a.label)
+        print(json.dumps(r.get("intake", r[a.phase]), indent=2))
     elif a.cmd == "bench-scale":
         bench_scale(rig, [float(x) for x in a.masses.split(",")], a.repeats, a.out)
     elif a.cmd == "bench-turntable":
