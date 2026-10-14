@@ -1,11 +1,11 @@
-\emph{These are partial-run results: seven of eleven planned depth models and
-11 of 22 synthetic scenes had finished at the time of writing.} Deployable
-table-only anchoring of relative models fails from an overhead view (median
-volume error $\geq$92.7\,\%), because a fronto-parallel plane cannot fix both
-scale and shift, and metric indoor models used as-is overestimate volume
-roughly eightfold at plate distance. With an oracle fit the best model (DA-V2-B) reproduces sensor
-volume to 13.0\,\% median error when the sensor's support plane is used, but
-to only 32.1\,\% when the plane is fitted in its own prediction.
+\emph{These are partial-run results: ten of eleven planned depth models and
+11 of 22 synthetic scenes had finished at the time of writing.} From an
+overhead view, deployable table-only anchoring of relative models fails
+(median volume error $\geq$88.4\,\%), because a fronto-parallel plane cannot
+fix both scale and shift. Metric models used as-is are off by 8--54$\times$ in volume;
+fitting their single scale to the table makes ZoeDepth-NYU the best
+deployable monocular option, at 44.1\,\% median error. With an oracle fit,
+DA-V2-L reaches 25.9\,\% (9.6\,\% with the sensor's support plane).
 Dense 24-view MVS with marker scale reaches 3.9\,\% [1.0, 5.7] median absolute
 error against exact mesh volume, while sparse SfM alone misses 92.4\,\%. Accuracy collapses below 12 views and under
 heavy JPEG compression, but not at half resolution. Even sensor-depth volume predicts weighed mass

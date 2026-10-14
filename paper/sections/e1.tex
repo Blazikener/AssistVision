@@ -6,6 +6,7 @@ calibration protocol. Brackets: 95\% bootstrap CI (10\,000 resamples). Latency i
 CPU time per image on 8-vCPU cloud VMs (VM evidence; see text).}
 \label{tab:n5k}
 \footnotesize
+\setlength{\tabcolsep}{4pt}
 \input{tables/n5k_models.tex}
 \end{table*}
 \input{sections/e1_text.tex}
@@ -18,6 +19,6 @@ CPU time per image on 8-vCPU cloud VMs (VM evidence; see text).}
 \begin{figure}[t]
 \centering
 \IfFileExists{figs/n5k_latency_pareto.pdf}{\includegraphics[width=\columnwidth]{figs/n5k_latency_pareto.pdf}}{\pending{figure}}
-\caption{Accuracy--latency trade-off (anchor protocol; CPU latency on 8-vCPU cloud VMs).}
+\caption{Accuracy--latency trade-off (anchor and oracle protocols; CPU latency on 8-vCPU cloud VMs).}
 \label{fig:n5k_pareto}
 \end{figure}

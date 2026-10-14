@@ -228,7 +228,7 @@ def figures(gt, models, rows, figs):
 
 def latex_table(rows, path):
     lines = [r"\begin{tabular}{llrrrrrrr}", r"\toprule",
-             r"Model & Prot. & AbsRel & $h$ MAE (mm) & Vol. APE med. (\%) & $\le$20\% (\%) & APE, sensor plane (\%) & table RMS (mm) & s/img \\", r"\midrule"]
+             r"Model & Prot. & AbsRel & $h$ MAE (mm) & Vol. APE med. (\%) & $\le$20\% (\%) & APE, sens.\ plane (\%) & table RMS (mm) & s/img \\", r"\midrule"]
     for r in sorted(rows, key=lambda r: (PROTOCOLS.index(r["protocol"]), r["vol_ape_median"])):
         lines.append(f"{r['model']} & {r['protocol']} & {r['absrel']:.3f} & {r['height_mae_mm']:.1f} & "
                      f"{r['vol_ape_median']:.1f} [{r['vol_ape_lo']:.1f}, {r['vol_ape_hi']:.1f}] & "

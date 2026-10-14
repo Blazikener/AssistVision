@@ -2,11 +2,12 @@ We built a capture rig within an INR~5{,}000 budget and a
 benchmark that scores monocular and multi-view volume estimation with the same
 integral, explicit calibration protocols and confidence intervals. On the
 partial results, three findings stand. First, a single overhead image
-anchored only on the table does not recover food volume, whatever the depth
-model. Second, low depth error (AbsRel) does not imply low volume error.
+anchored only on the table does not recover food volume: the best deployable
+model (ZoeDepth-NYU) still has a median error of 44\,\%, and relative models
+lose almost all of it. Second, low depth error (AbsRel) does not imply low volume error.
 Third, 24-view dense MVS with marker scale reaches a median error of a few
 percent on exact synthetic volumes, and its remaining error comes from
 food--plate segmentation. Volume from depth does not predict grams on real
-mixed dishes, which justifies the load cell. Next we will complete the model
-and ablation runs, add image-space food segmentation, and run the physical
+mixed dishes, which justifies the load cell. Next we will complete the remaining model
+and scene runs, add image-space food segmentation, and run the physical
 bench tests and real-plate captures.

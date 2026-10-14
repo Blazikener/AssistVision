@@ -3,16 +3,24 @@
 | DA-V2-Metric-Indoor-L | raw | 498/498 | 1.546 [1.494, 1.600] | 58.3 [51.2, 66.1] | 759.3 [627.7, 860.3] | 2% [1, 3] | 3.80 |
 | DA-V2-Metric-Indoor-B | raw | 498/498 | 2.028 [1.981, 2.075] | 118.2 [108.9, 128.0] | 772.2 [356.3, 1090.1] | 2% [1, 4] | 2.18 |
 | DA-V2-Metric-Indoor-S | raw | 498/498 | 1.334 [1.304, 1.366] | 55.8 [48.8, 63.6] | 801.3 [645.5, 942.5] | 3% [2, 5] | 1.70 |
+| ZoeDepth-NYU-KITTI | raw | 498/498 | 2.759 [2.729, 2.789] | 79.0 [65.7, 93.8] | 3539.3 [3267.7, 3906.8] | 0% [0, 1] | 2.76 |
+| ZoeDepth-NYU | raw | 498/498 | 2.613 [2.589, 2.638] | 86.2 [73.4, 100.4] | 5327.9 [5074.6, 5574.9] | 0% [0, 1] | 2.64 |
+| ZoeDepth-NYU | anchor | 498/498 | 0.049 [0.046, 0.052] | 18.5 [15.3, 22.0] | 44.1 [39.6, 50.5] | 24% [20, 28] | 2.64 |
+| ZoeDepth-NYU-KITTI | anchor | 498/498 | 0.050 [0.047, 0.053] | 21.4 [18.1, 25.1] | 58.6 [54.3, 62.8] | 18% [15, 22] | 2.76 |
 | DA-V2-Metric-Indoor-S | anchor | 498/498 | 0.063 [0.059, 0.067] | 24.4 [21.5, 27.6] | 73.5 [67.3, 80.3] | 12% [10, 16] | 1.70 |
 | DA-V2-Metric-Indoor-L | anchor | 498/498 | 0.057 [0.054, 0.060] | 25.8 [22.6, 29.3] | 82.7 [77.7, 86.4] | 12% [9, 15] | 3.80 |
+| DA-V2-L | anchor | 498/498 | 0.035 [0.033, 0.037] | 12.5 [11.6, 13.4] | 88.4 [86.2, 90.1] | 6% [4, 8] | 3.94 |
 | DA-V2-B | anchor | 498/498 | 0.038 [0.035, 0.040] | 13.4 [12.6, 14.4] | 92.7 [90.1, 95.4] | 4% [3, 7] | 2.89 |
 | DA-V1-S | anchor | 498/498 | 0.039 [0.037, 0.041] | 13.6 [12.9, 14.4] | 94.8 [92.9, 96.0] | 3% [2, 5] | 1.64 |
 | DA-V2-S | anchor | 498/498 | 0.038 [0.036, 0.040] | 13.4 [12.6, 14.2] | 96.0 [93.4, 97.8] | 3% [2, 5] | 1.85 |
 | MiDaS-DPT-Hybrid | anchor | 498/498 | 0.045 [0.043, 0.048] | 15.8 [15.0, 16.7] | 99.4 [98.9, 99.8] | 1% [0, 2] | 1.39 |
 | DA-V2-Metric-Indoor-B | anchor | 498/498 | 0.125 [0.118, 0.133] | 45.8 [41.7, 50.3] | 99.7 [98.7, 99.9] | 7% [5, 10] | 2.18 |
+| DA-V2-L | oracle | 498/498 | 0.013 [0.013, 0.014] | 11.2 [8.7, 14.0] | 25.9 [23.7, 30.2] | 38% [34, 43] | 3.94 |
 | DA-V2-B | oracle | 498/498 | 0.015 [0.014, 0.015] | 11.8 [9.2, 14.8] | 32.1 [28.5, 35.7] | 29% [25, 33] | 2.89 |
 | DA-V2-S | oracle | 498/498 | 0.016 [0.015, 0.016] | 12.0 [9.5, 14.9] | 37.4 [33.0, 41.9] | 26% [22, 30] | 1.85 |
+| ZoeDepth-NYU | oracle | 498/498 | 0.036 [0.035, 0.037] | 20.0 [16.2, 24.1] | 45.1 [40.7, 50.8] | 23% [20, 27] | 2.64 |
 | DA-V1-S | oracle | 498/498 | 0.017 [0.016, 0.018] | 10.3 [9.0, 11.9] | 47.6 [42.9, 51.8] | 17% [14, 20] | 1.64 |
+| ZoeDepth-NYU-KITTI | oracle | 498/498 | 0.037 [0.036, 0.039] | 22.5 [18.7, 26.7] | 60.9 [55.7, 65.2] | 18% [15, 21] | 2.76 |
 | DA-V2-Metric-Indoor-S | oracle | 498/498 | 0.042 [0.040, 0.044] | 25.3 [22.1, 28.9] | 75.2 [67.1, 80.7] | 12% [10, 15] | 1.70 |
 | DA-V2-Metric-Indoor-L | oracle | 498/498 | 0.037 [0.036, 0.039] | 25.9 [22.7, 29.5] | 85.5 [80.8, 89.2] | 11% [8, 14] | 3.80 |
 | MiDaS-DPT-Hybrid | oracle | 498/498 | 0.022 [0.021, 0.023] | 11.4 [10.9, 11.9] | 86.9 [82.7, 89.0] | 3% [2, 5] | 1.39 |
@@ -29,6 +37,12 @@
 | DA-V2-S (oracle) | 483 | 178.1 [161.6, 196.6] | 85.7 [84.2, 87.5] |
 | DA-V2-B (anchor) | 492 | 186.9 [172.8, 202.0] | 97.9 [96.5, 98.8] |
 | DA-V2-B (oracle) | 485 | 177.2 [164.4, 191.1] | 83.8 [82.0, 86.1] |
+| DA-V2-L (anchor) | 491 | 185.6 [171.0, 200.9] | 96.3 [95.4, 97.7] |
+| DA-V2-L (oracle) | 486 | 185.3 [172.1, 199.0] | 89.0 [87.5, 90.1] |
+| ZoeDepth-NYU (anchor) | 487 | 186.8 [173.3, 201.0] | 89.1 [87.1, 91.5] |
+| ZoeDepth-NYU (oracle) | 487 | 197.3 [184.0, 211.2] | 95.5 [94.9, 96.3] |
+| ZoeDepth-NYU-KITTI (anchor) | 480 | 195.8 [181.8, 210.0] | 95.1 [94.4, 96.2] |
+| ZoeDepth-NYU-KITTI (oracle) | 480 | 200.0 [186.2, 214.1] | 97.6 [97.2, 98.0] |
 | DA-V2-Metric-Indoor-S (anchor) | 475 | 182.3 [168.4, 197.0] | 92.2 [89.7, 94.0] |
 | DA-V2-Metric-Indoor-S (oracle) | 475 | 195.2 [180.5, 211.5] | 96.9 [95.8, 97.6] |
 | DA-V2-Metric-Indoor-B (anchor) | 421 | 192.8 [177.6, 208.4] | 98.8 [97.8, 99.3] |
@@ -39,17 +53,25 @@
 
 | Protocol | Best | Model | n | p (Wilcoxon) | p (Holm) |
 |---|---|---|---|---|---|
+| raw | DA-V2-Metric-Indoor-L | ZoeDepth-NYU | 498 | 1.5e-72 | 5.9e-72 |
+| raw | DA-V2-Metric-Indoor-L | ZoeDepth-NYU-KITTI | 498 | 8.6e-71 | 2.6e-70 |
 | raw | DA-V2-Metric-Indoor-L | DA-V2-Metric-Indoor-S | 498 | 0.056 | 0.056 |
 | raw | DA-V2-Metric-Indoor-L | DA-V2-Metric-Indoor-B | 498 | 1.8e-17 | 3.5e-17 |
-| anchor | DA-V2-Metric-Indoor-S | MiDaS-DPT-Hybrid | 498 | 9.7e-22 | 5.8e-21 |
-| anchor | DA-V2-Metric-Indoor-S | DA-V1-S | 498 | 2.6e-09 | 1.1e-08 |
-| anchor | DA-V2-Metric-Indoor-S | DA-V2-S | 498 | 4.8e-07 | 1.4e-06 |
-| anchor | DA-V2-Metric-Indoor-S | DA-V2-B | 498 | 1e-05 | 2.1e-05 |
-| anchor | DA-V2-Metric-Indoor-S | DA-V2-Metric-Indoor-B | 498 | 9.7e-19 | 4.8e-18 |
-| anchor | DA-V2-Metric-Indoor-S | DA-V2-Metric-Indoor-L | 498 | 0.14 | 0.14 |
-| oracle | DA-V2-B | MiDaS-DPT-Hybrid | 498 | 7.5e-56 | 3.7e-55 |
-| oracle | DA-V2-B | DA-V1-S | 498 | 3.9e-18 | 7.8e-18 |
-| oracle | DA-V2-B | DA-V2-S | 498 | 8.6e-10 | 8.6e-10 |
-| oracle | DA-V2-B | DA-V2-Metric-Indoor-S | 498 | 6.9e-36 | 2.1e-35 |
-| oracle | DA-V2-B | DA-V2-Metric-Indoor-B | 498 | 6.8e-64 | 4.1e-63 |
-| oracle | DA-V2-B | DA-V2-Metric-Indoor-L | 498 | 3.6e-49 | 1.4e-48 |
+| anchor | ZoeDepth-NYU | MiDaS-DPT-Hybrid | 498 | 1.6e-33 | 1.3e-32 |
+| anchor | ZoeDepth-NYU | DA-V1-S | 498 | 1.6e-20 | 1.1e-19 |
+| anchor | ZoeDepth-NYU | DA-V2-S | 498 | 1.4e-18 | 8.4e-18 |
+| anchor | ZoeDepth-NYU | DA-V2-B | 498 | 4.3e-17 | 2.2e-16 |
+| anchor | ZoeDepth-NYU | DA-V2-L | 498 | 1.7e-12 | 5e-12 |
+| anchor | ZoeDepth-NYU | ZoeDepth-NYU-KITTI | 498 | 0.086 | 0.086 |
+| anchor | ZoeDepth-NYU | DA-V2-Metric-Indoor-S | 498 | 1.8e-09 | 3.6e-09 |
+| anchor | ZoeDepth-NYU | DA-V2-Metric-Indoor-B | 498 | 3.1e-34 | 2.8e-33 |
+| anchor | ZoeDepth-NYU | DA-V2-Metric-Indoor-L | 498 | 3.2e-13 | 1.3e-12 |
+| oracle | DA-V2-L | MiDaS-DPT-Hybrid | 498 | 3.8e-57 | 3e-56 |
+| oracle | DA-V2-L | DA-V1-S | 498 | 1.6e-32 | 8e-32 |
+| oracle | DA-V2-L | DA-V2-S | 498 | 2.7e-28 | 8.9e-28 |
+| oracle | DA-V2-L | DA-V2-B | 498 | 1.5e-19 | 3.1e-19 |
+| oracle | DA-V2-L | ZoeDepth-NYU | 498 | 4e-15 | 4e-15 |
+| oracle | DA-V2-L | ZoeDepth-NYU-KITTI | 498 | 2.2e-28 | 8.9e-28 |
+| oracle | DA-V2-L | DA-V2-Metric-Indoor-S | 498 | 7.4e-39 | 4.4e-38 |
+| oracle | DA-V2-L | DA-V2-Metric-Indoor-B | 498 | 3e-62 | 2.7e-61 |
+| oracle | DA-V2-L | DA-V2-Metric-Indoor-L | 498 | 6.5e-51 | 4.6e-50 |

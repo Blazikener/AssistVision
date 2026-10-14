@@ -8,6 +8,22 @@
   {
    "protocol": "raw",
    "best": "DA-V2-Metric-Indoor-L",
+   "model": "ZoeDepth-NYU",
+   "n_paired": 498,
+   "p": 1.4650388554128394e-72,
+   "p_holm": 5.860155421651358e-72
+  },
+  {
+   "protocol": "raw",
+   "best": "DA-V2-Metric-Indoor-L",
+   "model": "ZoeDepth-NYU-KITTI",
+   "n_paired": 498,
+   "p": 8.63574898840833e-71,
+   "p_holm": 2.590724696522499e-70
+  },
+  {
+   "protocol": "raw",
+   "best": "DA-V2-Metric-Indoor-L",
    "model": "DA-V2-Metric-Indoor-S",
    "n_paired": 498,
    "p": 0.05649791644050965,
@@ -23,99 +39,147 @@
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-Metric-Indoor-S",
+   "best": "ZoeDepth-NYU",
    "model": "MiDaS-DPT-Hybrid",
    "n_paired": 498,
-   "p": 9.699702335614508e-22,
-   "p_holm": 5.819821401368705e-21
+   "p": 1.5984141952936038e-33,
+   "p_holm": 1.278731356234883e-32
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-Metric-Indoor-S",
+   "best": "ZoeDepth-NYU",
    "model": "DA-V1-S",
    "n_paired": 498,
-   "p": 2.6290421597363936e-09,
-   "p_holm": 1.0516168638945574e-08
+   "p": 1.6366307033958816e-20,
+   "p_holm": 1.1456414923771172e-19
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-Metric-Indoor-S",
+   "best": "ZoeDepth-NYU",
    "model": "DA-V2-S",
    "n_paired": 498,
-   "p": 4.826683896015617e-07,
-   "p_holm": 1.4480051688046852e-06
+   "p": 1.3964057777841928e-18,
+   "p_holm": 8.378434666705157e-18
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-Metric-Indoor-S",
+   "best": "ZoeDepth-NYU",
    "model": "DA-V2-B",
    "n_paired": 498,
-   "p": 1.0308653237237643e-05,
-   "p_holm": 2.0617306474475287e-05
+   "p": 4.320237172443612e-17,
+   "p_holm": 2.160118586221806e-16
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-Metric-Indoor-S",
-   "model": "DA-V2-Metric-Indoor-B",
+   "best": "ZoeDepth-NYU",
+   "model": "DA-V2-L",
    "n_paired": 498,
-   "p": 9.689999830193226e-19,
-   "p_holm": 4.8449999150966126e-18
+   "p": 1.6583092934326783e-12,
+   "p_holm": 4.974927880298035e-12
   },
   {
    "protocol": "anchor",
-   "best": "DA-V2-Metric-Indoor-S",
-   "model": "DA-V2-Metric-Indoor-L",
+   "best": "ZoeDepth-NYU",
+   "model": "ZoeDepth-NYU-KITTI",
    "n_paired": 498,
-   "p": 0.13798870626427656,
-   "p_holm": 0.13798870626427656
+   "p": 0.08586664590152972,
+   "p_holm": 0.08586664590152972
   },
   {
-   "protocol": "oracle",
-   "best": "DA-V2-B",
-   "model": "MiDaS-DPT-Hybrid",
-   "n_paired": 498,
-   "p": 7.454952943429233e-56,
-   "p_holm": 3.7274764717146165e-55
-  },
-  {
-   "protocol": "oracle",
-   "best": "DA-V2-B",
-   "model": "DA-V1-S",
-   "n_paired": 498,
-   "p": 3.9200470357868684e-18,
-   "p_holm": 7.840094071573737e-18
-  },
-  {
-   "protocol": "oracle",
-   "best": "DA-V2-B",
-   "model": "DA-V2-S",
-   "n_paired": 498,
-   "p": 8.639338788826319e-10,
-   "p_holm": 8.639338788826319e-10
-  },
-  {
-   "protocol": "oracle",
-   "best": "DA-V2-B",
+   "protocol": "anchor",
+   "best": "ZoeDepth-NYU",
    "model": "DA-V2-Metric-Indoor-S",
    "n_paired": 498,
-   "p": 6.861202265360318e-36,
-   "p_holm": 2.0583606796080955e-35
+   "p": 1.79943534433721e-09,
+   "p_holm": 3.59887068867442e-09
   },
   {
-   "protocol": "oracle",
-   "best": "DA-V2-B",
+   "protocol": "anchor",
+   "best": "ZoeDepth-NYU",
    "model": "DA-V2-Metric-Indoor-B",
    "n_paired": 498,
-   "p": 6.778186489201727e-64,
-   "p_holm": 4.066911893521036e-63
+   "p": 3.0714692617316505e-34,
+   "p_holm": 2.7643223355584854e-33
+  },
+  {
+   "protocol": "anchor",
+   "best": "ZoeDepth-NYU",
+   "model": "DA-V2-Metric-Indoor-L",
+   "n_paired": 498,
+   "p": 3.184662670740922e-13,
+   "p_holm": 1.2738650682963689e-12
   },
   {
    "protocol": "oracle",
-   "best": "DA-V2-B",
+   "best": "DA-V2-L",
+   "model": "MiDaS-DPT-Hybrid",
+   "n_paired": 498,
+   "p": 3.811709413551168e-57,
+   "p_holm": 3.0493675308409345e-56
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "DA-V1-S",
+   "n_paired": 498,
+   "p": 1.5960262459665596e-32,
+   "p_holm": 7.980131229832798e-32
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "DA-V2-S",
+   "n_paired": 498,
+   "p": 2.7060457402809643e-28,
+   "p_holm": 8.917139014501008e-28
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "DA-V2-B",
+   "n_paired": 498,
+   "p": 1.5406765784265526e-19,
+   "p_holm": 3.0813531568531053e-19
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "ZoeDepth-NYU",
+   "n_paired": 498,
+   "p": 3.999471138389025e-15,
+   "p_holm": 3.999471138389025e-15
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "ZoeDepth-NYU-KITTI",
+   "n_paired": 498,
+   "p": 2.229284753625252e-28,
+   "p_holm": 8.917139014501008e-28
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "DA-V2-Metric-Indoor-S",
+   "n_paired": 498,
+   "p": 7.371020465824512e-39,
+   "p_holm": 4.4226122794947074e-38
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
+   "model": "DA-V2-Metric-Indoor-B",
+   "n_paired": 498,
+   "p": 2.9632607474129254e-62,
+   "p_holm": 2.6669346726716328e-61
+  },
+  {
+   "protocol": "oracle",
+   "best": "DA-V2-L",
    "model": "DA-V2-Metric-Indoor-L",
    "n_paired": 498,
-   "p": 3.588925972682122e-49,
-   "p_holm": 1.4355703890728487e-48
+   "p": 6.54496287669484e-51,
+   "p_holm": 4.581474013686388e-50
   }
  ],
  "mass": [
@@ -243,6 +307,90 @@
     83.79476249940484,
     81.95062768192523,
     86.12434860905577
+   ]
+  },
+  {
+   "source": "DA-V2-L (anchor)",
+   "n": 491,
+   "mae_g": [
+    185.59528497093683,
+    171.0165969688024,
+    200.94516654069187
+   ],
+   "median_ape": [
+    96.29511191104875,
+    95.35387640933361,
+    97.68976366299097
+   ]
+  },
+  {
+   "source": "DA-V2-L (oracle)",
+   "n": 486,
+   "mae_g": [
+    185.30413148045503,
+    172.1310242146406,
+    198.95132055213628
+   ],
+   "median_ape": [
+    88.99399513687213,
+    87.51925686680713,
+    90.09913988150757
+   ]
+  },
+  {
+   "source": "ZoeDepth-NYU (anchor)",
+   "n": 487,
+   "mae_g": [
+    186.8015919012315,
+    173.31870224058665,
+    200.95911031130555
+   ],
+   "median_ape": [
+    89.06389590213536,
+    87.12740105792184,
+    91.51865995963992
+   ]
+  },
+  {
+   "source": "ZoeDepth-NYU (oracle)",
+   "n": 487,
+   "mae_g": [
+    197.3262860935613,
+    183.976576639217,
+    211.22658827550495
+   ],
+   "median_ape": [
+    95.46734164155508,
+    94.85501706843989,
+    96.25453010604494
+   ]
+  },
+  {
+   "source": "ZoeDepth-NYU-KITTI (anchor)",
+   "n": 480,
+   "mae_g": [
+    195.7509028890517,
+    181.83496513038918,
+    209.99330274863118
+   ],
+   "median_ape": [
+    95.13897473401738,
+    94.38777712338292,
+    96.17143107168039
+   ]
+  },
+  {
+   "source": "ZoeDepth-NYU-KITTI (oracle)",
+   "n": 480,
+   "mae_g": [
+    199.9582950443412,
+    186.23563410308492,
+    214.10533064037244
+   ],
+   "median_ape": [
+    97.59661983005591,
+    97.15153526604995,
+    98.00855828508216
    ]
   },
   {
