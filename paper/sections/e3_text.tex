@@ -6,7 +6,10 @@ ceramic (5.3\,\%). The textureless white ceramic gives plate-surface noise of
 
 \textbf{Failure case.} \texttt{curry\_heap\_\_ceramic} is $-26.0$\,\%: its
 6.2\,mm plate noise raises the threshold above the low outer skirt of the
-heap, which is then cut from the footprint. The post-hoc hysteresis rule
+heap, which is then cut from the footprint. The failure is intermittent:
+the identical input re-run on this machine and on a second VM gave $+0.2$\,\%
+and $+0.1$\,\%, because OpenMVS is not deterministic on the textureless plate
+and the noise estimate moves with it. The post-hoc hysteresis rule
 recovers it ($-1.0$\,\%) and lowers the median error to 2.0\,\%, but its bias is
 $+4.4$\,\% and it overestimates lumpy rice on ceramic by 24.2\,\% and the
 thali by 17.9\,\%, where plate noise connects to the food. No single height
