@@ -24,12 +24,13 @@ Oct 2026, not quotes). Replace with your invoice totals before publishing.
 | 9 | Jumper wires (F-F, M-F) + mini breadboard | 1 set | HX711 and ULN2003 hook-up without soldering | 100–200 |
 | 10 | USB-C data cable | 1 | Flashing and power | 100–150 |
 | 11 | 5 V USB LED strip, ~0.5 m, with paper diffuser | 1 | Even, constant light so the views match each other | 100–200 |
-| | **Total** | | | **≈ 2,320–4,220** |
+| 12 | 5 mm rigid flange shaft coupling (fits the 28BYJ-48 shaft) + M3 screws | 1 | Fixes the turntable top to the motor shaft so commanded steps become plate rotation | 50–150 |
+| | **Total** | | | **≈ 2,370–4,370** |
 
 ### Budget: hard cap ₹5,000
 
-Even at the top of every price range the rig costs about ₹4,220, which leaves
-about ₹780 for shipping and breakages. To spend less:
+Even at the top of every price range the rig costs about ₹4,370, which leaves
+about ₹630 for shipping and breakages. To spend less:
 
 - Reuse a phone charger (≥ 2 A) and a USB-C cable you already own: saves up to ₹550.
 - Build the base and arm from 6 mm plywood or thick cardboard: saves up to ₹300.
