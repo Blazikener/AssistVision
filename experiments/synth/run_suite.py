@@ -5,6 +5,7 @@
   python experiments/synth/run_suite.py --exp sensor    # resolution x JPEG quality
   python experiments/synth/run_suite.py --exp scale     # marker-side error 0.98-1.02
   python experiments/synth/run_suite.py --exp meal      # E5: after-meal leftover scenes
+  python experiments/synth/run_suite.py --exp glasses --scenes data/synth_glasses   # E6: 13-frame head sweep
 
 One JSON line per run is appended to results/synth/<exp>.jsonl; runs already
 present are skipped, so the driver can be interrupted and resumed.
@@ -30,6 +31,8 @@ def scenes(root, only=None):
 
 
 def grid(exp, all_scenes):
+    if exp == "glasses":  # E6: every served and cleared scene, all 13 head-sweep frames
+        return [dict(scene=s, views=13) for s in all_scenes]
     if exp == "meal":  # E5: leftover plates; paired with their before-meal scene in main.jsonl
         return [dict(scene=s, views=24) for s in all_scenes if s.endswith("__after")]
     all_scenes = [s for s in all_scenes if not s.endswith("__after")]
@@ -62,7 +65,7 @@ def key(c):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--exp", required=True, choices=["main", "views", "sensor", "scale", "sparse", "repeat", "meal"])
+    ap.add_argument("--exp", required=True, choices=["main", "views", "sensor", "scale", "sparse", "repeat", "meal", "glasses"])
     ap.add_argument("--scenes", default=os.path.join(ROOT, "data", "synth"))
     ap.add_argument("--only", default="", help="comma-separated scene-name substrings")
     ap.add_argument("--out", default=os.path.join(ROOT, "results", "synth"))
