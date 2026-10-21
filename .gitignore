@@ -46,3 +46,7 @@ paper/*.log
 paper/*.out
 results/synth/*.log
 data/synth/watch_main.sh
+data/synth_glasses/**/*.exr
+data/synth_glasses/**/*.log
+data/synth_glasses/*.log
+data/meals/
