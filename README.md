@@ -98,7 +98,22 @@ Prototype only: alerts are recorded, not sent; no clinical or user study has bee
 E5 (`experiments/synth/run_suite.py --exp meal`, `analyze_meal.py`) measures eaten volume
 on 12 synthetic partly eaten plates.
 
-## Hardware capture rig
+## Camera glasses (current capture design)
+
+A Seeed XIAO ESP32S3 Sense (built-in OV2640) and a single-cell LiPo in two clip-on
+printed pods on an ordinary spectacle frame (`hardware/glasses/`: CAD, STL/STEP,
+renders, build guide PDF; firmware in `hardware/firmware/assistvision_glasses/`).
+The carer presses the button at serving and at clearing; each press stores a
+13-frame burst while the head turns across the plate. The host downloads both
+bursts (`src/glasses_client.py`, `python src/test_glasses_client.py`), reconstructs
+both volumes and reports the share eaten, `1 - V_left / V_served`
+(`src/intake.py: photo_intake`). No scale, so no grams: `/api/meals` accepts
+`served_ml`/`left_ml` and stores the share. E6 (`run_suite.py --exp glasses`,
+`analyze_glasses.py`) tests this on simulated head-sweep views.
+
+Status: firmware compiles; nothing has been printed, flashed or worn yet.
+
+## Hardware capture rig (earlier design)
 
 `hardware/` holds an ESP32-S3 + OV2640 rig: stepper turntable, HX711 load cell
 under the plate, printed ArUco mat. One scan returns N views plus the plate's
