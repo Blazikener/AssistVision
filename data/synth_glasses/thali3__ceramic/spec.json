@@ -6,7 +6,7 @@
  "hfov_deg": 60.0,
  "elev_deg": 45.0,
  "cam_dist": 0.4,
- "threads": 6,
+ "threads": 4,
  "depth_views": [
   0
  ],

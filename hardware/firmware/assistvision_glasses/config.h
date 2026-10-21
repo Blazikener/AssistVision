@@ -28,7 +28,7 @@
 
 // One press = one burst. Turn the head slowly across the plate while the LED
 // blinks so the frames see the food from slightly different angles.
-#define BURST_FRAMES   8
+#define BURST_FRAMES   13
 #define BURST_GAP_MS   350
-#define MAX_FRAMES     12
+#define MAX_FRAMES     16
 #define DEFAULT_JPEG_QUALITY 10   // esp32-camera scale: lower = better (E4: heavy JPEG breaks SfM)

@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta charset="utf-8"><title>AssistVision glasses: build guide</title>
+<style>
+@page{size:A4;margin:14mm}
+body{font-family:Inter,"Helvetica Neue",Arial,sans-serif;color:#16181d;font-size:10.5pt;line-height:1.45;margin:0}
+h1{font-size:26pt;margin:0 0 2mm;letter-spacing:-.5px}
+h2{font-size:15pt;margin:0 0 3mm;display:flex;gap:3mm;align-items:center}
+h2 span{background:#f06a10;color:#fff;border-radius:50%;width:9mm;height:9mm;display:inline-flex;align-items:center;justify-content:center;font-size:12pt}
+.page{page-break-after:always}
+.sub{color:#5b606b;font-size:12pt;margin-bottom:6mm}
+img{width:100%;border-radius:3mm;display:block}
+table{border-collapse:collapse;width:100%;font-size:9.5pt}
+td,th{border-bottom:1px solid #e3e5e8;padding:1.6mm 2mm;text-align:left;vertical-align:top}
+th{background:#f4f5f7}
+.r{text-align:right;white-space:nowrap}
+code,pre{font-family:"JetBrains Mono",Consolas,monospace;font-size:9pt;background:#f4f5f7;border-radius:1.5mm}
+code{padding:.3mm 1mm} pre{padding:3mm;white-space:pre-wrap;margin:2mm 0}
+.warn{border-left:3px solid #d93025;background:#fdf1f0;padding:2.5mm 3mm;margin:3mm 0;border-radius:1mm}
+.tip{border-left:3px solid #f06a10;background:#fff5ee;padding:2.5mm 3mm;margin:3mm 0;border-radius:1mm}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+ol,ul{margin:1mm 0 3mm;padding-left:5mm} li{margin:.8mm 0}
+.small{font-size:8.5pt;color:#5b606b}
+</style></head><body>
+
+<div class="page">
+<h1>AssistVision glasses</h1>
+<div class="sub">A clip-on camera for ordinary glasses that photographs a meal when it is served and when the plate is cleared. The laptop works out how much was eaten.</div>
+<img src="../render/out/hero.png">
+<div class="two" style="margin-top:6mm">
+<div><b>What you build</b><ul><li>1 camera board, 1 battery, 2 printed clips</li><li>4 solder joints, no breadboard</li><li>About 2 hours, about ₹2,000–2,900</li></ul></div>
+<div><b>How it is used</b><ol><li>Meal served: press the button, turn your head slowly across the plate (4 s).</li><li>Plate cleared: do the same.</li><li>The laptop compares the two and logs % eaten.</li></ol></div>
+</div>
+<p class="small">Renders show the printed parts from <code>hardware/glasses/cad/out</code> on a generic frame. The device has not yet been built and tested; record your own measurements.</p>
+</div>
+
+<div class="page">
+<h2><span>1</span>Buy</h2>
+<table>
+<tr><th>Part</th><th>Notes</th><th class="r">Est. ₹</th></tr>
+<tr><td><b>Seeed XIAO ESP32S3 Sense</b></td><td>Must say “Sense” (comes with the OV2640 camera and 8 MB PSRAM). Robu.in, Robocraze, Amazon.</td><td class="r">1,500–2,000</td></tr>
+<tr><td><b>3.7 V LiPo, 400–600 mAh</b></td><td>Flat cell no bigger than 5 × 20 × 40 mm (e.g. “502040” or “402035”), with 2 wires. Single cell only.</td><td class="r">200–350</td></tr>
+<tr><td>Tactile push button 6 × 6 mm</td><td>Optional: the board’s own BOOT button also works.</td><td class="r">10–20</td></tr>
+<tr><td>Thin silicone wire (26–30 AWG), heat-shrink</td><td>About 30 cm, red + black.</td><td class="r">50–100</td></tr>
+<tr><td>3D printing, ~11 g PLA</td><td>College printer or a print shop (minimum charge applies).</td><td class="r">100–300</td></tr>
+<tr><td>Cheap glasses frame</td><td>Any frame with a flat temple arm about 3.5 mm thick, 8 mm tall. Pop out the lenses or keep them.</td><td class="r">100–250</td></tr>
+<tr><td>Double-sided foam tape</td><td>Shims a thin temple arm.</td><td class="r">30–50</td></tr>
+<tr><th colspan="2">Total (you already have a USB-C cable, laptop and Wi-Fi)</th><th class="r">≈ 2,000–2,900</th></tr>
+</table>
+<p class="small">Prices are estimates, not quotes. Keep every bill; the paper’s cost figure must match what you actually paid.</p>
+<div class="warn"><b>Battery safety.</b> Only a single-cell 3.7 V LiPo. Never reverse the wires: red to BAT+, black to BAT−. Do not puncture, bend or charge it unattended.</div>
+</div>
+
+<div class="page">
+<h2><span>2</span>Print</h2>
+<div class="two">
+<div>
+<table>
+<tr><th>File</th><th>Qty</th></tr>
+<tr><td><code>camera_pod.stl</code></td><td>1</td></tr>
+<tr><td><code>camera_pod_lid.stl</code></td><td>1 (print in a bright colour)</td></tr>
+<tr><td><code>battery_pod.stl</code></td><td>1</td></tr>
+</table>
+<ul><li>PLA, 0.2 mm layers, 3 walls, 20 % infill</li><li>Files are already in print orientation, flat side down</li><li>No supports; if the clip hook sags, use supports “touching build plate” only</li><li>About 1 h for all three</li></ul>
+</div>
+<div><img src="../render/out/exploded.png"></div>
+</div>
+<div class="tip"><b>Check the clip first.</b> Push the printed clip onto the temple arm. It should grip firmly. Too loose: add a strip of foam tape inside the hook. Too tight or too thin: measure your temple arm and re-generate the parts:
+<pre>python hardware/glasses/cad/glasses_mount.py   # edit temple_t / temple_h at the top first</pre></div>
+</div>
+
+<div class="page">
+<h2><span>3</span>Flash the firmware (before soldering)</h2>
+<ol>
+<li>Install Arduino IDE 2, then <i>Boards Manager → “esp32” by Espressif</i>.</li>
+<li>Click the camera module onto the board’s B2B connector (it clicks), and plug the board into the laptop with USB-C.</li>
+<li>Open <code>hardware/firmware/assistvision_glasses/assistvision_glasses.ino</code>.</li>
+<li>Copy <code>secrets.example.h</code> to <code>secrets.h</code> and type your Wi-Fi name and password (2.4 GHz only). Never commit <code>secrets.h</code>.</li>
+<li><i>Tools → Board → XIAO_ESP32S3</i>, <i>Tools → PSRAM → OPI PSRAM</i>, then Upload.</li>
+<li>Open the Serial Monitor at 115200. You should see <code>WiFi up IP 192.168.x.x</code> and one long LED flash.</li>
+</ol>
+<pre>python src/glasses_client.py --host assistvision-glasses.local status</pre>
+<p>If <code>.local</code> names do not resolve on your laptop, use the IP from the Serial Monitor instead.</p>
+<div class="tip">Test a capture now: <code>meal --id test --phase served</code> saves 13 photos to <code>data/meals/test/served</code>. Open them: the image should be upright and sharp. If it is upside down, send <code>POST /camera?vflip=1</code>.</div>
+</div>
+
+<div class="page">
+<h2><span>4</span>Solder (4 joints)</h2>
+<ol>
+<li><b>Battery:</b> on the back of the XIAO, red wire to the <b>BAT+</b> pad, black wire to <b>BAT−</b>. Check with a multimeter before connecting the cell.</li>
+<li><b>Button (optional):</b> one leg to <b>D1</b>, the other to <b>GND</b>. Skip it to use the BOOT button through the lid window.</li>
+<li>Slide heat-shrink over each joint.</li>
+</ol>
+<div class="warn">Polarity matters. A reversed LiPo can destroy the board instantly.</div>
+<h2 style="margin-top:6mm"><span>5</span>Assemble</h2>
+<div class="two">
+<div><ol>
+<li>Slide the board into the camera pod, camera first, so the lens sits in the square window.</li>
+<li>Lead the battery wires out of the bottom slot.</li>
+<li>Press the orange lid in. The USB-C port and the BOOT/charge-LED window stay open. Add a drop of glue if loose.</li>
+<li>Push the battery into its pod.</li>
+<li>Clip both pods onto the <b>right</b> temple arm: camera pod at the hinge, battery behind it.</li>
+<li>Tape the wire along the arm.</li>
+</ol></div>
+<div><img src="../render/out/side.png"></div>
+</div>
+<p>Charge by plugging USB-C into the board (it charges the LiPo itself). The small red LED by the USB port shows charging.</p>
+</div>
+
+<div class="page">
+<h2><span>6</span>Use it at a meal</h2>
+<ol>
+<li>Laptop and glasses on the same Wi-Fi. Run, before the meal arrives:
+<pre>python src/glasses_client.py --host assistvision-glasses.local meal --id 2026-11-02-lunch-r1 --phase served --wait-button</pre></li>
+<li>Sit where the diner sits, look at the plate from about half a metre, press the button.</li>
+<li>Turn your head slowly from left to right for about 4 seconds while the LED blinks (13 photos).</li>
+<li>Two blinks = all photos taken. Six fast blinks = some photos failed; press again.</li>
+<li>After the meal, run the same command with <code>--phase cleared</code> and repeat from the same seat.</li>
+</ol>
+<div class="tip">Keep the two printed ArUco squares next to the plate in both captures: they give the laptop a fixed reference.</div>
+<h2 style="margin-top:6mm"><span>7</span>If something goes wrong</h2>
+<table>
+<tr><th>Symptom</th><th>Fix</th></tr>
+<tr><td>20 fast blinks at start-up</td><td>Camera not detected: reseat the camera module on its connector.</td></tr>
+<tr><td>“no PSRAM” in Serial Monitor</td><td>Tools → PSRAM → OPI PSRAM, upload again.</td></tr>
+<tr><td>WiFi DOWN</td><td>2.4 GHz network only; check <code>secrets.h</code>.</td></tr>
+<tr><td>Board gets warm</td><td>Normal with the camera on; let it rest between meals.</td></tr>
+<tr><td>Photos blurry</td><td>Turn your head more slowly; check the lens is not touching the window edge.</td></tr>
+</table>
+</div>
+</body></html>
