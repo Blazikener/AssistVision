@@ -1,0 +1,40 @@
+Table~\ref{tab:synth} gives the results. With the pre-registered footprint
+rule, dense MVS has a median absolute error of 4.6\,\% [2.0, 6.1] on the 16
+textured-food scenes, and 13 of 16 are within 10\,\%. Steel plates (3.0\,\%,
+8 of 8 within 10\,\%) do better than ceramic (5.9\,\%, 5 of 8). Banana leaf
+gives $-1.9$ and $+7.8$\,\%. The textureless white ceramic gives plate-surface
+noise of 1.9--7.4\,mm, against 0.9--1.2\,mm on the textured steel. The three
+textured-food misses are all on ceramic: the curry heap ($-26.0$\,\%, below),
+the 38\,mL small portion ($-30.1$\,\%; 4.5\,mm plate noise is a large share of
+an 18\,mm-high portion) and the tall mound ($+16.8$\,\%).
+
+\textbf{Textureless food fails.} With the food texture removed, dense MVS gives
+$-1.4$\,\% (curry), $-20.8$\,\% (idli), $-69.4$\,\% (rice + dal) and
+$-82.9$\,\% (rice mound), a median of 45.1\,\%. Without texture on the food,
+the matcher has nothing to triangulate on its surface. Real rice and dal are
+textured, but smooth sauces and plain white foods are not, so this is the
+main limit of a passive-camera rig.
+
+\textbf{Failure case.} \texttt{curry\_heap\_\_ceramic} is $-26.0$\,\%: its
+6.2\,mm plate noise raises the threshold above the low outer skirt of the
+heap, which is then cut from the footprint. The failure is mostly but not
+always repeated. Five runs of the identical input on this machine gave
+$-26.0$, $-26.0$, $-24.8$, $-23.1$ and $+0.2$\,\%, and one run on a second VM
+gave $+0.1$\,\%. OpenMVS is not deterministic on the textureless plate, and the
+noise estimate, and with it the threshold, moves between runs. The post-hoc hysteresis rule
+recovers it ($-1.0$\,\%) and lowers the textured-food median error to
+2.2\,\%, but its bias is $+5.5$\,\% and it overestimates the tall mound on
+ceramic by 46.1\,\%, lumpy rice by 24.2\,\% and the thali by 17.9\,\%, where
+plate noise connects to the food. No single height
+threshold works on every scene. We keep the pre-registered rule as primary
+and conclude that \emph{separating food from plate}, not depth accuracy, is
+now the dominant error of the multi-view pipeline. Image-space food
+segmentation projected onto the height field is the natural next step.
+\textbf{Sparse is not enough.} Sparse SfM points alone have a median error of
+91.3\,\% [79.5, 99.5] over all 22 scenes, nearly always an underestimate:
+feature points concentrate on the textured mat and food edges, leaving most of
+the food surface empty. Two steel scenes happen to land within 10\,\%
+(thali $-0.8$\,\%, tall mound $+3.4$\,\%), but the steel median is still
+78.9\,\%.
+Densification is therefore required, and it is the main cost of a scan.
+Dense reconstruction takes about 119\,s per scene, against 18\,s for sparse on the VM CPU (VM evidence).

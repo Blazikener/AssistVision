@@ -1,0 +1,16 @@
+\begin{table}[t]\centering\small
+\caption{E5: eaten volume from before/after 24-view dense MVS on partly eaten synthetic plates (exact mesh volumes). Share: error in the eaten fraction of the serving, percentage points.}
+\label{tab:e5}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrr}
+\toprule
+Plate & $n$ & Median $|$err$|$ \% [95\,\% CI] & $\le$10\,\% & Share (pp) \\
+\midrule
+All & 12 & 2.8 [2.0, 7.4] & 11/12 & 2.8 \\
+Ceramic & 6 & 7.4 [2.2, 9.8] & 5/6 & 4.3 \\
+Steel & 6 & 2.1 [1.5, 3.4] & 6/6 & 2.1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each of the six plates from E3 was paired with a leftover version on ceramic and steel: one or more items removed, the rest reduced in height and radius (e.g.\ the rice eaten and 60\,\% of the dal height left), rendered with the same seed, camera path and plate. Eaten volume is the difference of two independent reconstructions, so the errors of both scans add. Across 12 pairs the median absolute error of the eaten volume is 2.8\,\% [2.0, 7.4], 11/12 within 10\,\%, and the eaten share of the serving is off by a median of 2.8 percentage points (Table~\ref{tab:e5}). The largest error is curry heap on ceramic (-11.1\,\%). The leftover scans alone are much worse in relative terms (median 9\,\% of the leftover volume), because thin remains on a plate are hard to reconstruct; in absolute terms that is a median 7.5\,ml, small next to the served portion. These scans follow the 24-view turntable path of our first design; E6 repeats the same pairs from the glasses' viewpoint. Both are synthetic, not physical, measurements.

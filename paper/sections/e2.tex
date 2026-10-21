@@ -1,0 +1,6 @@
+Nutrition5k has no food-volume label, so the volume target in E1/E2 is the
+volume integrated from RealSense depth over the dish region with the same
+height-field integral (Eq.~\ref{eq:vol}) applied to each model's prediction.
+The error therefore isolates the depth model: a model with zero error here
+reproduces the sensor, whatever the sensor's own error on food is.
+\input{tables/n5k_e2.tex}

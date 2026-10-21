@@ -1,0 +1,53 @@
+\textbf{Marker-scale error (60 runs, sparse SfM).} We scaled the believed marker
+side by $0.98$--$1.02$ on 12 scenes. The recovered metric scale tracks the
+injected factor, but the integrated volume does not change monotonically
+(mean 71.7, 90.3, 77.9, 66.9 and 47.7\,mL for factors 0.98 to 1.02). Two sparse
+runs of the same input differ by a median of 1.9 and up to 62.9 percentage
+points of true volume, so run-to-run SfM variation is far larger than the
+$\pm6\,\%$ that the cube law predicts for a $\pm2\,\%$ scale error. The cube law
+is therefore an analytic bound (Sec.~\ref{sec:scale}), and this ablation is
+uninformative on sparse reconstructions. It will be repeated on dense
+reconstructions.
+
+\textbf{View count (60 dense runs, 12 scenes).} Accuracy collapses below 12
+views. The median absolute volume error is 91.6\,\% [78.7, 96.3] at 6 views
+and 71.4\,\% [22.7, 76.5] at 8 views (0 and 2 of 12 scenes within 10\,\%). It
+is 3.3\,\% [0.4, 19.2] at 12, 1.6\,\% [0.4, 3.6] at 16 and 4.2\,\% [0.4, 5.6]
+at 24 views (9, 11 and 12 of 12 within 10\,\%). The paired difference between
+16 and 24 views is not significant ($p=0.38$, Wilcoxon, $n=12$). Every view
+registered at every setting; what drops is dense coverage (median 0.17\,M points
+at 6 views against 1.03\,M at 24). Four idli runs at 6 and 8 views return fewer
+than 1{,}000 food points and $-100\,\%$ volume while reporting success, so the
+pipeline needs a minimum-food-point check before a scan is accepted. We keep 24
+views as the default because it is the only setting with all scenes within
+10\,\%; 16 views is the fallback when scan time matters. These runs were split
+across three identical cloud VMs (8-vCPU Xeon, same package versions). The
+pipeline is not bit-reproducible: the same 24-view input reconstructed on two
+machines differed by a median of 0.9 percentage points, 10 of 12 scenes within
+1.2 points, but by 4.9 points on \texttt{thali3\_\_ceramic} and 26.1 points on
+\texttt{curry\_heap\_\_ceramic} ($-26.0\,\%$ vs.\ $+0.1\,\%$).
+
+\textbf{Resolution and compression (72 dense runs, 12 scenes).} Resolution
+matters less than compression. Median absolute volume error is 3.9\,\% [0.8,
+5.1] at 1600$\times$1200 lossless and 3.2\,\% [2.1, 4.0] at 800$\times$600
+lossless (12 of 12 within 10\,\%; paired $p=0.27$). OpenCV quality 30 at full
+resolution is 7.4\,\% [2.4, 8.6] (12 of 12 within 10\,\%, $p=0.18$). Quality 10
+fails at every resolution: 72.7\,\% at 1600$\times$1200, 90.4\,\% at
+800$\times$600 and 82.7\,\% at 640$\times$480 (at most 1 of 12 within 10\,\%;
+$p=4.9\times10^{-4}$ for each against the lossless baseline, significant after
+Holm correction over five comparisons). Heavy compression removes the fine
+texture that dense matching needs. For the rig this means a low compression
+setting on the camera matters more than its maximum resolution; we did not
+measure how the OV2640 quality register maps onto these OpenCV levels, so the
+rig default has to be checked on hardware.
+
+\textbf{Repeat runs (18 dense runs, 6 scenes, one machine).} Three runs on
+identical input stay within 0.2--0.9 percentage points of each other on steel
+plates and within 1.8--2.9 points on ceramic. The spread is again larger on the
+textureless plate.
+ Two observations are already available
+from E3. Ceramic and steel differ in plate noise by about $2$--$5\times$
+(plate-material ablation). Two independent reconstructions of the same eight
+scenes differed by up to 2.7 percentage points (e.g.\ \texttt{idli\_pair\_\_ceramic}
+$-8.4$ vs $-5.7$\,\%), which bounds run-to-run repeatability before the formal
+repeat experiment.

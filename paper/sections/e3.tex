@@ -1,0 +1,36 @@
+\textbf{Scenes.} We specify twenty-two Blender (Cycles) scenes with watertight food meshes
+whose volume is computed exactly from the mesh: eight food configurations
+(single rice mound, rice + dal, two idli, curry heap, lumpy rice, a three-item
+thali, a 40\,mL small portion and a tall mound) on ceramic and polished steel
+plates (16 scenes), four textureless-food variants of the first four
+configurations on ceramic, and two configurations on banana leaf. All 22 were
+rendered and reconstructed. Each scene is rendered
+at $1600\times1200$, $60^\circ$ horizontal FoV, $45^\circ$ elevation and
+\SI{0.40}{m} distance, with the plate rotating on a turntable inside a printed
+50\,mm ArUco mat, i.e.\ the rig geometry. View 0 also stores a metric depth map for a ``perfect single-view depth''
+baseline.
+
+\textbf{Methods.} We compare two pipelines. Dense MVS runs COLMAP SfM, takes
+scale from the triangulated marker corners, densifies with OpenMVS, cuts the
+food footprint at a threshold set from plate noise, and integrates. Sparse
+SfM skips densification and integrates the SfM points with the same scale.
+Single-view runs on these scenes are in the code but were not run, so the
+monocular comparison rests on E1.
+
+\textbf{Footprint rule.} Dense MVS leaves millimetre-level noise on the plate
+surface. A cell counts as food if its height exceeds $\mu+2\sigma$ of the plate
+annulus heights. This rule was fixed on \texttt{rice\_mound\_\_ceramic} before
+the other scenes were run, and those scenes are held out. A hysteresis variant
+(seed at $2\sigma$, grow connected cells down to $0.5\sigma$) was added
+\emph{after} the curry failure below, and is reported as post hoc.
+
+\begin{table*}[t]
+\centering
+\caption{E3 on synthetic plates with exact mesh volume. Error columns give the
+median absolute error with a 95\% bootstrap CI across scenes; bias is the mean
+signed error. Time: CPU seconds per scene on our VM.}
+\label{tab:synth}
+\footnotesize
+\IfFileExists{tables/synth_main.tex}{\input{tables/synth_main.tex}}{\pending{table}}
+\end{table*}
+\input{sections/e3_text.tex}

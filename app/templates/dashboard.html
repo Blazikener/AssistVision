@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ r.name }} · AssistVision Care{% endblock %}
+{% block body %}
+<a class="back" href="{{ url_for('home') }}">← All people</a>
+<div class="row head">
+  <div><h1>{{ r.name }}, {{ r.age }}</h1><p class="muted">{{ r.notes }}</p></div>
+  <a class="btn" href="{{ url_for('report', rid=r.id) }}">Weekly report for doctor</a>
+</div>
+{% if s.alert %}
+<div class="alert"><strong>Eating less than usual.</strong> The last {{ s.alert.meals }} meals were each under {{ r.low_pct|round|int }}% eaten (average {{ s.alert.mean_eaten_pct|round|int }}%), starting {{ s.alert.since|dshort }} {{ s.alert.since|hm }}.</div>
+{% endif %}
+<div class="stats">
+  <div><div class="big">{{ s.week_eaten_pct|pct }}</div><div class="muted">eaten this week</div></div>
+  <div><div class="big">{{ s.week_eaten_g_per_day|round|int }} g</div><div class="muted">eaten per day</div></div>
+  <div><div class="big">{% if s.trend_g_per_day is none %}–{% else %}{{ '%+d' % s.trend_g_per_day|round|int }} g{% endif %}</div><div class="muted">change per day, this week</div></div>
+</div>
+<section><h3>Last two weeks</h3>{% include "_chart.html" %}</section>
+<div class="grid2">
+<section>
+  <h3>Recent meals</h3>
+  <table class="list">
+    <thead><tr><th>When</th><th>Meal</th><th class="num">Served</th><th class="num">Eaten</th></tr></thead>
+    <tbody>
+    {% for m in recent %}
+      <tr><td>{{ m.served_at|dshort }}, {{ m.served_at|hm }}</td><td>{{ m.label }}</td><td class="num">{{ m.served_g|round|int }} g</td>
+          <td class="num {{ 'lowtxt' if m.eaten_pct is not none and m.eaten_pct < r.low_pct }}">{{ m.eaten_pct|pct }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+<section>
+  <h3>Circle of care</h3>
+  <table class="list">
+    <tbody>{% for c in contacts %}<tr><td>{{ c.name }}</td><td class="muted">{{ 'Doctor' if c.role == 'doctor' else 'Family' }}</td><td class="muted">{{ c.reach }}</td></tr>{% endfor %}</tbody>
+  </table>
+  <h3>Alert history</h3>
+  {% if alerts %}<table class="list"><tbody>{% for a in alerts %}<tr><td class="nowrap">{{ a.created|dshort }}</td><td>{{ a.message }}<div class="muted">Recorded for: {{ a.notified }}</div></td></tr>{% endfor %}</tbody></table>
+  {% else %}<p class="muted">No alerts yet.</p>{% endif %}
+  <h3>Log a meal by hand</h3>
+  <form method="post" action="{{ url_for('add_meal', rid=r.id) }}" class="form">
+    <input name="label" placeholder="Meal, e.g. rice and dal" required>
+    <input name="served_g" type="number" min="1" step="1" placeholder="Served (g)" required>
+    <input name="left_g" type="number" min="0" step="1" placeholder="Left (g)" required>
+    <button class="btn">Save</button>
+  </form>
+</section>
+</div>
+{% endblock %}

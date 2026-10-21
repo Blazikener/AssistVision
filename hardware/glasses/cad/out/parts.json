@@ -1,0 +1,55 @@
+{
+ "params": {
+  "wall": 1.6,
+  "clr": 0.5,
+  "board_y": 21.0,
+  "board_z": 17.8,
+  "stack_x": 15.0,
+  "lid_t": 1.6,
+  "lid_lip": 1.5,
+  "fit": 0.15,
+  "lens_win": 11.0,
+  "lens_dy": 0.0,
+  "lens_dz": 0.0,
+  "tilt_deg": 20.0,
+  "temple_t": 3.5,
+  "temple_h": 8.0,
+  "bridge_t": 2.0,
+  "jaw_t": 1.2,
+  "bat_t": 5.0,
+  "bat_w": 20.0,
+  "bat_l": 40.0,
+  "bat_wall": 1.4,
+  "bat_gap": 4.0
+ },
+ "camera_pod": {
+  "size_mm": [
+   25.2,
+   26.9,
+   29.9
+  ],
+  "volume_mm3": 2966,
+  "solid_pla_g": 3.7,
+  "valid": true
+ },
+ "camera_pod_lid": {
+  "size_mm": [
+   22.0,
+   25.2,
+   3.1
+  ],
+  "volume_mm3": 749,
+  "solid_pla_g": 0.9,
+  "valid": true
+ },
+ "battery_pod": {
+  "size_mm": [
+   43.4,
+   24.0,
+   13.1
+  ],
+  "volume_mm3": 4428,
+  "solid_pla_g": 5.5,
+  "valid": true
+ }
+}

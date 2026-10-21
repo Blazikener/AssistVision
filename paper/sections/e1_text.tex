@@ -1,0 +1,64 @@
+\textbf{Relative models: anchoring on the table fails from overhead.} The five
+relative models have a median volume error of 88.4--99.4\,\% under the
+deployable anchor protocol (Table~\ref{tab:n5k}), even though their predicted
+table is flat to 0.6--0.7\,mm RMS: the scale-and-shift fit reproduces the table
+and collapses the food relief. The fit is badly conditioned on most dishes
+(Fig.~\ref{fig:cond}), as expected when the only reference is a plane almost
+perpendicular to the optical axis. This is the quantitative reason the rig
+views the plate at $45^\circ$ and uses the marker mat and multiple views.
+
+\textbf{Metric models are not metric at plate distance, but one scale helps.}
+Used as-is, all five metric models are far off: AbsRel 1.33--2.76 and median
+volume errors of 759--801\,\% (DA-V2 metric indoor) and 3{,}539--5{,}328\,\%
+(ZoeDepth). ZoeDepth places the table at about 1.2\,m instead of 0.35\,m, a
+distance well outside the room-scale scenes it was trained on. Their anchor
+fits only one scale to the table, which is well conditioned even from
+overhead. ZoeDepth-NYU is then the best deployable model: 44.1\,\% [39.6,
+50.5] median volume error, 24\,\% of dishes within 20\,\%, ahead of the next
+model (DA-V2-Metric-Indoor-S, 73.5\,\%; Holm-corrected Wilcoxon
+$p=3.6\times10^{-9}$). That is still an order of magnitude worse than
+multi-view reconstruction (Sec.~\ref{sec:synth}). Its predicted table is not
+flat (9.4\,mm RMS), and the KITTI-mixed variant is worse (58.6\,\%). Model size
+does not order the DA-V2 metric models: B is the worst of the three under
+every protocol.
+
+\textbf{Depth Pro is the exception, but no better once anchored.} Depth Pro
+was run on a seeded 200-dish subset because it takes 40\,s per image on the
+VM CPU. Used as-is it is the only metric model with roughly the right scale
+(AbsRel 0.20), yet it still overestimates volume (median signed error
+$+82$\,\%, absolute 97.9\,\%). Anchored, it reaches 47.7\,\% [41.7, 54.9],
+indistinguishable from ZoeDepth-NYU on the same dishes (45.3\,\%;
+Wilcoxon $p=0.8$, $n=198$) at about 15$\times$ the latency. Its oracle fit
+(49.5\,\%) is no better than its anchor and far behind DA-V2-L
+($p=9.2\times10^{-11}$).
+
+\textbf{Depth metrics do not predict volume.} After alignment AbsRel is
+0.013--0.125 for every model, yet volume errors span 10--100\,\%. Food relief
+(1--3\,cm) is a small fraction of the 36\,cm camera distance, so a model can
+score well on depth and still lose most of the volume. We therefore rank
+models on volume, not on AbsRel.
+
+\textbf{Oracle upper bound.} With an oracle fit DA-V2-L is best of all eleven
+models: 25.9\,\% [23.7, 30.2] median volume error with its own support plane
+and 9.6\,\% with the sensor's plane. Within Depth Anything V2 (relative) the
+error falls with encoder size, from 37.4\,\% (S) to 32.1\,\% (B) to 25.9\,\%
+(L); L is separated from B with Holm-corrected $p=3.1\times10^{-19}$. The gap
+between the two plane choices shows that fitting the support plane in
+predicted depth causes more than half of the error; in the rig the marker mat
+provides this plane independently of the network. The oracle needs food
+ground truth and is not deployable.
+
+\textbf{Coverage and failures.} 498 of the 503 usable dishes were evaluated
+for every model except Depth Pro (198 of its 200-dish subset). The remaining five have no visible table (degenerate plane
+fit) and are counted as failures, not dropped. Latency is 1.4--3.9\,s per
+image on 8-vCPU cloud VMs (VM evidence), and 40\,s for Depth Pro: DA-V1-S, DA-V2-S/B and MiDaS ran on a
+machine shared with other jobs, so their times are upper bounds, and the other
+models ran alone on identical VMs.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figs/n5k_anchor_conditioning.pdf}
+\caption{Anchor-fit conditioning on Nutrition5k (relative models): condition
+number of the affine fit (left) and coefficient of variation of table inverse
+depth (right). A low CV means the table alone cannot separate scale from shift.}
+\label{fig:cond}
+\end{figure}
