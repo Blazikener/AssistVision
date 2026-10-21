@@ -5,7 +5,7 @@
 \newcommand{\pending}[1]{\textcolor{red}{[#1]}}
 
 \begin{document}
-\title{AssistVision: Before-and-After Plate Weighing and Scanning for Meal-Intake Monitoring in Older Adults}
+\title{AssistVision: Clip-On Camera Glasses for Before-and-After Meal-Intake Monitoring in Older Adults}
 \author{\IEEEauthorblockN{Dr.~Usama Abdur Rahman, M.Tech., Ph.D.}
 \IEEEauthorblockA{Department of Computer Science\\
 and Engineering with Specialization\\
@@ -34,19 +34,23 @@ Chennai, India}}
 \begin{abstract}
 Many older adults eat less than they are served. In hospital, eating little
 predicts death even after adjusting for illness, yet intake is usually judged by
-eye. AssistVision is a rig costing at most INR~4,370 (ESP32-S3 camera, stepper
-turntable, HX711 load cell, printed ArUco mat) that weighs and scans the plate
-when a meal is served and again when it is cleared; the mass difference gives
-grams eaten. A companion app keeps the meal log, alerts family after a run of
+eye. AssistVision is a clip-on camera for ordinary spectacles (Seeed XIAO
+ESP32S3 Sense, a small LiPo and two 3D-printed pods, about INR~2,000--2,900 in
+parts) worn by a carer. One button press records a 13-frame burst while the
+carer looks across the plate, once when the meal is served and once when it is
+cleared; the host reconstructs both scenes and reports the share of the meal
+eaten. A companion app keeps the meal log, alerts family after a run of
 low-intake meals and prints a weekly report for the doctor. To choose the
 vision pipeline we test \input{tables/n_models.tex}monocular depth models on
 507 Nutrition5k dishes and dense multi-view stereo on
 \input{tables/n_synth.tex}synthetic plates with exact volume, plus 12
-before/after meal pairs.
+before/after meal pairs seen from a turntable path and from a simulated head
+sweep.
 \input{tables/abstract_numbers.tex}
 \input{tables/e5_abstract.tex}
-The app and alert rule are an engineering prototype; no clinical or user study
-has been run.
+\input{tables/e6_abstract.tex}
+The glasses have not yet been built or worn, and no clinical or user study has
+been run.
 \end{abstract}
 
 \section{Introduction}
@@ -66,33 +70,34 @@ decline only once it shows as weight loss.
 
 Weighing the plate before and after the meal is the reference method in those
 validation studies~\cite{kawasaki2016criterion}. It is accurate but tedious,
-so it is rarely done as routine. We make it automatic and send the result to
-the people who can act on it: AssistVision weighs and photographs the plate on
-a turntable at serving and at clearing, and its companion app shows grams
-eaten to family members and the doctor.
+so it is rarely done as routine, and a scale at every seat costs money and
+space. We take the measurement to the person who is already at the table: a
+carer wearing AssistVision's clip-on camera glasses presses a button at
+serving and at clearing, the host compares the two scenes, and the companion
+app shows the share eaten to family members and the doctor.
 
 The camera half of the rig raises a measurement problem. Perspective projection
 discards absolute scale: a small plate near the camera and a large plate far
 away give the same pixels. Metric scale has to come from outside the image:
 from a reference object, a depth sensor, camera motion with known geometry, or
-a learned prior. We measure what each choice costs, and whether before/after
-volume differences are accurate enough to back up the scale.
+a learned prior. We measure what each choice costs, and whether a short head
+sweep gives volumes consistent enough for a served/cleared ratio.
 
 Our contributions are:
 \begin{enumerate}
 \item A meal-intake monitoring system for older adults (Sec.~\ref{sec:care}):
-before/after weighing and scanning on one rig, intake arithmetic that flags
-impossible readings, and a companion app with family and clinician views (meal
-log, two-week trend, low-intake alert, weekly report).
-\item An open hardware capture rig (Sec.~\ref{sec:hw}) that produces multi-view
-images, metric scale and plate mass in one button press, with firmware, host
-software, wiring and a bench-test protocol.
+served and cleared photo bursts from one wearable camera, a share-eaten rule
+that flags impossible pairs, and a companion app with family and clinician
+views (meal log, two-week trend, low-intake alert, weekly report).
+\item Open, low-cost camera glasses (Sec.~\ref{sec:hw}): parametric printable
+pods for any spectacle frame, burst-capture firmware, a host client and an
+illustrated build guide.
 \item A benchmark of monocular depth models for food on real RGB-D data
 (Nutrition5k) that keeps deployable and oracle calibration apart.
 \item A controlled synthetic study with exact mesh volumes: dense MVS against
 ground truth, ablations of the factors the rig designer controls (views,
 resolution, compression, marker accuracy, serveware), and partly eaten plates
-(E5).
+seen from a turntable path (E5) and from a simulated head sweep (E6).
 \item A record of design decisions and rejected alternatives
 (Sec.~\ref{sec:design}), each tied to a measurement or a stated assumption.
 \end{enumerate}
@@ -134,12 +139,12 @@ Decision & Chosen & Rejected alternatives & Why / evidence \\
 \midrule
 Scale source & Printed ArUco mat, multi-view triangulation & Credit-card reference in one image; metric monocular depth; depth sensor & Volume scales with the \emph{cube} of length error (Sec.~\ref{sec:scale}); metric networks are off by large factors at plate distance (Table~\ref{tab:n5k}); a D435-class sensor costs $\sim$10$\times$ the camera (assumption). \\
 Geometry & Dense MVS (COLMAP + OpenMVS) & Sparse SfM points only; single-view depth & Sparse points under-cover low-texture food (Sec.~\ref{sec:synth}); single view cannot see the far side of a mound even with perfect depth. \\
-Capture motion & Fixed camera, motorised turntable & Hand-held phone orbit; multi-camera ring & Repeatable baselines and known angles; one camera keeps cost and synchronisation trivial; the angle prior is checked against SfM. \\
-Camera tilt & 45$^\circ$ elevation & Straight overhead (Nutrition5k) & Overhead view makes the support plane fronto-parallel: the relative-depth anchor fit becomes rank-deficient (condition number $10^{14}$, Sec.~\ref{sec:anchor}). \\
-Controller & ESP32-S3 + OV2640 & Raspberry Pi + camera; smartphone app & Pi adds cost, boot time and an OS to maintain; phones vary per user and cannot drive the turntable or scale. Processing is host-side, so the MCU only needs camera, Wi-Fi and GPIO (assumption: cost table in hardware README). \\
-Ground truth & 5\,kg bar load cell + HX711 under the plate & External kitchen scale; no mass at all & In-rig weighing removes a manual step and lets every scan carry its own reference; tare-before-serve gives food-only mass. \\
+Capture motion & Head sweep: 13-frame burst from clip-on glasses & Fixed camera on a motorised turntable (our first design); hand-held phone orbit; commercial smart glasses & The carer is already at the table, so nothing is added to the tray or table; a 60$^\circ$ sweep gives enough baseline for MVS (E6); the turntable needs mains power, space and a plate placed on it; commercial glasses are closed and cost over 10$\times$ more (assumption). \\
+Camera tilt & Pod tilted 20$^\circ$ down; plate seen at about 55$^\circ$ elevation & Straight overhead (Nutrition5k) & Overhead view makes the support plane fronto-parallel: the relative-depth anchor fit becomes rank-deficient (condition number $10^{14}$, Sec.~\ref{sec:anchor}). \\
+Controller & XIAO ESP32S3 Sense (camera, 8\,MB PSRAM, LiPo charger on board) & ESP32-S3 dev board + separate charger; Raspberry Pi Zero + camera; smartphone & Thumb-sized and light enough for a temple arm; no extra charger board or OS; processing is host-side, so the MCU only needs camera, Wi-Fi and a button (assumption: cost table in the build guide). \\
+Burst storage & 13 JPEGs held in PSRAM, pulled by the host & Stream video; store on microSD & Frames stay sharp at UXGA instead of video bit rates; no card to remove; the host checks every frame before filing it. \\
 Volume integral & Height field over the fitted support plane & Constant per-pixel footprint (Nutrition5k); voxel carving; mesh + watertight closure & Exact on tilted planes in our unit tests (0.09\,\% error) where the constant-footprint formula is not; shared across all methods so comparisons measure geometry, not bookkeeping. \\
-Intake measure & Load-cell difference, served minus left & Staff visual estimate; image-volume difference $\times$ density & Weighing is the reference in validation studies~\cite{kawasaki2016criterion}; visual estimates are weak for individuals~\cite{heighington2022visual}; volume needs density and tracks mass poorly (E2). \\
+Intake measure & Share eaten, $1-V_l/V_s$, from the two reconstructions & Staff visual estimate; grams via volume $\times$ density; plate scale & The plate, food and density cancel in the ratio; visual estimates are weak for individuals~\cite{heighington2022visual}; volume tracks mass poorly (E2); weighing is the reference~\cite{kawasaki2016criterion} but needs a scale at every seat. \\
 Alert rule & $k$ low meals in a row, threshold set by the clinician & Daily-total threshold; fixed population cut-off & A run of low meals is visible within a day; thresholds are prototype defaults, not validated cut-offs. \\
 Mono calibration & Report raw / anchor / oracle separately & Report only oracle-aligned numbers & Oracle alignment uses the ground truth being evaluated; it is an upper bound, not a deployable result. \\
 \bottomrule
@@ -148,9 +153,9 @@ Mono calibration & Report raw / anchor / oracle separately & Report only oracle-
 
 \section{Meal-Intake Monitoring for Older Adults}\label{sec:care}
 \begin{figure*}[t]\centering
-\includegraphics[width=0.9\textwidth]{figs/care_flow.pdf}
-\caption{Meal-intake loop. The rig records served and leftover mass and
-volume; the host computes intake; family members get alerts and a daily view;
+\includegraphics[width=0.9\textwidth]{figs/care_flow_glasses.pdf}
+\caption{Meal-intake loop. The glasses record a served and a cleared burst;
+the host reconstructs both and computes the share eaten; family members get alerts and a daily view;
 the doctor gets a weekly report and sets the alert threshold.}
 \label{fig:care}
 \end{figure*}
@@ -161,77 +166,22 @@ weekly share of served food eaten, grams per day, and the two-week trend of
 served (grey) versus eaten (green; red when under the threshold).}
 \label{fig:app}
 \end{figure}
-\textbf{Protocol.} The empty plate is tared. At serving the rig records the
-food mass $m_s$ and a 24-view scan (volume $V_s$); when the plate is cleared it
-records $m_l$ and $V_l$ (Fig.~\ref{fig:care}; \texttt{rig\_client.py meal
---phase served|cleared}). Eaten mass and fraction are
-\begin{equation}\label{eq:intake}
-m_e=m_s-\min\!\big(\max(m_l,0),\,m_s\big),\qquad f=m_e/m_s .
-\end{equation}
-A served reading under 2\,g is treated as an empty plate. A leftover heavier
-than the serving by more than 2\,g (food added, plate swapped, a spoon left on
-the plate) is stored with a flag and excluded from alerts instead of being
-silently clipped. The volume difference $V_s-V_l$ is stored next to $m_e$ as a
-cross-check; E5 measures how accurate it is.
-
-\textbf{Why mass, not image volume, gives the grams.} Converting volume to
-mass needs a density for every food, and on real mixed dishes sensor-derived
-volume barely tracks weighed mass (E2). The load cell measures mass directly,
-so the reported intake never depends on a density table.
-
-\textbf{Alerts and reports.} A meal is \emph{low} if $f<\tau$; an alert is
-raised when the last $k$ scored meals are all low, and only once per run. The
-defaults $\tau=50\,\%$ and $k=3$ are prototype values, not clinical cut-offs;
-the clinician sets both per person. The weekly report lists, per day, the
-number of meals, grams served, grams eaten and the eaten share, plus the count
-of low meals. It reports food mass, not energy or nutrients.
-
-\textbf{App.} The companion app (Flask and SQLite, Fig.~\ref{fig:app}) has one
-page per older adult with the alert banner, weekly figures, two-week chart,
-recent meals and the circle of care (family members and doctor). The rig posts
-each cleared plate to \texttt{/api/meals}; meals can also be entered by hand.
-It stores masses, times and meal names, not images, which stay on the host for
-reconstruction. In this prototype alerts are recorded in the app but not sent
-by SMS or e-mail. Unit tests cover the intake arithmetic, the alert rule
-(including firing once per run) and the rig-to-app path.
+\input{sections/care_glasses.tex}
 
 \section{Hardware}\label{sec:hw}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{figs/architecture.pdf}
-\caption{System architecture. The rig exposes an HTTP API; the host drives the
-scan loop, so dropped frames are retried rather than corrupting a scan.}
+\begin{figure*}[t]\centering
+\includegraphics[width=0.92\textwidth]{figs/architecture_glasses.pdf}
+\caption{System architecture. The glasses only capture; the host pulls each
+burst over Wi-Fi, reconstructs it and computes the share eaten.}
 \label{fig:arch}
-\end{figure}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{figs/wiring.pdf}
-\caption{Wiring of the ESP32-S3, HX711 load-cell amplifier and ULN2003 stepper driver.}
-\label{fig:wiring}
-\end{figure}
-\begin{figure}[t]\centering
-\includegraphics[width=0.78\columnwidth]{figs/scan_flow.pdf}
-\caption{Scan protocol implemented by \texttt{rig\_client.py scan}. Weight is
-read before and after the turntable moves; their difference is a per-scan
-drift/vibration check.}
-\label{fig:flow}
-\end{figure}
-The rig (Figs.~\ref{fig:arch}--\ref{fig:flow}) uses an ESP32-S3 camera board
-(OV2640, up to $1600\times1200$), a 28BYJ-48 stepper through a ULN2003 driver
-(4076 half-steps per revolution, \SI{0.088}{\degree} per step), and a
-\SI{5}{kg} bar load cell read by an HX711 at 10\,Hz. The firmware exposes
-\texttt{/capture}, \texttt{/rotate}, \texttt{/weight}, \texttt{/tare},
-\texttt{/calibrate} and camera-setting endpoints. Exposure, gain and white
-balance are locked after convergence so that all views of a scan share
-photometry, which MVS assumes. Stepper coils are released while weighing to
-avoid heating and vibration of the load cell. Tare and the counts-per-gram
-calibration persist in flash. The firmware compiles for the ESP32-S3 target with
-the Arduino core 3.3.12; a fake-firmware test exercises every client endpoint,
-retry on a dropped frame, and calibration arithmetic.
+\end{figure*}
+\input{sections/hw_glasses.tex}
 
-\textbf{Physical validation (pending).} Load-cell linearity, repeatability and
-drift, turntable angular error, scan duration and transfer latency are
-specified as scripted bench tests (\texttt{rig\_client.py bench-*}) whose
-results are not yet measured, because the rig has not yet been assembled. We report no
-physical number we have not measured.
+\textbf{Earlier design.} We first built the capture side as a fixed ESP32-S3
+camera over a stepper turntable with a load cell under the plate; its firmware
+and client remain in the repository. E3--E5 use that design's 24-view
+turntable path; E6 repeats the meal pairs from the glasses' viewpoint. Neither
+device has been measured physically yet.
 
 \section{Method}
 \subsection{Shared volume integral}
@@ -277,8 +227,11 @@ constant inverse depth, so scale and shift are not separately identifiable.
 \subsection{E4: Ablations}
 \input{sections/e4.tex}
 
-\subsection{E5: Partly eaten plates}\label{sec:e5}
+\subsection{E5: Partly eaten plates, turntable path}\label{sec:e5}
 \input{sections/e5.tex}
+
+\subsection{E6: Partly eaten plates seen from the glasses}\label{sec:e6}
+\input{sections/e6.tex}
 
 \section{Limitations}
 \input{sections/limitations.tex}

@@ -13,15 +13,24 @@ controlled lighting and procedural textures. Real OV2640 frames add rolling
 shutter, auto-exposure drift, lens distortion and JPEG blocking on low-texture
 food. The resolution and JPEG ablations bound part of this gap but not all of it. Textureless food already fails in simulation (Sec.~\ref{sec:synth}); an active texture projector or image-space segmentation would be needed for it.
 
-\textbf{No physical measurements yet.} Load-cell linearity, repeatability and
-drift, turntable angular error, scan duration and Wi-Fi transfer latency have
-scripts and empty tables (Sec.~\ref{sec:hw}); none of the numbers in this paper
-come from the physical rig. Timings are CPU timings on 8-vCPU cloud VMs, not
-on the ESP32-S3.
+\textbf{No physical measurements yet.} The glasses have not been printed,
+flashed or worn. Fit on a real temple arm, image sharpness during the head
+sweep, battery life, heat and Wi-Fi transfer time are untested, and the first
+turntable rig's bench tests have not been run either. None of the numbers in
+this paper come from hardware. Timings are CPU timings on 8-vCPU cloud VMs.
 
-\textbf{Volume is not mass.} E2 shows that even sensor-measured volume tracks
-weighed mass poorly on real dishes, and we estimate no food density, so every
-gram figure in AssistVision comes from the load cell.
+\textbf{One seat, one side.} A sweep from the carer's position sees the near
+side and top of the food, never the far side, so each volume is biased; the
+share is reliable only to the extent that the bias is the same in the served
+and the cleared scan (E6). A hand, cup or spoon in front of the plate, a
+missed button press or a plate moved between the two scans breaks the pair.
+The ArUco squares must lie beside the plate for metric scale; the share itself
+needs only a consistent scale between the two scans.
+
+\textbf{A share, not grams.} The glasses report what fraction of the serving
+was eaten. Grams need the portion weight from the kitchen and assume the
+leftover has the serving's density, which fails when, say, the rice is eaten
+and the curry left.
 
 \textbf{No clinical or user study.} The app, the alert rule and the weekly
 report have not been used by older adults, families or clinicians. Usability

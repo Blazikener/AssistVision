@@ -1,0 +1,16 @@
+\begin{table}[t]\centering\small
+\caption{E6: eaten share of the serving from a 13-frame head-mounted sweep (served and cleared), synthetic plates. Error in percentage points (pp).}
+\label{tab:e6}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrr}
+\toprule
+Capture, footprint rule & $n$ & Median $|$err$|$ pp [95\,\% CI] & $\le$10 pp & Max \\
+\midrule
+Glasses, fixed rule & 1 & 25.3 & 0/1 & 25.3 \\
+Glasses, region growing & 1 & 37.5 & 0/1 & 37.5 \\
+Turntable (E5), fixed rule & 1 & 15.7 & 0/1 & 15.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Across 1 served/cleared pairs, the eaten share from the glasses sweep is off by a median of 25.3 percentage points, with 0/1 pairs within 10 points (Table~\ref{tab:e6}). The largest miss is curry heap on ceramic (-25.3 points). The served portion alone has a median volume error of -31.4\,\%, because a 60-degree sweep from one seat never sees the far side of the food. Most of that bias is shared by the served and cleared scans of the same plate, so it largely cancels in the ratio. These are rendered scenes with exact volumes and a simulated head path, not measurements from the printed glasses.

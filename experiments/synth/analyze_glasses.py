@@ -86,6 +86,9 @@ def main():
         "printed glasses.")
     with open(os.path.join(PAPER, "sections", "e6.tex"), "w") as f:
         f.write("\n".join(lines) + "\n")
+    with open(os.path.join(PAPER, "tables", "e6_abstract.tex"), "w") as f:
+        f.write(f"On {a['n']} simulated served/cleared pairs seen from the glasses, the eaten share is off by a "
+                f"median of {a['med']:.1f} percentage points ({a['w10']}/{a['n']} within 10 points).\n")
     print("\n".join(f"{c}: {s}" for c, s in S.items()))
     print("failed:", failed)
 

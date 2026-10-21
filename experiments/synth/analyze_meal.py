@@ -90,8 +90,8 @@ def main():
         f"The leftover scans alone are much worse in relative terms (median {left_pct:.0f}\\,\\% of the leftover "
         f"volume), because thin remains on a plate are hard to reconstruct; in absolute terms that is a median "
         f"{left_ml:.1f}\\,ml, small next to the served portion. "
-        "The load cell remains the source of the grams; these numbers say how far the image-based cross-check "
-        "can be trusted, and they are synthetic, not physical, measurements.")
+        "These scans follow the 24-view turntable path of our first design; E6 repeats the same pairs from the "
+        "glasses' viewpoint. Both are synthetic, not physical, measurements.")
     with open(os.path.join(PAPER, "sections", "e5.tex"), "w") as f:
         f.write("\n".join(lines) + "\n")
     with open(os.path.join(PAPER, "tables", "e5_abstract.tex"), "w") as f:
