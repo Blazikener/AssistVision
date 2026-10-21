@@ -20,7 +20,7 @@ import sys
 
 import bpy
 import bmesh
-from mathutils import Matrix, Vector
+from mathutils import Matrix, Quaternion, Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -245,14 +245,24 @@ def main():
     fo.file_slots[0].path = "depth_"
     nt.links.new(rl.outputs["Depth"], fo.inputs[0])
 
-    n_views = spec.get("views", 36)
+    # cam_poses: a moving head-mounted camera over a static scene (E6, glasses).
+    poses = spec.get("cam_poses")
+    n_views = len(poses) if poses else spec.get("views", 36)
     K = [[fx, 0, (W - 1) / 2], [0, fx, (H - 1) / 2], [0, 0, 1]]
     # Blender camera looks down -Z with +Y up; OpenCV looks down +Z with +Y down.
     flip = Matrix(((1, 0, 0, 0), (0, -1, 0, 0), (0, 0, -1, 0), (0, 0, 0, 1)))
     views = []
     depth_views = set(spec.get("depth_views", [0]))
     for i in range(n_views):
-        turntable.rotation_euler = (0, 0, 2 * math.pi * i / n_views)
+        if poses:
+            p = poses[i]
+            az, el, d = math.radians(p["az"]), math.radians(p["elev"]), p["dist"]
+            tgt = Vector((p.get("tx", 0.0), p.get("ty", 0.0), 0.02))
+            cam.location = tgt + Vector((d * math.cos(el) * math.sin(az), -d * math.cos(el) * math.cos(az), d * math.sin(el)))
+            q = (tgt - cam.location).to_track_quat("-Z", "Y") @ Quaternion((0, 0, 1), math.radians(p.get("roll", 0.0)))
+            cam.rotation_euler = q.to_euler()
+        else:
+            turntable.rotation_euler = (0, 0, 2 * math.pi * i / n_views)
         bpy.context.view_layer.update()
         sc.frame_set(i)
         fo.mute = i not in depth_views
@@ -260,7 +270,7 @@ def main():
         bpy.ops.render.render(write_still=True)
         T_world_cam = cam.matrix_world @ flip
         T_cam_tt = T_world_cam.inverted() @ turntable.matrix_world
-        views.append({"file": f"view_{i:02d}.png", "angle_deg": 360.0 * i / n_views,
+        views.append({"file": f"view_{i:02d}.png", "angle_deg": poses[i]["az"] if poses else 360.0 * i / n_views,
                       "T_cam_from_turntable": [list(r) for r in T_cam_tt]})
 
     gt = {
