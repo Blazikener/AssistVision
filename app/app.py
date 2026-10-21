@@ -23,6 +23,7 @@ from flask import Flask, abort, g, jsonify, redirect, render_template, request, 
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 from intake import (
+    photo_intake,
     LOW_MEAL_PCT,
     LOW_STREAK,
     Meal,
@@ -139,12 +140,22 @@ def create_app(db_path: str | None = None, today: date | None = None) -> Flask:
     @app.post("/api/meals")
     def api_meal():
         j = request.get_json(force=True)
+        source = j.get("source", "rig")
         try:
-            rid, served_g, left_g = int(j["resident_id"]), float(j["served_g"]), float(j["left_g"])
+            rid = int(j["resident_id"])
+            if "served_ml" in j:  # camera glasses: two reconstructed volumes, no scale
+                photo = photo_intake(float(j["served_ml"]), float(j["left_ml"]))
+                if photo["eaten_pct"] is None:
+                    return jsonify(error=photo["status"]), 422
+                # stored as a share of a nominal 100-unit serving; no grams are claimed
+                served_g, left_g = 100.0, 100.0 - photo["eaten_pct"]
+                source = j.get("source", "glasses")
+            else:
+                served_g, left_g = float(j["served_g"]), float(j["left_g"])
         except (KeyError, TypeError, ValueError):
-            return jsonify(error="resident_id, served_g and left_g are required numbers"), 400
+            return jsonify(error="resident_id plus served_g/left_g or served_ml/left_ml are required numbers"), 400
         intake, alert = record_meal(rid, j.get("when") or datetime.now().strftime("%Y-%m-%dT%H:%M"),
-                                    j.get("label", ""), served_g, left_g, j.get("source", "rig"))
+                                    j.get("label", ""), served_g, left_g, source)
         return jsonify(intake=intake, alert=alert), 201
 
     @app.get("/api/residents/<int:rid>/summary")

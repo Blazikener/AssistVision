@@ -31,9 +31,11 @@ report energy or nutrients.
 \textbf{App.} The companion app (Flask and SQLite, Fig.~\ref{fig:app}) has one
 page per older adult with the alert banner, weekly figures, two-week chart,
 recent meals and the circle of care (family members and doctor). Meals arrive
-through \texttt{/api/meals} or are entered by hand; the endpoint still takes
-served and left grams from the earlier weighing rig, and posting the glasses'
-share to it is not wired yet. Images stay on the host. In this
+through \texttt{/api/meals} or are entered by hand. The endpoint takes either
+served and left grams (the earlier weighing rig) or the two reconstructed
+volumes from the glasses, which it turns into a share with the rule above and
+tags as a glasses meal. Running the reconstruction and posting the result is
+still a manual step on the host. Images stay on the host. In this
 prototype alerts are recorded in the app but not sent by SMS or e-mail. Unit
 tests cover the intake arithmetic, the alert rule (including firing once per
 run) and the client-to-app path.

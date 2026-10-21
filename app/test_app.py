@@ -44,6 +44,18 @@ def test_api_posts_and_alerts_once():
     assert c.post("/api/meals", json={"resident_id": rid}).status_code == 400
 
 
+def test_api_accepts_glasses_volumes():
+    app, c = make()
+    r = c.post("/api/meals", json={"resident_id": 1, "when": "2026-10-14T13:00", "served_ml": 400, "left_ml": 100})
+    assert r.status_code == 201
+    assert abs(r.get_json()["intake"]["eaten_pct"] - 75.0) < 1e-6
+    with app.app_context():
+        src = app.db().execute("SELECT source FROM meals ORDER BY id DESC LIMIT 1").fetchone()[0]
+    assert src == "glasses"
+    assert c.post("/api/meals", json={"resident_id": 1, "served_ml": 2, "left_ml": 0}).status_code == 422
+    assert c.post("/api/meals", json={"resident_id": 1, "served_ml": 400}).status_code == 400
+
+
 if __name__ == "__main__":
     tests = [v for k, v in dict(globals()).items() if k.startswith("test_")]
     for t in tests:
