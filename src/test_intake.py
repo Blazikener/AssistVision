@@ -4,7 +4,7 @@ import sys
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(__file__))
-from intake import Meal, daily_totals, low_intake_alert, meal_intake, trend_g_per_day
+from intake import Meal, daily_totals, low_intake_alert, meal_intake, photo_intake, trend_g_per_day
 
 
 def test_basic():
@@ -18,6 +18,16 @@ def test_guards():
     r = meal_intake(200, 260)
     assert r["status"] == "more_after_than_before" and r["eaten_g"] == 0
     assert meal_intake(200, -3)["eaten_g"] == 200
+
+
+def test_photo_intake():
+    r = photo_intake(200, 50)
+    assert r["status"] == "ok" and abs(r["eaten_pct"] - 75) < 1e-9
+    assert photo_intake(3, 0)["status"] == "empty_plate"
+    assert photo_intake(200, 215)["status"] == "ok"          # within reconstruction noise
+    r = photo_intake(200, 260)
+    assert r["status"] == "more_after_than_before" and r["eaten_pct"] == 0
+    assert photo_intake(200, -4)["eaten_pct"] == 100
 
 
 def test_alert():

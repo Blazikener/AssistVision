@@ -1,0 +1,39 @@
+\textbf{Protocol.} When the meal is served, the carer wearing the glasses
+presses the button and turns their head slowly across the plate; when the
+plate is cleared they do the same again (Fig.~\ref{fig:care};
+\texttt{glasses\_client.py meal --phase served|cleared}). Each 13-frame burst
+is reconstructed on the host into a food volume, $V_s$ at serving and $V_l$ at
+clearing, and the share eaten is
+\begin{equation}\label{eq:intake}
+f = 1-\frac{\min\!\big(\max(V_l,0),\,V_s\big)}{V_s}.
+\end{equation}
+A served volume under 5\,ml is treated as an empty plate. A leftover more than
+10\,\% larger than the serving (food added, a different plate, a failed scan)
+is stored with a flag and kept out of the alert rule instead of being clipped
+silently (\texttt{intake.photo\_intake}).
+
+\textbf{Why a share, not grams.} The glasses carry no scale. Grams from images
+would need a density for every food, and on real mixed dishes even
+sensor-measured volume tracks weighed mass poorly (E2). A share needs neither:
+the plate, the food and its density are the same in both scans, so they cancel
+in the ratio. This is the quantity nurses already record by eye in quarters of
+a plate~\cite{heighington2022visual}, measured instead of guessed. Where the
+kitchen weighs each portion, grams eaten follow as $f\,m_s$, assuming the
+leftover has the same density as the serving.
+
+\textbf{Alerts and reports.} A meal is \emph{low} if $f<\tau$; an alert is
+raised when the last $k$ scored meals are all low, and only once per run. The
+defaults $\tau=50\,\%$ and $k=3$ are prototype values, not clinical cut-offs;
+the clinician sets both per person. The weekly report lists, per day, the
+number of meals, the eaten share and the count of low meals. It does not
+report energy or nutrients.
+
+\textbf{App.} The companion app (Flask and SQLite, Fig.~\ref{fig:app}) has one
+page per older adult with the alert banner, weekly figures, two-week chart,
+recent meals and the circle of care (family members and doctor). Meals arrive
+through \texttt{/api/meals} or are entered by hand; the endpoint still takes
+served and left grams from the earlier weighing rig, and posting the glasses'
+share to it is not wired yet. Images stay on the host. In this
+prototype alerts are recorded in the app but not sent by SMS or e-mail. Unit
+tests cover the intake arithmetic, the alert rule (including firing once per
+run) and the client-to-app path.

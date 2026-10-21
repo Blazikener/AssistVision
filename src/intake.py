@@ -15,6 +15,8 @@ from datetime import date, timedelta
 PLATE_NOISE_G = 2.0      # below this, a difference is treated as load-cell noise
 LOW_MEAL_PCT = 50.0      # default: a meal counts as "low" if under half was eaten
 LOW_STREAK = 3           # default: alert after this many low meals in a row
+PLATE_NOISE_ML = 5.0     # glasses: served volume below this is an empty plate
+PHOTO_TOL = 0.10         # glasses: leftover may exceed served by 10 % before it is flagged
 
 
 @dataclass
@@ -46,6 +48,22 @@ def meal_intake(served_g: float, left_g: float, served_ml: float | None = None,
         out["eaten_ml"] = max(served_ml - left_ml, 0.0)
         out["eaten_pct_volume"] = 100.0 * out["eaten_ml"] / served_ml
     return out
+
+
+def photo_intake(served_ml: float, left_ml: float) -> dict:
+    """Percent eaten from two image reconstructions (camera glasses, no scale).
+
+    Plate, scale and density are the same in both scans, so the ratio needs no
+    grams. Reconstruction noise is larger than load-cell noise, hence the
+    relative tolerance before a leftover larger than the serving is flagged.
+    """
+    if served_ml <= PLATE_NOISE_ML:
+        return {"status": "empty_plate", "eaten_pct": None}
+    status = "ok"
+    if left_ml > served_ml * (1 + PHOTO_TOL):
+        status = "more_after_than_before"
+    left = min(max(left_ml, 0.0), served_ml)
+    return {"status": status, "eaten_pct": 100.0 * (served_ml - left) / served_ml, "left_ml": left}
 
 
 def low_intake_alert(meals: list[Meal], pct: float = LOW_MEAL_PCT, streak: int = LOW_STREAK) -> dict | None:

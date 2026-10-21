@@ -1,0 +1,16 @@
+digraph G {
+  rankdir=LR; splines=ortho; nodesep=0.35; ranksep=0.5;
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10, fillcolor="#F4F6F8", color="#5B6770"];
+  edge [fontname="Helvetica", fontsize=8, color="#5B6770"];
+  subgraph cluster_g { label="Camera glasses (XIAO ESP32S3 Sense)"; fontname="Helvetica-Bold"; fontsize=11; style="rounded"; color="#2B6CB0";
+    btn [label="Button\n(or BOOT)"]; cam [label="OV2640\n13-frame burst"]; ps [label="PSRAM\nburst buffer"]; bat [label="3.7 V LiPo\n(on-board charger)"];
+    fw [label="Firmware\nHTTP API", fillcolor="#E3EEFA"];
+    btn -> fw; fw -> cam -> ps -> fw; bat -> fw [style=dashed, arrowhead=none]; }
+  mk [label="ArUco squares\nbeside the plate"];
+  subgraph cluster_host { label="Host (laptop / server)"; fontname="Helvetica-Bold"; fontsize=11; style="rounded"; color="#2F855A";
+    cli [label="glasses_client.py\nserved / cleared"]; sfm [label="SfM\n(COLMAP)"]; scale [label="Metric scale\nmarker triangulation"];
+    mvs [label="Dense MVS\n(OpenMVS)"]; vol [label="Volume integral\n(height field over plane)", fillcolor="#E6F4EA"];
+    pct [label="% eaten\n1 - V_cleared / V_served", fillcolor="#FFF5E0"]; }
+  fw -> cli [label="Wi-Fi"]; mk -> cam [style=dashed, arrowhead=none];
+  cli -> sfm -> scale -> mvs -> vol -> pct;
+}
