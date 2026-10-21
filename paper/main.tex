@@ -76,7 +76,7 @@ carer wearing AssistVision's clip-on camera glasses presses a button at
 serving and at clearing, the host compares the two scenes, and the companion
 app shows the share eaten to family members and the doctor.
 
-The camera half of the rig raises a measurement problem. Perspective projection
+The camera raises a measurement problem. Perspective projection
 discards absolute scale: a small plate near the camera and a large plate far
 away give the same pixels. Metric scale has to come from outside the image:
 from a reference object, a depth sensor, camera motion with known geometry, or
@@ -95,7 +95,7 @@ illustrated build guide.
 \item A benchmark of monocular depth models for food on real RGB-D data
 (Nutrition5k) that keeps deployable and oracle calibration apart.
 \item A controlled synthetic study with exact mesh volumes: dense MVS against
-ground truth, ablations of the factors the rig designer controls (views,
+ground truth, ablations of the factors a device designer controls (views,
 resolution, compression, marker accuracy, serveware), and partly eaten plates
 seen from a turntable path (E5) and from a simulated head sweep (E6).
 \item A record of design decisions and rejected alternatives
@@ -111,7 +111,7 @@ individual patients; only two of the studies used modern
 technology~\cite{heighington2022visual}. In a community hospital, visual
 estimates by nursing assistants differed significantly from weighed intake,
 with Bland--Altman limits of $-121$ to $+147$\,kcal per
-tray~\cite{kawasaki2016criterion}. Our rig automates the weighed reference.
+tray~\cite{kawasaki2016criterion}. Our glasses replace the visual estimate with a measured share; weighing stays the reference.
 \textbf{Food volume.} Nutrition5k~\cite{thames2021nutrition5k} provides
 overhead RGB-D video and weighed dishes; its depth-based volume baseline uses a
 constant per-pixel footprint at the capture-plane distance. Multi-view food
@@ -177,7 +177,7 @@ burst over Wi-Fi, reconstructs it and computes the share eaten.}
 \end{figure*}
 \input{sections/hw_glasses.tex}
 
-\textbf{Earlier design.} We first built the capture side as a fixed ESP32-S3
+\textbf{Earlier design.} We first designed the capture side as a fixed ESP32-S3
 camera over a stepper turntable with a load cell under the plate; its firmware
 and client remain in the repository. E3--E5 use that design's 24-view
 turntable path; E6 repeats the meal pairs from the glasses' viewpoint. Neither
@@ -207,7 +207,7 @@ volume; Sec.~\ref{sec:synth} measures this directly.
 \subsection{Monocular protocols}\label{sec:anchor}
 \textbf{Raw}: the model's metric output is used as-is. \textbf{Anchor}: the
 prediction is calibrated using only the support plane (the table in
-Nutrition5k, the marker mat in our rig), never the food; metric outputs get one
+Nutrition5k, the marker squares beside our plate), never the food; metric outputs get one
 scale, relative outputs an affine map of inverse depth. \textbf{Oracle}: the
 same maps fitted to ground-truth depth over the whole dish region---an upper
 bound that is not available at deployment. For relative models we record the
@@ -250,7 +250,7 @@ generate every table and figure are in the repository. Evidence categories are
 labelled throughout: \emph{Nutrition5k} (public real RGB-D data),
 \emph{synthetic} (Blender/Cycles renders with exact mesh volume), \emph{VM}
 (timings on an 8-core CPU-only cloud VM, not on the ESP32), and
-\emph{physical} (pending rig measurements).
+\emph{physical} (pending hardware measurements).
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
