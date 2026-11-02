@@ -7,8 +7,9 @@ scale (this is not the OV2640 0--63 quality register, and we did not measure
 how the two map), a deliberate error in the printed marker size
 ($\pm1$, $\pm2\,\%$), plate material, and three repeated runs on identical
 input to measure the run-to-run spread of SfM/MVS, which are not
-bit-deterministic. A run fails if SfM returns no model, if no marker side is
-triangulated, or if densification errors; failures are counted, not dropped.
-The driver (\texttt{experiments/synth/run\_suite.py}) and the analysis
-script are in the repository.
+bit-deterministic. We count a run as failed when SfM gives back no model, when
+not one marker side gets triangulated, or when densification crashes, and we
+keep those failures in the totals. Anyone can rerun the suite with
+\texttt{experiments/synth/run\_suite.py} and the analysis script in the
+repository.
 \input{sections/e4_text.tex}
