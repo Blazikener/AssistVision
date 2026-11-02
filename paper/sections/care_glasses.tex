@@ -1,0 +1,69 @@
+\textbf{Protocol.} When the meal is served, the carer wearing the glasses
+presses the button and turns their head slowly across the plate; when the
+plate is cleared they do the same again (Fig.~\ref{fig:care};
+\texttt{glasses\_client.py meal --phase served|cleared}). Each 13-frame burst
+is reconstructed on the host into a food volume, $V_s$ at serving and $V_l$ at
+clearing, and the share eaten is
+\begin{equation}\label{eq:intake}
+f = 1-\frac{\min\!\big(\max(V_l,0),\,V_s\big)}{V_s}.
+\end{equation}
+A served volume under 5\,ml is treated as an empty plate. A leftover more than
+10\,\% larger than the serving (food added, a different plate, a failed scan)
+is stored with a flag and kept out of the alert rule instead of being clipped
+silently (\texttt{intake.photo\_intake}).
+
+\textbf{Why a share, not grams.} There is no scale on the glasses. Grams from
+pictures would need the density of every food, and E2 already showed that even
+sensor-measured volume follows weighed mass badly on real mixed dishes. A share
+avoids both problems. The same plate with the same food is in both scans, so
+plate size and density drop out when one volume is divided by the other. Nurses
+already write this number down when they mark a quarter or half a
+plate~\cite{heighington2022visual}; here it is measured. If the kitchen does
+weigh portions, grams eaten are $f\,m_s$, assuming what is left is as dense as
+what was served.
+
+\textbf{Alerts and reports.} We call a meal \emph{low} when $f<\tau$. When the
+last $k$ scored meals are all low, the app raises one alert and then stays quiet
+until the run breaks. We start with $\tau=50\,\%$ and $k=3$. These are our
+defaults, not clinical cut-offs, and the doctor changes them for each person.
+The weekly report has one line per day: meals, share eaten, and how many were
+low. Energy is not estimated. Protein is, dish by dish, as described below.
+
+\textbf{App.} The companion app is a small Flask site on SQLite
+(Fig.~\ref{fig:app}). Each older adult has one page: the alert banner on top,
+the week's figures, a two-week chart, the last few meals and the circle of care,
+meaning the family members and the doctor who see that page. A meal comes in
+through \texttt{/api/meals} or is typed in by a carer. The endpoint takes served
+and left grams from the earlier weighing rig, or the two reconstructed volumes
+from the glasses. For the glasses it works out the share with the rule above
+and marks the meal as a glasses meal. Someone still has to run the
+reconstruction on the laptop and post the result. The photos never leave the
+laptop. Alerts are saved in the app; this prototype does not send them by SMS or
+e-mail yet. Our tests check the arithmetic, that an alert fires once per run and
+not again, and the path from the client to the app.
+
+\textbf{Which dish was left, and its protein.} A share of the whole plate
+hides the case that matters most on an Indian menu: the rice is finished and the
+dal is left. The rice gave energy, but most of the protein was in the dal. The
+host therefore also splits the plate into dishes. It takes the centre frame of
+each burst, warps it to a top view with the two mat markers, and marks as food
+every pixel that differs from the bare rim in colour or local texture. The
+served food is clustered into the $K$ dishes on the menu by colour and position,
+and each cleared food pixel joins the nearest served dish. A dish's eaten share
+is $1-(A_\text{left}/A_\text{served})^{1.5}$, since a mound that shrinks evenly
+keeps its volume proportional to its area to the power 1.5. The kitchen enters
+the protein in one portion of each dish once, from its recipe or the Indian food
+composition tables, and the app multiplies. The daily total is compared with
+1.0\,g per kg of body weight, the low end of the 1.0--1.2\,g/kg that the PROT-AGE
+group recommends for healthy older adults~\cite{bauer2013protage}; the doctor can
+change it. After three short days in a row the family and the doctor get one
+message. If a dish was left (under 75\,\% of it eaten on average) the message
+names it, e.g. ``Most often left: Sambar''. If almost everything was eaten and
+protein was still short, it says the menu is short instead. That is a job for
+the kitchen, not a sign of poor appetite. The low-intake alert cannot
+separate these cases: in the demo data one resident eats most of every meal, so
+her low-intake alert never fires, yet she stays under her protein target and
+the protein alert does. Dietitians have long used photos of plate waste to
+estimate what was eaten~\cite{williamson2003photo}. What we change is who takes
+the photo (the carer, without stopping) and who sees the result (the family and
+the doctor, the same day).

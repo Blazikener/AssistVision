@@ -1,0 +1,16 @@
+{# 14-day bars: served (light) behind eaten (solid). Fixed viewBox keeps proportions at any width. #}
+{% set W, H, pad = 1000, 200, 24 %}
+{% set maxg = (s.daily | map(attribute='served_g') | max) or 1 %}
+{% set bw = (W - 2) / (s.daily | length) %}
+<svg class="chart" viewBox="0 0 {{ W }} {{ H + 4 }}" preserveAspectRatio="xMidYMid meet" role="img"
+     aria-label="Food served and eaten per day, last {{ s.daily | length }} days">
+  {% for d in s.daily %}
+    {% set x = loop.index0 * bw + 4 %}
+    {% set hs = (d.served_g / maxg) * (H - 10) %}
+    {% set he = (d.eaten_g / maxg) * (H - 10) %}
+    <rect x="{{ x }}" y="{{ H - hs }}" width="{{ bw - 8 }}" height="{{ hs }}" rx="3" class="served"><title>{{ d.day }}: served {{ d.served_g|round|int }} g</title></rect>
+    <rect x="{{ x }}" y="{{ H - he }}" width="{{ bw - 8 }}" height="{{ he }}" rx="3" class="{{ 'eaten low' if d.eaten_pct is not none and d.eaten_pct < s.resident.low_pct else 'eaten' }}"><title>{{ d.day }}: ate {{ d.eaten_g|round|int }} g ({{ d.eaten_pct|pct }})</title></rect>
+  {% endfor %}
+</svg>
+<div class="xaxis">{% for d in s.daily %}<span>{% if loop.index0 % 2 == (s.daily|length - 1) % 2 %}{{ d.day|dshort }}{% endif %}</span>{% endfor %}</div>
+<div class="legend"><span class="sw served"></span>Served <span class="sw eaten"></span>Eaten <span class="sw low"></span>Under {{ s.resident.low_pct|round|int }}% eaten</div>

@@ -1,0 +1,18 @@
+digraph F {
+  rankdir=TB; nodesep=0.25; ranksep=0.22;
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=9, fillcolor="#F4F6F8", color="#5B6770", width=2.2];
+  edge [fontname="Helvetica", fontsize=8, color="#5B6770"];
+  tare [label="Tare with empty plate\nPOST /tare (30 samples)"];
+  place [label="Place food"];
+  home [label="Home turntable, lock exposure\nPOST /home, POST /camera"];
+  w0 [label="Weight before\nGET /weight (30 samples)"];
+  cap [label="Capture view i\nGET /capture → view_i.jpg", fillcolor="#E3EEFA"];
+  last [label="i = N−1 ?", shape=diamond, width=1.2, fillcolor="#FFFFFF"];
+  rot [label="Rotate 360/N°, settle 400 ms\nPOST /rotate", fillcolor="#E3EEFA"];
+  w1 [label="Home, weight after\n|w1 − w0| = drift check"];
+  meta [label="scan.json: angles, bytes,\ntransfer times, w0, w1", fillcolor="#E6F4EA"];
+  host [label="Host: SfM → marker scale → dense MVS\n→ shared volume integral", fillcolor="#E6F4EA"];
+  tare -> place -> home -> w0 -> cap -> last;
+  last -> rot [label=" no"]; rot -> cap;
+  last -> w1 [label=" yes"]; w1 -> meta -> host;
+}

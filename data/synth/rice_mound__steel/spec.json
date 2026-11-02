@@ -1,0 +1,23 @@
+{
+ "plate": "steel",
+ "views": 24,
+ "samples": 24,
+ "width": 1600,
+ "height": 1200,
+ "hfov_deg": 60.0,
+ "elev_deg": 45.0,
+ "cam_dist": 0.4,
+ "threads": 4,
+ "depth_views": [
+  0
+ ],
+ "foods": [
+  {
+   "shape": "cap",
+   "r": 0.065,
+   "h": 0.04,
+   "texture": "rice"
+  }
+ ],
+ "seed": 671191146
+}

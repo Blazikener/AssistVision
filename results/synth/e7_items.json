@@ -1,0 +1,288 @@
+{
+ "all": {
+  "n": 20,
+  "med": 10.807551906240974,
+  "lo": 0.2154551725536109,
+  "hi": 15.586522725802972,
+  "w10": 9,
+  "max": 51.761853718378646
+ },
+ "area_only": {
+  "n": 20,
+  "med": 24.314287671792645,
+  "lo": 0.7923748277446019,
+  "hi": 28.012982188572142,
+  "w10": 7,
+  "max": 54.9287013337413
+ },
+ "steel": {
+  "n": 10,
+  "med": 13.872942779831728,
+  "lo": 6.656756921366188,
+  "hi": 33.1707940635126,
+  "w10": 2,
+  "max": 51.761853718378646
+ },
+ "ceramic": {
+  "n": 10,
+  "med": 1.399295968189271,
+  "lo": 0.0,
+  "hi": 10.966437756447071,
+  "w10": 7,
+  "max": 18.519227784363316
+ },
+ "most_left_ok": 6,
+ "multi_item_plates": 6,
+ "finished_found": 4,
+ "finished": 6,
+ "untouched_found": 3,
+ "untouched": 4,
+ "rows": [
+  {
+   "scene": "curry_heap__ceramic",
+   "plate": "ceramic",
+   "food": "curry",
+   "gt_pct": 77.50000090457976,
+   "est_pct": 58.98077312021645,
+   "est_area_pct": 44.79331788806243,
+   "served_cm2": 164.02,
+   "pos_err_mm": 5.972424357239018,
+   "err": -18.519227784363316
+  },
+  {
+   "scene": "curry_heap__steel",
+   "plate": "steel",
+   "food": "curry",
+   "gt_pct": 77.50000090457976,
+   "est_pct": 63.302160181680776,
+   "est_area_pct": 48.74215614223528,
+   "served_cm2": 176.89,
+   "pos_err_mm": 7.912507348501869,
+   "err": -14.197840722898988
+  },
+  {
+   "scene": "idli_pair__ceramic",
+   "plate": "ceramic",
+   "food": "idli",
+   "gt_pct": 0.0,
+   "est_pct": 0.0,
+   "est_area_pct": 0.0,
+   "served_cm2": 3.01,
+   "pos_err_mm": 3.629824679042051,
+   "err": 0.0
+  },
+  {
+   "scene": "idli_pair__ceramic",
+   "plate": "ceramic",
+   "food": "idli",
+   "gt_pct": 100.0,
+   "est_pct": 100.0,
+   "est_area_pct": 100.0,
+   "served_cm2": 4.1,
+   "pos_err_mm": 28.318363660432805,
+   "err": 0.0
+  },
+  {
+   "scene": "idli_pair__steel",
+   "plate": "steel",
+   "food": "idli",
+   "gt_pct": 100.0,
+   "est_pct": 66.8292059364874,
+   "est_area_pct": 52.0814230698698,
+   "served_cm2": 109.06,
+   "pos_err_mm": 40.831490350116546,
+   "err": -33.1707940635126
+  },
+  {
+   "scene": "idli_pair__steel",
+   "plate": "steel",
+   "food": "idli",
+   "gt_pct": 0.0,
+   "est_pct": 0.0,
+   "est_area_pct": 0.0,
+   "served_cm2": 14.0,
+   "pos_err_mm": 56.10139305356882,
+   "err": 0.0
+  },
+  {
+   "scene": "lumpy_rice__ceramic",
+   "plate": "ceramic",
+   "food": "rice",
+   "gt_pct": 59.281085399304764,
+   "est_pct": 49.102828486051095,
+   "est_area_pct": 36.25260649389336,
+   "served_cm2": 33.57,
+   "pos_err_mm": 44.747371482555344,
+   "err": -10.17825691325367
+  },
+  {
+   "scene": "lumpy_rice__steel",
+   "plate": "steel",
+   "food": "rice",
+   "gt_pct": 59.281085399304764,
+   "est_pct": 45.733040562540296,
+   "est_area_pct": 33.469060044732466,
+   "served_cm2": 174.37,
+   "pos_err_mm": 7.059007861066551,
+   "err": -13.548044836764468
+  },
+  {
+   "scene": "rice_dal__ceramic",
+   "plate": "ceramic",
+   "food": "dal",
+   "gt_pct": 61.60000084729238,
+   "est_pct": 44.62479611858542,
+   "est_area_pct": 32.56631511665069,
+   "served_cm2": 62.58,
+   "pos_err_mm": 7.9023599902315,
+   "err": -16.975204728706956
+  },
+  {
+   "scene": "rice_dal__ceramic",
+   "plate": "ceramic",
+   "food": "rice",
+   "gt_pct": 100.0,
+   "est_pct": 100.0,
+   "est_area_pct": 100.0,
+   "served_cm2": 19.14,
+   "pos_err_mm": 40.09435746426471,
+   "err": 0.0
+  },
+  {
+   "scene": "rice_dal__steel",
+   "plate": "steel",
+   "food": "rice",
+   "gt_pct": 100.0,
+   "est_pct": 86.68648615726762,
+   "est_area_pct": 73.92675236478293,
+   "served_cm2": 164.92,
+   "pos_err_mm": 36.58852813661098,
+   "err": -13.313513842732377
+  },
+  {
+   "scene": "rice_dal__steel",
+   "plate": "steel",
+   "food": "dal",
+   "gt_pct": 61.60000084729238,
+   "est_pct": 9.838147128913732,
+   "est_area_pct": 6.671299513551077,
+   "served_cm2": 14.39,
+   "pos_err_mm": 57.77433869746224,
+   "err": -51.761853718378646
+  },
+  {
+   "scene": "rice_mound__ceramic",
+   "plate": "ceramic",
+   "food": "rice",
+   "gt_pct": 70.18397606606925,
+   "est_pct": 69.75306572096203,
+   "est_area_pct": 54.940374787052804,
+   "served_cm2": 23.48,
+   "pos_err_mm": 47.506753008421285,
+   "err": -0.4309103451072218
+  },
+  {
+   "scene": "rice_mound__steel",
+   "plate": "steel",
+   "food": "rice",
+   "gt_pct": 70.18397606606925,
+   "est_pct": 58.74712916684097,
+   "est_area_pct": 44.583879627895364,
+   "served_cm2": 160.17,
+   "pos_err_mm": 12.206047625358943,
+   "err": -11.436846899228279
+  },
+  {
+   "scene": "thali3__ceramic",
+   "plate": "ceramic",
+   "food": "dal",
+   "gt_pct": 100.0,
+   "est_pct": 100.0,
+   "est_area_pct": 100.0,
+   "served_cm2": 40.0,
+   "pos_err_mm": 4.9682500062899395,
+   "err": 0.0
+  },
+  {
+   "scene": "thali3__ceramic",
+   "plate": "ceramic",
+   "food": "curry",
+   "gt_pct": 0.0,
+   "est_pct": 2.36768159127132,
+   "est_area_pct": 1.5847496554892038,
+   "served_cm2": 43.54,
+   "pos_err_mm": 9.458306636156992,
+   "err": 2.36768159127132
+  },
+  {
+   "scene": "thali3__ceramic",
+   "plate": "ceramic",
+   "food": "rice",
+   "gt_pct": 70.08775545530584,
+   "est_pct": 65.13008467111865,
+   "est_area_pct": 50.45871559633027,
+   "served_cm2": 14.17,
+   "pos_err_mm": 36.55117254600668,
+   "err": -4.9576707841871865
+  },
+  {
+   "scene": "thali3__steel",
+   "plate": "steel",
+   "food": "rice",
+   "gt_pct": 70.08775545530584,
+   "est_pct": 49.71700118376391,
+   "est_area_pct": 36.766467065868255,
+   "served_cm2": 83.5,
+   "pos_err_mm": 5.307213876357908,
+   "err": -20.370754271541927
+  },
+  {
+   "scene": "thali3__steel",
+   "plate": "steel",
+   "food": "curry",
+   "gt_pct": 0.0,
+   "est_pct": 37.97207919464207,
+   "est_area_pct": 27.2681196147998,
+   "served_cm2": 59.19,
+   "pos_err_mm": 26.744750947778073,
+   "err": 37.97207919464207
+  },
+  {
+   "scene": "thali3__steel",
+   "plate": "steel",
+   "food": "dal",
+   "gt_pct": 100.0,
+   "est_pct": 100.0,
+   "est_area_pct": 100.0,
+   "served_cm2": 41.41,
+   "pos_err_mm": 5.019372542177693,
+   "err": 0.0
+  }
+ ],
+ "plates": [
+  {
+   "scene": "idli_pair__ceramic",
+   "most_left_ok": true
+  },
+  {
+   "scene": "idli_pair__steel",
+   "most_left_ok": true
+  },
+  {
+   "scene": "rice_dal__ceramic",
+   "most_left_ok": true
+  },
+  {
+   "scene": "rice_dal__steel",
+   "most_left_ok": true
+  },
+  {
+   "scene": "thali3__ceramic",
+   "most_left_ok": true
+  },
+  {
+   "scene": "thali3__steel",
+   "most_left_ok": true
+  }
+ ]
+}

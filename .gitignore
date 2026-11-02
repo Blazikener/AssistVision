@@ -10,6 +10,8 @@ captures/
 # Papers you cite belong in paper/refs/, which is exempted below.
 *.pdf
 !paper/refs/*.pdf
+!paper/figs/*.pdf
+!paper/main.pdf
 
 # COLMAP working directories
 sparse/
@@ -26,3 +28,25 @@ venv/
 .DS_Store
 NOTES.md
 STUDY.md
+
+# Rendered synthetic scenes are regenerable (experiments/synth/make_suite.py);
+# keep only their specs and ground truth.
+data/synth/**/*.exr
+data/synth/**/*.log
+results/synth/runs/
+results/**/run.log
+
+# LaTeX build products (main.pdf is kept)
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+results/synth/*.log
+data/synth/watch_main.sh
+data/synth_glasses/**/*.exr
+data/synth_glasses/**/*.log
+data/synth_glasses/*.log
+data/meals/

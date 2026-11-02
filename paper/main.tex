@@ -1,0 +1,279 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{graphicx,booktabs,amsmath,amssymb,siunitx,url,xcolor}
+\usepackage[hidelinks]{hyperref}
+\sisetup{detect-all}
+\newcommand{\pending}[1]{\textcolor{red}{[#1]}}
+
+\begin{document}
+\title{AssistVision: Clip-On Camera Glasses for Before-and-After Meal-Intake Monitoring in Older Adults}
+\author{\IEEEauthorblockN{Dr.~Usama Abdur Rahman, M.Tech., Ph.D.}
+\IEEEauthorblockA{Department of Computer Science\\
+and Engineering with Specialization\\
+in Artificial Intelligence\\
+Sathyabama Institute of Science\\
+And Technology\\
+Chennai, India}
+\and
+\IEEEauthorblockN{Yasir}
+\IEEEauthorblockA{Department of Computer Science\\
+and Engineering with Specialization\\
+in Artificial Intelligence\\
+Sathyabama Institute of Science\\
+And Technology\\
+Chennai, India}
+\and
+\IEEEauthorblockN{K. M. Mohammed Mohsin}
+\IEEEauthorblockA{Department of Computer Science\\
+and Engineering with Specialization\\
+in Artificial Intelligence\\
+Sathyabama Institute of Science\\
+And Technology\\
+Chennai, India}}
+\maketitle
+
+\begin{abstract}
+Many older adults eat less than they are served. In hospital, eating little
+predicts death even after adjusting for illness, yet intake is usually judged by
+eye. AssistVision is a clip-on camera for ordinary spectacles (Seeed XIAO
+ESP32S3 Sense, a small LiPo and two 3D-printed pods, about INR~2,000--2,900 in
+parts) worn by a carer. One button press records a 13-frame burst while the
+carer looks across the plate, once when the meal is served and once when it is
+cleared; the host reconstructs both scenes and reports the share of the meal
+eaten. A companion app keeps the meal log, alerts family after a run of
+low-intake meals and prints a weekly report for the doctor. To choose the
+vision pipeline we test \input{tables/n_models.tex}monocular depth models on
+507 Nutrition5k dishes and dense multi-view stereo on
+\input{tables/n_synth.tex}synthetic plates with exact volume, plus 12
+before/after meal pairs seen from a turntable path and from a simulated head
+sweep.
+\input{tables/abstract_numbers.tex}
+\input{tables/e5_abstract.tex}
+\input{tables/e6_abstract.tex}
+A share of the whole plate cannot say that the rice went and the dal stayed, so
+the app also splits each plate into its dishes from the two photos and turns
+what was left into protein eaten per day; after three days under 1.0\,g per kg
+body weight, family and doctor are told which dish was left, or that the menu
+itself is short. On the 6 simulated plates with more than one dish, the dish
+left most was named correctly each time, and per-dish shares were off by a
+median of 10.8 points.
+The glasses have not yet been built or worn, and no clinical or user study has
+been run.
+\end{abstract}
+
+\section{Introduction}
+Older adults who eat too little lose weight and muscle and recover more slowly
+from illness. In the NutritionDay survey of 16,290 hospitalised adults, more
+than half did not finish the meal they were given, and eating only about a
+quarter of it went with an adjusted hazard ratio of 2.10 for dying in hospital
+over the next 30 days (3.02 for eating nothing)~\cite{hiesmayr2009nutritionday}. The
+ESPEN guideline for geriatrics recommends regular malnutrition screening for
+every older person~\cite{volkert2019espen}. Screening and follow-up need a
+number for how much was eaten. On wards that number usually comes from a
+nurse's visual estimate of the leftovers; checked against weighing, such
+estimates hold up on average across a group but are much less reliable for a
+single patient~\cite{heighington2022visual,kawasaki2016criterion}. At home
+there is often no record at all, and children living in another city learn of a
+decline only once it shows as weight loss.
+
+Weighing the plate before and after the meal is the reference method in those
+validation studies~\cite{kawasaki2016criterion}. It is accurate but tedious,
+so it is rarely done as routine, and a scale at every seat costs money and
+space. We take the measurement to the person who is already at the table: a
+carer wearing AssistVision's clip-on camera glasses presses a button at
+serving and at clearing, the host compares the two scenes, and the companion
+app shows the share eaten to family members and the doctor.
+
+One photo cannot tell a small plate held close from a big plate further away;
+both land on the same pixels. The scale has to be brought in from somewhere
+else. A printed marker can supply it, and so can a depth sensor, a camera that
+moves along a known path, or a network that has learned typical sizes. Each
+costs something different, and we measured how much. For the glasses we also
+asked a narrower question: is a four-second head turn steady enough that the
+served and cleared volumes can be divided by each other?
+
+This paper makes six contributions.
+\begin{enumerate}
+\item A meal-intake monitor for older adults (Sec.~\ref{sec:care}). One
+wearable camera takes a burst when the plate arrives and another when it goes
+back. The share eaten comes from the pair, a pair that cannot be right (more
+food after than before) is flagged, and a small app shows the family and the
+doctor the meals, a two-week trend, a low-intake alert and a weekly report.
+\item A per-dish reading of the same two photos (E7). It finds which dish came
+back and how much protein went back with it. Its protein alert separates two
+cases a doctor treats differently: the person leaves the dal, or the menu
+never had enough protein to begin with.
+\item Camera glasses anyone can print and build (Sec.~\ref{sec:hw}). The pods
+are parametric, so they fit a cheap frame. We release the burst firmware, the
+laptop client and a build guide with a picture for every step.
+\item Monocular depth models tested on food with real depth (Nutrition5k). We
+kept the calibration a phone could really do apart from the oracle kind that
+peeks at the ground truth.
+\item Rendered plates with exact mesh volumes. Against them we tested dense MVS
+and changed what a builder controls: number of views, resolution, JPEG quality,
+marker error and plate material. Partly eaten plates were then seen along a
+turntable path (E5) and along a simulated head turn (E6).
+\item The design choices we made and the ones we dropped
+(Sec.~\ref{sec:design}), each with the measurement or assumption behind it.
+\end{enumerate}
+
+\section{Related Work}
+\textbf{Meal intake in care settings.} In hospitals the reference for intake is
+weighed plate waste. On the ward, staff usually look at the tray and mark a
+quarter, a half or a percentage. A review that pooled 14 validation studies of
+this visual method found it held up for groups of patients but much less for a
+single patient, and only two of the studies used any modern
+technology~\cite{heighington2022visual}. When nursing assistants' estimates in a
+community hospital were checked against weighed trays, the gap was significant,
+with Bland--Altman limits from $-121$ to $+147$\,kcal per
+tray~\cite{kawasaki2016criterion}. The glasses are meant to replace the
+look-and-mark step. Weighing stays the reference.
+\textbf{Food volume.} Nutrition5k~\cite{thames2021nutrition5k} provides
+overhead RGB-D video and weighed dishes; its depth-based volume baseline uses a
+constant per-pixel footprint at the capture-plane distance. Multi-view food
+reconstruction has used structure-from-motion with reference cards and dense
+stereo~\cite{dehais2017two,lo2020image}. \textbf{Monocular depth.} Relative
+depth models (MiDaS~\cite{ranftl2020midas}, Depth Anything~\cite{yang2024depthanything,yang2024depthanythingv2})
+predict depth up to an unknown affine transform of inverse depth; metric models
+(ZoeDepth~\cite{bhat2023zoedepth}, Depth Pro~\cite{bochkovskii2024depthpro},
+metric-finetuned Depth Anything V2) predict absolute depth from priors learned on
+room- and street-scale scenes. \textbf{Reconstruction.} We use COLMAP~\cite{schoenberger2016sfm}
+for SfM and OpenMVS for dense MVS.
+
+\section{Design Decisions and Rejected Alternatives}\label{sec:design}
+Table~\ref{tab:design} summarises each decision; the evidence column points to
+the experiment that supports it. Decisions marked \emph{assumption} rest on
+datasheets or cost quotes, not on our measurements.
+
+\begin{table*}[t]
+\centering\small
+\caption{Design decisions, alternatives considered, and the evidence behind each choice.}
+\label{tab:design}
+\begin{tabular}{p{2.5cm}p{3.3cm}p{4.6cm}p{5.6cm}}
+\toprule
+Decision & Chosen & Rejected alternatives & Why / evidence \\
+\midrule
+Scale source & Printed ArUco mat, multi-view triangulation & Credit-card reference in one image; metric monocular depth; depth sensor & Volume scales with the \emph{cube} of length error (Sec.~\ref{sec:scale}); metric networks are off by large factors at plate distance (Table~\ref{tab:n5k}); a D435-class sensor costs $\sim$10$\times$ the camera (assumption). \\
+Geometry & Dense MVS (COLMAP + OpenMVS) & Sparse SfM points only; single-view depth & Sparse points leave smooth food half empty (Sec.~\ref{sec:synth}). One view never sees the back of a heap of rice, however good the depth. \\
+Capture motion & Head sweep: 13-frame burst from clip-on glasses & Fixed camera on a motorised turntable (our first design); hand-held phone orbit; commercial smart glasses & The carer is already at the table, so nothing is added to the tray or table; a 60$^\circ$ sweep gives enough baseline for MVS (E6); the turntable needs mains power, space and a plate placed on it; commercial glasses are closed and cost over 10$\times$ more (assumption). \\
+Camera tilt & Pod tilted 20$^\circ$ down; plate seen at about 55$^\circ$ elevation & Straight overhead (Nutrition5k) & Looking straight down, the whole table sits at one depth, so the anchor fit cannot separate scale from shift (condition number $10^{14}$, Sec.~\ref{sec:anchor}). \\
+Controller & XIAO ESP32S3 Sense (camera, 8\,MB PSRAM, LiPo charger on board) & ESP32-S3 dev board + separate charger; Raspberry Pi Zero + camera; smartphone & Thumb-sized and light enough for a temple arm; no extra charger board or OS; processing is host-side, so the MCU only needs camera, Wi-Fi and a button (assumption: cost table in the build guide). \\
+Burst storage & 13 JPEGs held in PSRAM, pulled by the host & Stream video; store on microSD & Frames stay sharp at UXGA instead of video bit rates; no card to remove; the host checks every frame before filing it. \\
+Volume integral & Height field over the fitted support plane & Constant per-pixel footprint (Nutrition5k); voxel carving; mesh + watertight closure & On a tilted plate it was off by 0.09\,\% in our unit tests, and the constant-footprint formula was not. Every method uses it, so a gap between methods comes from their geometry. \\
+Intake measure & Share eaten, $1-V_l/V_s$, from the two reconstructions & Staff visual estimate; grams via volume $\times$ density; plate scale & The plate, food and density cancel in the ratio; visual estimates are weak for individuals~\cite{heighington2022visual}; volume tracks mass poorly (E2); weighing is the reference~\cite{kawasaki2016criterion} but needs a scale at every seat. \\
+Alert rule & $k$ low meals in a row, threshold set by the clinician & Daily-total threshold; fixed population cut-off & Three poor meals in a row show up within a day. The thresholds are our starting values; nobody has validated them yet. \\
+Mono calibration & Report raw / anchor / oracle separately & Report only oracle-aligned numbers & The oracle fit looks at the very depth it is scored against. It shows the best case, which no device could reach. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Meal-Intake Monitoring for Older Adults}\label{sec:care}
+\begin{figure*}[t]\centering
+\includegraphics[width=0.9\textwidth]{figs/care_flow_glasses.pdf}
+\caption{Meal-intake loop. The glasses record a served and a cleared burst;
+the host reconstructs both and computes the share eaten; family members get alerts and a daily view;
+the doctor gets a weekly report and sets the alert threshold.}
+\label{fig:care}
+\end{figure*}
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{figs/care_app.png}
+\caption{Companion app, resident page (fictional demo data): low-intake and
+protein-gap alerts (the second names the dish most often left), weekly share of
+served food eaten, grams per day, protein on the last full day against the
+target, and the two-week trend of served (grey) versus eaten (green; red when
+under the threshold).}
+\label{fig:app}
+\end{figure}
+\input{sections/care_glasses.tex}
+
+\section{Hardware}\label{sec:hw}
+\begin{figure*}[t]\centering
+\includegraphics[width=0.92\textwidth]{figs/architecture_glasses.pdf}
+\caption{System architecture. The glasses only capture; the host pulls each
+burst over Wi-Fi, reconstructs it and computes the share eaten.}
+\label{fig:arch}
+\end{figure*}
+\input{sections/hw_glasses.tex}
+
+\textbf{Earlier design.} We first designed the capture side as a fixed ESP32-S3
+camera over a stepper turntable with a load cell under the plate; its firmware
+and client remain in the repository. E3--E5 use that design's 24-view
+turntable path; E6 repeats the meal pairs from the glasses' viewpoint. Neither
+device has been measured physically yet.
+
+\section{Method}
+\subsection{Shared volume integral}
+Every method ends with points $P$ in metres and a plane $(\mathbf n, d)$ for
+the table, its normal pointing at the camera. For each point we take the height
+above that plane, $h=\mathbf n^\top\mathbf p+d$, and its position on the plane
+along two axes at right angles. We drop the points into square cells of side
+$c$ and keep the median height in each cell. A hole inside the food outline
+takes the value of the nearest filled cell, heights below the plane become
+zero, and
+\begin{equation}\label{eq:vol}
+V=c^2\sum_{\text{cells}}\max(h,0).
+\end{equation}
+Monocular depth, multi-view and the depth sensor all go through this one sum.
+When their volumes differ, it is the geometry that differs.
+
+\subsection{Metric scale from the marker mat}\label{sec:scale}
+We find the marker corners in each view and triangulate them with the SfM
+cameras. The scale $s$ is the printed side length over the median triangulated
+one. Volume goes with the cube of length, so if $s$ is off by $\epsilon$ the
+volume is off by $(1+\epsilon)^3-1\approx3\epsilon$. A 1\,\% slip in scale
+costs about 3\,\% of volume, which Sec.~\ref{sec:synth} checks.
+
+\subsection{Monocular protocols}\label{sec:anchor}
+\textbf{Raw}: the model's metric output is used as-is. \textbf{Anchor}: the
+prediction is calibrated using only the support plane (the table in
+Nutrition5k, the marker squares beside our plate), never the food; metric outputs get one
+scale, relative outputs an affine map of inverse depth. \textbf{Oracle}: the
+same maps fitted to ground-truth depth over the whole dish. That is the best
+the model could do, and a real device never has that depth. For relative
+models we log the condition number of the anchor fit: when the table faces the
+camera head-on, its inverse depth is almost the same everywhere, and scale and
+shift cannot be told apart.
+
+\section{Experiments}
+\subsection{E1: Monocular depth on Nutrition5k}
+\input{sections/e1.tex}
+
+\subsection{E2: Sensor-referenced volume and weighed mass}
+\input{sections/e2.tex}
+
+\subsection{E3: Multi-view versus monocular on exact synthetic volumes}\label{sec:synth}
+\input{sections/e3.tex}
+
+\subsection{E4: Ablations}
+\input{sections/e4.tex}
+
+\subsection{E5: Partly eaten plates, turntable path}\label{sec:e5}
+\input{sections/e5.tex}
+
+\subsection{E6: Partly eaten plates seen from the glasses}\label{sec:e6}
+\input{sections/e6.tex}
+
+\subsection{E7: Which dish was left}\label{sec:e7}
+\input{sections/e7.tex}
+
+\section{Limitations}
+\input{sections/limitations.tex}
+
+\section{Conclusion}
+\input{sections/conclusion.tex}
+
+\section*{Acknowledgment}
+Parts of the software and a first draft of this text were prepared with an AI
+coding assistant (Devin, Cognition AI). The authors checked, edited and take
+responsibility for all content, code and results.
+
+\section*{Reproducibility}
+All code, scene specifications, per-dish result files and the scripts that
+generate every table and figure are in the repository. Evidence categories are
+labelled throughout: \emph{Nutrition5k} (public real RGB-D data),
+\emph{synthetic} (Blender/Cycles renders with exact mesh volume), \emph{VM}
+(timings on an 8-core CPU-only cloud VM, not on the ESP32), and
+\emph{physical} (pending hardware measurements).
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+\end{document}

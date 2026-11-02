@@ -16,3 +16,4 @@ open3d>=0.18
 # These want a GPU -- install on Colab, not necessarily locally.
 # torch>=2.4
 # torchvision>=0.19
+flask==3.1.3

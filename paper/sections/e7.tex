@@ -1,0 +1,46 @@
+E7 reuses the 12 E6 pairs. Three of the six plates hold more than one dish
+(a thali of rice, dal and curry; rice with dal; two idli), each on steel and on
+white ceramic, so there are 20 dishes, 14 of them sharing a plate. The truth for
+each dish is $1-V_\text{left}/V_\text{served}$ from the scene meshes. Only the
+centre frame of each burst is used; nothing is reconstructed. Estimated items
+are paired with true dishes by position (Hungarian assignment). The colour
+threshold (12 Lab units), the texture threshold (6 grey levels above the rim),
+the 9-pixel vote window and the exponent 1.5 were fixed before the run. One
+change came after a first run: a unit test on drawn plates showed that the
+$7\times7$ texture window added a 3-pixel ring of bare plate around every dish
+and that this ring was handed to the wrong dish. The mask is now eroded by 3
+pixels, and Table~\ref{tab:e7} reports the run after that fix
+(script \texttt{analyze\_items.py} in \texttt{experiments/synth}).
+
+\begin{table}[t]\centering
+\caption{E7: per-dish eaten share from the centre frame of the served and
+cleared bursts, absolute error in percentage points (20 dishes, 12 renders).}
+\label{tab:e7}
+\begin{tabular}{lrcrr}
+\toprule
+ & Median & 95\,\% CI & $\le$10 & Max\\
+\midrule
+All dishes & 10.8 & 0.2--15.6 & 9/20 & 51.8\\
+Steel & 13.9 & 6.7--33.2 & 2/10 & 51.8\\
+White ceramic & 1.4 & 0.0--11.0 & 7/10 & 18.5\\
+Area ratio only, no 1.5 & 24.3 & 0.8--28.0 & 7/20 & 54.9\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Without the exponent the median error is 24.3 points: the area a dish covers
+shrinks more slowly than its volume, so area alone says too little was eaten.
+The plate materials swap places compared with E6. White ceramic does well here
+and steel does badly, because the weak step is now the food mask rather than the
+3D match. On steel some reflections on the bare plate pass as food. On ceramic,
+white rice is partly lost against the plate: the rice on the rice-and-dal plate
+covers 165\,cm$^2$ in the steel mask and 19\,cm$^2$ in the ceramic one. The worst
+dish is the dal next to that rice on steel, read as 10\,\% eaten when 62\,\% had
+gone.
+
+The alert needs something coarser than the share: which dish was left. On all
+6 plates with more than one dish, the dish with the lowest estimated share was
+also the one with the lowest true share. Four of the 6 dishes that were
+finished were read as at least 90\,\% eaten, and 3 of the 4 untouched dishes as
+at most 10\,\%. Six plates is a small sample and they are renders, so this shows
+that the split works on clean images, not that it is reliable on a real thali.

@@ -1,0 +1,13 @@
+Seen from straight above, anchoring a relative model on the table alone does
+not work (median volume error at least 88.4\,\%), because a flat table facing
+the camera cannot fix both scale and shift. Metric models used as they come are
+8--54$\times$ off in volume. Once their one scale is fitted to the table,
+ZoeDepth-NYU is the best monocular option a device could use, and it is still
+off by a median 44.1\,\%. With 24 views, dense MVS and the marker scale, the 16
+textured-food scenes land within a median 4.6\,\% [2.0, 6.1] of the exact mesh
+volume. Sparse SfM on its own misses 91.3\,\%, and plain food on a white plate
+fails at 45.1\,\%. Fewer than 12 views, or heavy JPEG compression, ruin the
+result; half resolution hardly matters. Even depth-sensor volume predicts
+weighed mass worse than guessing the dataset mean (68.2 vs 52.0\,\% median
+error), one reason the glasses report a share and not grams. None of these
+numbers comes from physical hardware.

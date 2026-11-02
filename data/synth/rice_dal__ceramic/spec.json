@@ -1,0 +1,32 @@
+{
+ "plate": "ceramic",
+ "views": 24,
+ "samples": 24,
+ "width": 1600,
+ "height": 1200,
+ "hfov_deg": 60.0,
+ "elev_deg": 45.0,
+ "cam_dist": 0.4,
+ "threads": 4,
+ "depth_views": [
+  0
+ ],
+ "foods": [
+  {
+   "shape": "cap",
+   "r": 0.055,
+   "h": 0.035,
+   "texture": "rice",
+   "x": -0.03
+  },
+  {
+   "shape": "gauss",
+   "r": 0.045,
+   "h": 0.022,
+   "texture": "dal",
+   "x": 0.055,
+   "y": 0.02
+  }
+ ],
+ "seed": 734632613
+}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Weekly report · {{ r.name }}{% endblock %}
+{% block body %}
+<a class="back noprint" href="{{ url_for('dashboard', rid=r.id) }}">← Back</a>
+<div class="row head"><div><h1>Weekly intake report</h1><p class="muted">{{ r.name }}, {{ r.age }} · {{ s.daily[0].day|dshort }} to {{ s.daily[-1].day|dshort }}</p></div>
+<button class="btn noprint" onclick="window.print()">Print</button></div>
+<div class="stats">
+  <div><div class="big">{{ s.week_eaten_pct|pct }}</div><div class="muted">of served food eaten</div></div>
+  <div><div class="big">{{ s.week_eaten_g_per_day|round|int }} g</div><div class="muted">eaten per day</div></div>
+  <div><div class="big">{{ s.meals | selectattr('eaten_pct', 'lt', r.low_pct) | list | length }}</div><div class="muted">meals under {{ r.low_pct|round|int }}% eaten</div></div>
+</div>
+<table class="list">
+  <thead><tr><th>Day</th><th class="num">Meals</th><th class="num">Served</th><th class="num">Eaten</th><th class="num">Eaten %</th></tr></thead>
+  <tbody>{% for d in s.daily %}<tr><td>{{ d.day|dshort }}</td><td class="num">{{ d.meals }}</td><td class="num">{{ d.served_g|round|int }} g</td><td class="num">{{ d.eaten_g|round|int }} g</td>
+  <td class="num {{ 'lowtxt' if d.eaten_pct is not none and d.eaten_pct < r.low_pct }}">{{ d.eaten_pct|pct }}</td></tr>{% endfor %}</tbody>
+</table>
+<p class="muted small">Grams are food mass from the plate's load cell (served minus left). This report measures how much food was eaten, not nutrients or energy. Alert rule: {{ r.streak }} meals in a row under {{ r.low_pct|round|int }}% eaten (set per person by the clinician).</p>
+{% endblock %}

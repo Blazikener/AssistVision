@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Who are you looking after?</h1>
+<p class="lead">Each plate is weighed when it is served and when it is cleared. What is missing is what was eaten.</p>
+<div class="cards">
+{% for c in cards %}
+  <a class="card {{ 'alerting' if c.alert }}" href="{{ url_for('dashboard', rid=c.resident.id) }}">
+    <div class="row"><h2>{{ c.resident.name }}</h2><span class="muted">{{ c.resident.age }}</span></div>
+    <div class="big">{{ c.week_eaten_pct|pct }}</div>
+    <div class="muted">of food served was eaten this week</div>
+    {% if c.alert %}<div class="badge">Eating less: last {{ c.alert.meals }} meals under {{ c.resident.low_pct|round|int }}%</div>
+    {% else %}<div class="badge ok">No alerts</div>{% endif %}
+  </a>
+{% endfor %}
+</div>
+{% endblock %}
