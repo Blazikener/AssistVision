@@ -24,6 +24,10 @@ from flask import Flask, abort, g, jsonify, redirect, render_template, request, 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 from intake import (
     photo_intake,
+    PROTEIN_G_PER_KG,
+    most_left,
+    protein_eaten,
+    protein_gap_alert,
     LOW_MEAL_PCT,
     LOW_STREAK,
     Meal,
@@ -35,13 +39,15 @@ from intake import (
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS residents (id INTEGER PRIMARY KEY, name TEXT NOT NULL, age INTEGER, notes TEXT,
-  low_pct REAL NOT NULL DEFAULT 50, streak INTEGER NOT NULL DEFAULT 3);
+  low_pct REAL NOT NULL DEFAULT 50, streak INTEGER NOT NULL DEFAULT 3, weight_kg REAL);
 CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY, resident_id INTEGER NOT NULL, name TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('family', 'doctor')), reach TEXT);
 CREATE TABLE IF NOT EXISTS meals (id INTEGER PRIMARY KEY, resident_id INTEGER NOT NULL, served_at TEXT NOT NULL,
   label TEXT, served_g REAL NOT NULL, left_g REAL NOT NULL, source TEXT NOT NULL DEFAULT 'manual');
 CREATE TABLE IF NOT EXISTS alerts (id INTEGER PRIMARY KEY, resident_id INTEGER NOT NULL, created TEXT NOT NULL,
   message TEXT NOT NULL, notified TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS meal_items (id INTEGER PRIMARY KEY, meal_id INTEGER NOT NULL, name TEXT NOT NULL,
+  protein_g REAL NOT NULL, eaten_pct REAL NOT NULL);
 """
 
 
@@ -55,6 +61,10 @@ def create_app(db_path: str | None = None, today: date | None = None) -> Flask:
             g.db = sqlite3.connect(app.config["DB"])
             g.db.row_factory = sqlite3.Row
             g.db.executescript(SCHEMA)
+            try:  # databases made before the protein feature
+                g.db.execute("ALTER TABLE residents ADD COLUMN weight_kg REAL")
+            except sqlite3.OperationalError:
+                pass
         return g.db
 
     @app.teardown_appcontext
@@ -80,6 +90,17 @@ def create_app(db_path: str | None = None, today: date | None = None) -> Flask:
         rows = db().execute(q + " ORDER BY served_at", args).fetchall()
         return [Meal(r["served_at"], r["served_g"], r["left_g"], label=r["label"] or "") for r in rows], rows
 
+    def protein_days(rid, before: str):
+        """Itemised protein per finished day (days before `before`, ISO date)."""
+        rows = db().execute("SELECT substr(m.served_at, 1, 10) AS day, i.name, i.protein_g, i.eaten_pct "
+                            "FROM meal_items i JOIN meals m ON m.id = i.meal_id WHERE m.resident_id = ? "
+                            "AND m.served_at < ? ORDER BY m.served_at", (rid, before)).fetchall()
+        days = {}
+        for x in rows:
+            days.setdefault(x["day"], []).append({"name": x["name"], "protein_g": x["protein_g"],
+                                                  "eaten_pct": x["eaten_pct"]})
+        return [{"day": d, "protein_g": protein_eaten(v), "items": v} for d, v in days.items()]
+
     def summary(r, days=14):
         start = now() - timedelta(days=days - 1)
         meals, rows = meals_of(r["id"], start)
@@ -93,13 +114,39 @@ def create_app(db_path: str | None = None, today: date | None = None) -> Flask:
             "week_eaten_g_per_day": eaten / 7,
             "trend_g_per_day": trend_g_per_day(week),
             "alert": low_intake_alert(meals, r["low_pct"], r["streak"]),
+            "protein": protein_summary(r),
         }
 
-    def record_meal(rid, served_at, label, served_g, left_g, source):
+    def protein_summary(r):
+        done = protein_days(r["id"], now().isoformat())
+        week = [d for d in done if d["day"] >= (now() - timedelta(days=7)).isoformat()]
+        return {"target_g": PROTEIN_G_PER_KG * r["weight_kg"] if r["weight_kg"] else None,
+                "last_day": done[-1] if done else None,
+                "alert": protein_gap_alert(done, r["weight_kg"]),
+                "most_left": most_left([i for d in week for i in d["items"]])}
+
+    def record_meal(rid, served_at, label, served_g, left_g, source, items=None):
         r = resident(rid)
         before = low_intake_alert(meals_of(rid)[0], r["low_pct"], r["streak"])
-        db().execute("INSERT INTO meals (resident_id, served_at, label, served_g, left_g, source) VALUES (?,?,?,?,?,?)",
-                     (rid, served_at, label, served_g, left_g, source))
+        prev = db().execute("SELECT max(served_at) FROM meals WHERE resident_id = ?", (rid,)).fetchone()[0]
+        p_before = protein_gap_alert(protein_days(rid, prev[:10]), r["weight_kg"]) if prev else None
+        mid = db().execute("INSERT INTO meals (resident_id, served_at, label, served_g, left_g, source) "
+                           "VALUES (?,?,?,?,?,?)", (rid, served_at, label, served_g, left_g, source)).lastrowid
+        for it in items or []:
+            db().execute("INSERT INTO meal_items (meal_id, name, protein_g, eaten_pct) VALUES (?,?,?,?)",
+                         (mid, it["name"], it["protein_g"], it["eaten_pct"]))
+        p_alert = protein_gap_alert(protein_days(rid, served_at[:10]), r["weight_kg"])
+        if p_alert and not p_before:
+            who = [c["name"] for c in db().execute("SELECT name FROM contacts WHERE resident_id = ?", (rid,))]
+            msg = (f"{r['name']} ate under {p_alert['target_g']:.0f} g protein on each of the last {p_alert['days']} "
+                   f"days (average {p_alert['mean_protein_g']:.0f} g).")
+            if p_alert["most_left"]:
+                ml = p_alert["most_left"]
+                msg += f" Most often left: {ml['name']} ({ml['mean_eaten_pct']:.0f}% eaten)."
+            else:
+                msg += " Most of each dish was eaten, so the menu itself is short on protein."
+            db().execute("INSERT INTO alerts (resident_id, created, message, notified) VALUES (?,?,?,?)",
+                         (rid, served_at, msg, ", ".join(who)))
         alert = low_intake_alert(meals_of(rid)[0], r["low_pct"], r["streak"])
         if alert and not before:
             who = [c["name"] for c in db().execute("SELECT name FROM contacts WHERE resident_id = ?", (rid,))]
@@ -152,10 +199,13 @@ def create_app(db_path: str | None = None, today: date | None = None) -> Flask:
                 source = j.get("source", "glasses")
             else:
                 served_g, left_g = float(j["served_g"]), float(j["left_g"])
+            items = [{"name": str(i["name"]).strip(), "protein_g": float(i["protein_g"]),
+                      "eaten_pct": min(max(float(i["eaten_pct"]), 0.0), 100.0)} for i in j.get("items", [])]
         except (KeyError, TypeError, ValueError):
-            return jsonify(error="resident_id plus served_g/left_g or served_ml/left_ml are required numbers"), 400
+            return jsonify(error="resident_id plus served_g/left_g or served_ml/left_ml are required numbers; "
+                                 "items need name, protein_g and eaten_pct"), 400
         intake, alert = record_meal(rid, j.get("when") or datetime.now().strftime("%Y-%m-%dT%H:%M"),
-                                    j.get("label", ""), served_g, left_g, source)
+                                    j.get("label", ""), served_g, left_g, source, items)
         return jsonify(intake=intake, alert=alert), 201
 
     @app.get("/api/residents/<int:rid>/summary")
@@ -185,6 +235,15 @@ MENU = {8: ["Idli, sambar", "Pongal, chutney", "Upma", "Dosa, chutney", "Ragi po
         19: ["Chapati, mixed veg", "Idiyappam, kurma", "Rice, dal", "Dosa, sambar", "Wheat upma"]}
 
 
+# Illustrative protein per served portion (g) for the demo only; a kitchen enters
+# its own values from its recipes or IFCT 2017.
+DEMO_PROTEIN = {"idli": 6, "sambar": 6, "pongal": 8, "chutney": 2, "upma": 5, "dosa": 6, "ragi porridge": 8,
+                "rice": 5, "dal": 9, "beans poriyal": 3, "cabbage": 2, "curd rice": 8, "pickle": 0, "rasam": 2,
+                "keerai": 3, "chapati": 6, "mixed veg": 3, "idiyappam": 3, "kurma": 6, "wheat upma": 5, "milk": 8,
+                "curd": 6}
+PROTEIN_RICH = {"dal", "sambar", "kurma", "milk", "curd", "curd rice", "pongal"}
+
+
 def seed(app: Flask, today: date, days: int = 14):
     """Fictional demo data: one resident eating well, one whose intake falls over the last week."""
     rnd = random.Random(3)
@@ -195,8 +254,10 @@ def seed(app: Flask, today: date, days: int = 14):
                    [("Priya (daughter)", "family", "+91 98xxx xxx21"), ("Dr. R. Meenakshi", "doctor", "Geriatric clinic")]),
                   ("Abdul Kareem", 84, "Recovering from a fall, on new medication since last week.", True,
                    [("Imran (son)", "family", "+971 5x xxx xx48"), ("Dr. S. Varadharajan", "doctor", "Family physician")])]
-        for name, age, notes, declining, contacts in people:
-            rid = d.execute("INSERT INTO residents (name, age, notes) VALUES (?,?,?)", (name, age, notes)).lastrowid
+        d.execute("DELETE FROM meal_items")
+        for (name, age, notes, declining, contacts), kg in zip(people, (46, 58)):
+            rid = d.execute("INSERT INTO residents (name, age, notes, weight_kg) VALUES (?,?,?,?)",
+                            (name, age, notes, kg)).lastrowid
             for c in contacts:
                 d.execute("INSERT INTO contacts (resident_id, name, role, reach) VALUES (?,?,?,?)", (rid, *c))
             d.commit()
@@ -210,8 +271,15 @@ def seed(app: Flask, today: date, days: int = 14):
                     if declining and k >= days - 6:
                         eaten = max(0.15, 0.72 - 0.09 * (k - (days - 6)) + rnd.uniform(-0.05, 0.05))
                     when = f"{day.isoformat()}T{hour:02d}:{rnd.randint(0, 40):02d}"
-                    app.record_meal(rid, when, rnd.choice(items), round(served), round(served * (1 - eaten)),
-                                    "rig" if rnd.random() < 0.8 else "manual")
+                    label = rnd.choice(items) + {8: ", milk", 13: ", curd", 19: ", milk"}[hour]
+                    parts = []
+                    for n in label.split(", "):
+                        e = eaten * (0.45 if declining and k >= days - 6 and n in PROTEIN_RICH else 1.0)
+                        e = min(1.0, max(0.0, e + rnd.uniform(-0.08, 0.08)))
+                        parts.append({"name": n.capitalize(), "protein_g": DEMO_PROTEIN.get(n, 3),
+                                      "eaten_pct": round(100 * e)})
+                    app.record_meal(rid, when, label, round(served),
+                                    round(served * (1 - eaten)), "glasses" if rnd.random() < 0.8 else "manual", parts)
 
 
 if __name__ == "__main__":

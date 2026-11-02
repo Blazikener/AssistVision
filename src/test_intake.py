@@ -46,6 +46,22 @@ def test_daily_and_trend():
     assert abs(trend_g_per_day(rows) + 40) < 1e-9
 
 
+def test_protein_gap_names_the_left_item():
+    from intake import protein_eaten, protein_gap_alert
+    def day(d, dal_pct):
+        items = [{"name": "Rice", "protein_g": 4.0, "eaten_pct": 90.0},
+                 {"name": "Dal", "protein_g": 9.0, "eaten_pct": dal_pct}]
+        return {"day": d, "protein_g": 3 * protein_eaten(items), "items": items}
+    short = [day(f"2026-10-0{d}", 10.0) for d in (1, 2, 3)]
+    a = protein_gap_alert(short, weight_kg=50)
+    assert a and a["most_left"]["name"] == "Dal" and abs(a["target_g"] - 50) < 1e-9
+    assert abs(a["mean_protein_g"] - 3 * (3.6 + 0.9)) < 1e-9
+    assert protein_gap_alert(short, weight_kg=None) is None
+    assert protein_gap_alert(short[:2], weight_kg=50) is None
+    ok = short[:2] + [{"day": "2026-10-04", "protein_g": 60.0, "items": []}]
+    assert protein_gap_alert(ok, weight_kg=50) is None
+
+
 if __name__ == "__main__":
     tests = [v for k, v in dict(globals()).items() if k.startswith("test_")]
     for t in tests:

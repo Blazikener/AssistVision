@@ -9,11 +9,18 @@
 {% if s.alert %}
 <div class="alert"><strong>Eating less than usual.</strong> The last {{ s.alert.meals }} meals were each under {{ r.low_pct|round|int }}% eaten (average {{ s.alert.mean_eaten_pct|round|int }}%), starting {{ s.alert.since|dshort }} {{ s.alert.since|hm }}.</div>
 {% endif %}
+{% set p = s.protein %}
+{% if p.alert %}
+<div class="alert"><strong>Short on protein.</strong> Under {{ p.alert.target_g|round|int }} g on each of the last {{ p.alert.days }} days (average {{ p.alert.mean_protein_g|round|int }} g).{% if p.alert.most_left %} Most often left: {{ p.alert.most_left.name }}, {{ p.alert.most_left.mean_eaten_pct|round|int }}% eaten.{% else %} Most of each dish was eaten, so the menu itself is short.{% endif %}</div>
+{% endif %}
 <div class="stats">
   <div><div class="big">{{ s.week_eaten_pct|pct }}</div><div class="muted">eaten this week</div></div>
   <div><div class="big">{{ s.week_eaten_g_per_day|round|int }} g</div><div class="muted">eaten per day</div></div>
   <div><div class="big">{% if s.trend_g_per_day is none %}–{% else %}{{ '%+d' % s.trend_g_per_day|round|int }} g{% endif %}</div><div class="muted">change per day, this week</div></div>
 </div>
+{% if p.last_day or p.most_left %}
+<p class="muted">{% if p.last_day %}Protein {{ p.last_day.day|dshort }}: <strong>{{ p.last_day.protein_g|round|int }} g</strong>{% if p.target_g %} of {{ p.target_g|round|int }} g{% endif %}. {% endif %}{% if p.most_left %}Most often left this week: <strong>{{ p.most_left.name }}</strong> ({{ p.most_left.mean_eaten_pct|round|int }}% eaten, {{ p.most_left.protein_lost_g|round|int }} g protein not eaten).{% endif %}</p>
+{% endif %}
 <section><h3>Last two weeks</h3>{% include "_chart.html" %}</section>
 <div class="grid2">
 <section>

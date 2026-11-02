@@ -49,6 +49,13 @@ sweep.
 \input{tables/abstract_numbers.tex}
 \input{tables/e5_abstract.tex}
 \input{tables/e6_abstract.tex}
+A share of the whole plate cannot say that the rice went and the dal stayed, so
+the app also splits each plate into its dishes from the two photos and turns
+what was left into protein eaten per day; after three days under 1.0\,g per kg
+body weight, family and doctor are told which dish was left, or that the menu
+itself is short. On the 6 simulated plates with more than one dish, the dish
+left most was named correctly each time, and per-dish shares were off by a
+median of 10.8 points.
 The glasses have not yet been built or worn, and no clinical or user study has
 been run.
 \end{abstract}
@@ -89,6 +96,9 @@ Our contributions are:
 served and cleared photo bursts from one wearable camera, a share-eaten rule
 that flags impossible pairs, and a companion app with family and clinician
 views (meal log, two-week trend, low-intake alert, weekly report).
+\item A per-dish view of the same two photos (E7): which dish was left, the
+protein that went with it, and a protein-gap alert that tells the doctor
+whether the person is leaving the protein dish or the menu has too little.
 \item Open, low-cost camera glasses (Sec.~\ref{sec:hw}): parametric printable
 pods for any spectacle frame, burst-capture firmware, a host client and an
 illustrated build guide.
@@ -161,9 +171,11 @@ the doctor gets a weekly report and sets the alert threshold.}
 \end{figure*}
 \begin{figure}[t]\centering
 \includegraphics[width=\columnwidth]{figs/care_app.png}
-\caption{Companion app, resident page (fictional demo data): alert banner,
-weekly share of served food eaten, grams per day, and the two-week trend of
-served (grey) versus eaten (green; red when under the threshold).}
+\caption{Companion app, resident page (fictional demo data): low-intake and
+protein-gap alerts (the second names the dish most often left), weekly share of
+served food eaten, grams per day, protein on the last full day against the
+target, and the two-week trend of served (grey) versus eaten (green; red when
+under the threshold).}
 \label{fig:app}
 \end{figure}
 \input{sections/care_glasses.tex}
@@ -232,6 +244,9 @@ constant inverse depth, so scale and shift are not separately identifiable.
 
 \subsection{E6: Partly eaten plates seen from the glasses}\label{sec:e6}
 \input{sections/e6.tex}
+
+\subsection{E7: Which dish was left}\label{sec:e7}
+\input{sections/e7.tex}
 
 \section{Limitations}
 \input{sections/limitations.tex}

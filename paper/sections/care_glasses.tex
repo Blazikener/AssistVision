@@ -39,3 +39,28 @@ still a manual step on the host. Images stay on the host. In this
 prototype alerts are recorded in the app but not sent by SMS or e-mail. Unit
 tests cover the intake arithmetic, the alert rule (including firing once per
 run) and the client-to-app path.
+
+\textbf{Which dish was left, and its protein.} A share of the whole plate
+hides the case that matters most on an Indian menu: the rice is finished and the
+dal is left. The rice gave energy, but most of the protein was in the dal. The
+host therefore also splits the plate into dishes. It takes the centre frame of
+each burst, warps it to a top view with the two mat markers, and marks as food
+every pixel that differs from the bare rim in colour or local texture. The
+served food is clustered into the $K$ dishes on the menu by colour and position,
+and each cleared food pixel joins the nearest served dish. A dish's eaten share
+is $1-(A_\text{left}/A_\text{served})^{1.5}$, since a mound that shrinks evenly
+keeps its volume proportional to its area to the power 1.5. The kitchen enters
+the protein in one portion of each dish once, from its recipe or the Indian food
+composition tables, and the app multiplies. The daily total is compared with
+1.0\,g per kg of body weight, the low end of the 1.0--1.2\,g/kg that the PROT-AGE
+group recommends for healthy older adults~\cite{bauer2013protage}; the doctor can
+change it. After three short days in a row the family and the doctor get one
+message. If a dish was left (under 75\,\% of it eaten on average) the message
+names it, e.g. ``Most often left: Sambar''. If almost everything was eaten and
+protein was still short, the message says the menu is short instead, which
+points at the kitchen rather than the appetite. The low-intake alert cannot
+separate these cases: in the demo data one resident eats most of every meal, so
+her low-intake alert never fires, yet she stays under her protein target and
+the protein alert does. Photographs of plate waste are an established way to
+estimate what was eaten~\cite{williamson2003photo}; here the photos come from
+the carer's glasses and the result goes straight to the people who can act.

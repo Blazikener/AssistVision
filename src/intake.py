@@ -101,3 +101,46 @@ def trend_g_per_day(rows: list[dict]) -> float | None:
     my = sum(y for _, y in pts) / n
     sxx = sum((x - mx) ** 2 for x, _ in pts)
     return sum((x - mx) * (y - my) for x, y in pts) / sxx
+
+
+# Which item was left -> protein gap. The kitchen gives protein per served
+# portion of each menu item (from its recipe card or IFCT 2017); the glasses
+# give the share of each item eaten (src/plate_items.py).
+PROTEIN_G_PER_KG = 1.0   # PROT-AGE and ESPEN geriatrics: at least 1.0 g/kg body weight per day
+PROTEIN_STREAK = 3       # default: alert after this many short days in a row
+LEFT_PCT = 75.0          # a dish counts as "left" if under this share of it was eaten on average
+
+
+def protein_eaten(items: list[dict]) -> float:
+    """Grams of protein eaten from [{"name", "protein_g", "eaten_pct"}, ...]."""
+    return sum(i["protein_g"] * min(max(i["eaten_pct"], 0.0), 100.0) / 100.0 for i in items)
+
+
+def most_left(items: list[dict], min_seen: int = 2) -> dict | None:
+    """Menu item with the lowest mean eaten share, over all logged items."""
+    by = {}
+    for i in items:
+        by.setdefault(i["name"].strip().lower(), []).append(i)
+    stats = [{"name": v[0]["name"], "seen": len(v), "mean_eaten_pct": sum(x["eaten_pct"] for x in v) / len(v),
+              "protein_lost_g": sum(x["protein_g"] * (100 - x["eaten_pct"]) / 100 for x in v)}
+             for v in by.values() if len(v) >= min_seen]
+    return min(stats, key=lambda s: (s["mean_eaten_pct"], -s["protein_lost_g"])) if stats else None
+
+
+def protein_gap_alert(days: list[dict], weight_kg: float | None, g_per_kg: float = PROTEIN_G_PER_KG,
+                      streak: int = PROTEIN_STREAK) -> dict | None:
+    """days: [{"day", "protein_g", "items"}] for days with itemised meals, any order.
+
+    Alert when the last `streak` such days were all under the daily target.
+    """
+    if not weight_kg:
+        return None
+    target = g_per_kg * weight_kg
+    tail = sorted(days, key=lambda d: d["day"])[-streak:]
+    if len(tail) < streak or any(d["protein_g"] >= target for d in tail):
+        return None
+    left = most_left([i for d in tail for i in d["items"]])
+    if left and left["mean_eaten_pct"] >= LEFT_PCT:
+        left = None  # nothing much was left: the menu itself is short on protein
+    return {"since": tail[0]["day"], "days": len(tail), "target_g": target,
+            "mean_protein_g": sum(d["protein_g"] for d in tail) / len(tail), "most_left": left}

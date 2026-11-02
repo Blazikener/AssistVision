@@ -39,7 +39,7 @@ def test_api_posts_and_alerts_once():
         assert r.status_code == 201
     assert r.get_json()["alert"]["meals"] == 3
     with app.app_context():
-        n = app.db().execute("SELECT COUNT(*) FROM alerts WHERE resident_id = ?", (rid,)).fetchone()[0]
+        n = app.db().execute("SELECT COUNT(*) FROM alerts WHERE resident_id = ? AND message NOT LIKE '%protein%'", (rid,)).fetchone()[0]
     assert n == 1
     assert c.post("/api/meals", json={"resident_id": rid}).status_code == 400
 
@@ -54,6 +54,26 @@ def test_api_accepts_glasses_volumes():
     assert src == "glasses"
     assert c.post("/api/meals", json={"resident_id": 1, "served_ml": 2, "left_ml": 0}).status_code == 422
     assert c.post("/api/meals", json={"resident_id": 1, "served_ml": 400}).status_code == 400
+
+
+def test_protein_gap_alert_names_left_item():
+    app, c = make()
+    with app.app_context():
+        rid = app.db().execute("INSERT INTO residents (name, age, weight_kg) VALUES ('T', 80, 50)").lastrowid
+        app.db().commit()
+    items = [{"name": "Rice", "protein_g": 5, "eaten_pct": 90}, {"name": "Dal", "protein_g": 9, "eaten_pct": 10}]
+    for d in (1, 2, 3, 4):
+        r = c.post("/api/meals", json={"resident_id": rid, "when": f"2026-10-0{d}T13:00",
+                                       "served_ml": 300, "left_ml": 120, "items": items})
+        assert r.status_code == 201
+    p = c.get(f"/api/residents/{rid}/summary").get_json()["protein"]
+    assert p["alert"]["most_left"]["name"] == "Dal" and p["target_g"] == 50
+    with app.app_context():
+        msgs = [m[0] for m in app.db().execute("SELECT message FROM alerts WHERE resident_id = ?", (rid,))]
+    assert sum("protein" in m and "Dal" in m for m in msgs) == 1
+    bad = {"resident_id": rid, "served_g": 300, "left_g": 10, "items": [{"name": "Dal"}]}
+    assert c.post("/api/meals", json=bad).status_code == 400
+    assert c.get(f"/r/{rid}").status_code == 200
 
 
 if __name__ == "__main__":

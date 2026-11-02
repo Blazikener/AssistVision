@@ -111,6 +111,19 @@ both volumes and reports the share eaten, `1 - V_left / V_served`
 `served_ml`/`left_ml` and stores the share. E6 (`run_suite.py --exp glasses`,
 `analyze_glasses.py`) tests this on simulated head-sweep views.
 
+### Which dish was left, and the protein gap
+
+The same two photos also give a share per dish (`src/plate_items.py`): the
+centre frame of each burst is warped to a top view with the mat markers, food
+pixels are split into the menu's K dishes by colour and position, and each
+dish's eaten share is `1 - (A_left / A_served)^1.5`. `/api/meals` takes an
+optional `items` list (`name`, `protein_g` per portion from the kitchen,
+`eaten_pct`). The app adds up protein per day and, after 3 days under
+1.0 g/kg body weight (PROT-AGE), alerts family and doctor with the dish most
+often left, or says the menu itself is short when nearly everything was eaten.
+E7 (`python experiments/synth/analyze_items.py`, `python src/test_plate_items.py`)
+tests the split on the E6 renders. No extra hardware.
+
 Status: firmware compiles; nothing has been printed, flashed or worn yet.
 
 ## Hardware capture rig (earlier design)
